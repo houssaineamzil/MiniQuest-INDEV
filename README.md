@@ -18,7 +18,13 @@ MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical
 The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs around the world, talk to NPCS, cast spells, complete quests and slay monsters.
 
 ### Controls
-The player can move around the world with WASD controls. Left clicking the screen will attack with whichever weapon the player is currently holding. Clicking E will interact with objects around the world, such as chests, doors, signs and NPCs.
+The player can move their character using the WASD keys. W moves the character forward, A moves them left, S moves them backward, and D moves them to the right. 
+
+The player can attack enemies by left-clicking the screen. The type of attack performed depends on the weapon the character is currently holding. For example, a sword might trigger a slashing motion, while a bow would release an arrow towards the cursor.
+
+The E key is used for interactions. This includes opening chests, entering doors, reading signs, and initiating conversations with NPCs. When near an interactable object or character, a prompt will appear on screen to inform the player that they can press E to interact.
+ 
+The player can access their inventory and game menus by pressing the I and Esc keys, respectively. In the inventory, players can equip new items, use consumables, and view their character's stats and abilities. The game menu provides access to options such as saving and loading the game, adjusting settings, and exiting to the desktop.
 
 ### Level Design
 MiniQuest employs a sprawling world map that consists of multiple, distinct smaller maps, each featuring its own unique environment, challenges, and storylines. The player's journey will lead them through a variety of landscapes - from verdant forests and treacherous mountains, to bustling towns and eerie dungeons.
