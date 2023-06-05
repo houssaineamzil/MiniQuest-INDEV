@@ -20,6 +20,6 @@ MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical
 
 ## Proposed Class Diagram
 <p align="center">
-  <img src="class_diagram.png" alt="class_diagram"/>
+  <img src="class_diagram.jpg" alt="class_diagram"/>
 </p>
 
