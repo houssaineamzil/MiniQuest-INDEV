@@ -366,7 +366,7 @@ class Enemy:
 
 
 # Create the enemy
-enemy = Enemy(250, 300)  # Replace with the position where you want the enemy to appear
+enemy = Enemy(250, 300)
 # Load the music file
 pygame.mixer.music.load("source/sound/music.wav")
 fireball_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
