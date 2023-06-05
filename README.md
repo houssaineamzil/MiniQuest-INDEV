@@ -20,7 +20,17 @@ The player can interact with the world in various ways. MiniQuest features multi
 The player can move around the world with WASD controls. Left clicking the screen will attack with whichever weapon the player is currently holding. Clicking E will interact with objects around the world, such as chests, doors, signs and NPCs.
 
 ### Level Design
-The world map consists of multiple smaller maps, that the player can travel through. Some maps have "inner maps", like a house or building. Maps will be created using "TileMaps" complete with collision layers, ground and above ground layers. The art style of maps will be similar to that of a 16bit top-down RPG.
+MiniQuest employs a sprawling world map that consists of multiple, distinct smaller maps, each featuring its own unique environment, challenges, and storylines. The player's journey will lead them through a variety of landscapes - from verdant forests and treacherous mountains, to bustling towns and eerie dungeons.
+
+The world map is vast and interconnected, fostering a sense of a continuous, cohesive world. Some areas are easily accessible from the beginning, inviting early exploration, while others are gated by story progress, character abilities, or challenging enemies, rewarding players for growth and progression.
+
+Each smaller map or "area" is designed with its own unique layout, aesthetic, and theme. Areas may include a variety of terrains and points of interest, such as natural landmarks, NPC hubs, enemy encampments, secret paths, and treasure caches. This variety encourages thorough exploration and offers diverse gameplay experiences.
+
+Certain areas have "inner maps" or "interiors", such as houses, castles, or dungeons. These interior maps often feature puzzles, quests, or enemies that are specific to that location. For example, a dungeon might be filled with traps and monsters, while a castle may contain political intrigue and hidden secrets. Interiors serve to deepen the world's lore, provide context to its inhabitants, and offer a change of pace from the outside world.
+
+The maps are meticulously handcrafted using TileMaps. Each tile represents a piece of the environment - such as a patch of grass, a piece of wall, or a section of river - and can be combined with others to create intricate, varied landscapes. Each map features multiple layers, including collision layers to prevent players from walking through solid objects, ground layers to create the basic terrain, and above-ground layers to add details and depth.
+
+MiniQuest's map aesthetic is inspired by the charm and nostalgia of 16-bit RPGs. Each map is visually distinct and teeming with life and color, from the subtle animation of leaves in the wind to the shifting hues of a sunset sky. Despite the top-down perspective, care is taken to create a sense of depth and perspective, making the world feel truly immersive.
 
 ### Character Progression
 At the start of the game, the player begins as a humble farmer, starting at level one with only basic tools and no combat abilities. As the story unfolds, the player will have the opportunity to learn new skills, acquire valuable items, and enhance their abilities, ultimately transforming from a simple farmer into a formidable hero.
