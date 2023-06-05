@@ -67,7 +67,7 @@ MiniQuest is enriched with a diverse cast of supporting characters, each with th
 ### Visual Style
 The visual style of MiniQuest is reminiscent of classic 16-bit RPGs, offering a modern take on nostalgic aesthetics. The pixel art design, though simplistic, is rich in detail and character. Each environment, character, and object in the game is carefully crafted, adding depth and personality to the game world.
 
-## Sound
+### Sound
 The soundtrack, featuring orchestral arrangements with elements of folk and fantasy music, sets the emotional tone for the game. Each area has its own unique theme, helping to differentiate them and enhance the feeling of journeying through a vast, diverse world.
 
 Sound effects are crisp and satisfying, providing immediate feedback for the player's actions. The clashing of swords, the casting of spells, the chimes when a quest is completed - all these sounds contribute to making the game world feel tangible and responsive.
@@ -85,31 +85,31 @@ We chose Python as our programming language due to its readability, simplicity, 
 
 For designing our game's world, we are utilizing Tilemaps. This method allows us to create complex, grid-based environments efficiently and effectively. It's a widely used technique in 2D game development, particularly in creating RPGs like MiniQuest, and provides us the flexibility we need in creating diverse and engaging levels.
 
-### Timeline and Milestones
-##Pre-Production (June 2023)
+## Timeline and Milestones
+### Pre-Production (June 2023)
 - Conceptualization and design of game's mechanics, story, characters, and art style.
 - Plan and design the project with class diagrams and specifications.
 - 
-##Prototype Development (June 2023 - July 2023)
+### Prototype Development (June 2023 - July 2023)
 - Develop a basic playable prototype featuring core gameplay mechanics, such as player movement, basic combat, and interaction with the game world.
 - Establish a solid foundation for the game's code, incorporating good software design practices and clean code principles.
 
-##Alpha Development (July 2023 - August 2023)
+### Alpha Development (July 2023 - August 2023)
 - Develop the first complete version of the game, also known as the alpha version.
 - This version should include all major game systems and mechanics, basic art assets, and a significant portion of the game's content.
 - Continue playtesting and start to gather broader feedback on the game's design and balance.
 
-##Beta Development (August 2023 - September 2023)
+### Beta Development (August 2023 - September 2023)
 - Polish the game, fix bugs, and implement final assets, including art, sound, and music.
 - Optimize the game for the best performance.
 - Continue playtesting with a broader audience to find and fix as many bugs as possible.
 
-##Release (October 2023)
+### Release (October 2023)
 - Launch the final version of the game.
 - Monitor for any immediate issues that need to be addressed.
 - Begin post-launch support, including fixing any additional bugs and potentially starting work on additional content or features based on player feedback.
 
-##Post-Release (October 2023 and beyond)
+### Post-Release (October 2023 and beyond)
 - Monitor the game for bugs
 - Fix any issues that arise
 
