@@ -14,7 +14,7 @@ MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical
 
 ## Alpha Footage
 <p align="center">
-  <img src="example1.gif" alt="AlphaTest1"/>
+  <img src="example.gif" alt="AlphaTest1"/>
   <img src="example2.gif" alt="AlphaTest2"/>
 </p>
 
