@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="mq.png" alt="miniquest"/>
+</p>
+
 # MiniQuest
 Welcome to MiniQuest, a captivating top-down adventure game where the stakes are high, and the journey is full of unexpected twists and turns. Play as a village farmer thrown into a heroic journey after a tragic dragon attack devastates your peaceful life. Brace yourself for an epic quest around the world to seek justice, find courage, and make new allies.
 
