@@ -74,7 +74,7 @@ Sound effects are crisp and satisfying, providing immediate feedback for the pla
 
 The ambient sounds further enhance immersion, with the chirping of birds in the forests, the bustle of towns, or the eerie echoes in a dungeon. These sounds breathe life into the world, making it feel like a living, breathing entity.
 
-##Technical
+## Technical
 ### Platforms
 MiniQuest is initially being designed for the Windows platform. This choice allows us to focus our resources and testing on creating the best possible experience for a large user base. As the game evolves, we will consider expanding to additional platforms based on player demand and feasibility.
 
