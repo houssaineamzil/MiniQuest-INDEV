@@ -19,9 +19,14 @@ The player can interact with the world in various ways. MiniQuest features multi
 - **Character Development:** Gain experience, level up your character, and acquire new skills to become stronger.
 - **Decision Impact:** Your choices have consequences, leading to different narrative branches and game endings.
 
-## Alpha Footage
+## Prototype
 <p align="center">
-  <img src="example.gif" alt="AlphaTest1"/>
-  <img src="example2.gif" alt="AlphaTest2"/>
+  <img src="example.gif" alt="prototype1"/>
+  <img src="example2.gif" alt="prototype2"/>
+</p>
+
+## Proposed Class Diagram
+<p align="center">
+  <img src="class_diagram.JPG" alt="class_diagram"/>
 </p>
 
