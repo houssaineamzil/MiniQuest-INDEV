@@ -11,6 +11,7 @@ MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical
 - **Immersive Gameplay:** Engage in strategic combat, quests, solve intricate puzzles, and interact with a variety of NPCs.
 - **Character Development:** Gain experience, level up your character, and acquire new skills and items to become stronger.
 - **Decision Impact:** Your choices have consequences, leading to different narrative branches and game endings.
+- **Inter-connected map:** Traverse an expansive, interconnected world filled with unique biomes, each teeming with distinct challenges, quests, and secrets.
 
 ## Gameplay
 ### Mechanics
