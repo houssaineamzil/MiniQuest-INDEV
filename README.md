@@ -22,6 +22,17 @@ The player can move around the world with WASD controls. Left clicking the scree
 ### Level Design
 The world map consists of multiple smaller maps, that the player can travel through. Some maps have "inner maps", like a house or building. Maps will be created using "TileMaps" complete with collision layers, ground and above ground layers. The art style of maps will be similar to that of a 16bit top-down RPG.
 
+### Character Progression
+At the start of the game, the player begins as a humble farmer, starting at level one with only basic tools and no combat abilities. As the story unfolds, the player will have the opportunity to learn new skills, acquire valuable items, and enhance their abilities, ultimately transforming from a simple farmer into a formidable hero.
+
+The player earns experience points (XP) by defeating enemies, completing quests, and overcoming challenges. Accumulating a certain amount of XP allows the player to level up, which not only enhances their base stats like health, strength, and intelligence but also gives them skill points to spend on new abilities.
+
+As the player levels up, they gain access to new skills and abilities. These can range from combat abilities like a powerful sword strike or a healing spell, to non-combat abilities like crafting or negotiation. The player is free to choose which abilities to acquire and enhance, allowing them to customize their character to their preferred playstyle.
+
+The world of MiniQuest is filled with hidden treasures, special items, and powerful equipment. As the player explores, they will find weapons to increase their combat abilities, armor to protect them from damage, artifacts with special effects, and resources that can be used to craft new items. Some items will be straightforward to find, while others will require solving challenging puzzles, defeating powerful enemies, or completing complex quests.
+
+Over the course of their journey, the player will encounter a variety of non-player characters (NPCs). Interacting with these characters can lead to new quests, access to special items, or even companionship. Building relationships with NPCs can enhance the player's abilities in a variety of ways, and can also lead to new narrative possibilities.
+
 ## Prototype
 <p align="center">
   <img src="example.gif" alt="prototype1"/>
