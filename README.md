@@ -13,4 +13,4 @@ MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical
 - **Decision Impact:** Your choices have consequences, leading to different narrative branches and game endings.
 
 ## Alpha Footage
-![AlphaTest](https://imgur.com/mLxLcj3)
+![AlphaTest](example.gif)
