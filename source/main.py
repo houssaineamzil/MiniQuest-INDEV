@@ -8,7 +8,7 @@ pygame.mixer.init()
 
 screenWidth = 800
 screenHeight = 800
-tileSize = 24
+tileSize = 20
 last_shot = 0
 gameScreen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("MiniQuest")
@@ -365,11 +365,8 @@ class Enemy:
                 self.rect.x -= speed
 
 
-import os
-
-print(os.getcwd())
 # Create the enemy
-enemy = Enemy(200, 200)  # Replace with the position where you want the enemy to appear
+enemy = Enemy(250, 300)  # Replace with the position where you want the enemy to appear
 # Load the music file
 pygame.mixer.music.load("source/sound/music.wav")
 fireball_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
@@ -427,11 +424,18 @@ while run:
                 player.image, -90
             )  # rotate 90 degrees clockwise
 
+            if (
+                projectile in projectiles
+            ):  # Check if projectile still exists in the list
+                projectiles.remove(projectile)
+
         if projectile.update():
             explosion_sound.play()
-            projectiles.remove(projectile)
+            if (
+                projectile in projectiles
+            ):  # Check if projectile still exists in the list
+                projectiles.remove(projectile)
         else:
-            # Only check for collision if enemy is not None
             if (
                 enemy is not None
                 and enemy.rect.colliderect(projectile.rect)
@@ -442,25 +446,30 @@ while run:
                     Explosion(projectile.rect.centerx, projectile.rect.centery)
                 )
                 explosion_sound.play()
-                projectiles.remove(projectile)
+                if (
+                    projectile in projectiles
+                ):  # Check if projectile still exists in the list
+                    projectiles.remove(projectile)
                 if enemy.hp <= 0:
                     enemy = None
                     break
 
-    for particle in particles:
+    for particle in list(particles):  # Iterate over a copy of the list
         if particle.update():
-            particles.remove(particle)
+            if particle in particles:  # Check if particle still exists in the list
+                particles.remove(particle)
 
-    for explosion in explosions[:]:  # iterate over a copy of the list
+    for explosion in list(explosions):  # Iterate over a copy of the list
         if explosion.update():
-            explosions.remove(explosion)
+            if explosion in explosions:  # Check if explosion still exists in the list
+                explosions.remove(explosion)
 
-    for particle in explosion_particles[:]:  # iterate over a copy of the list
+    for particle in list(explosion_particles):  # Iterate over a copy of the list
         if particle.update():
-            explosion_particles.remove(particle)
-
-    for particle in explosion_particles:
-        particle.update()
+            if (
+                particle in explosion_particles
+            ):  # Check if particle still exists in the list
+                explosion_particles.remove(particle)
 
     if enemy is not None:
         enemy.update()  # Move the enemy
