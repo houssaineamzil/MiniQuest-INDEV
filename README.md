@@ -50,6 +50,69 @@ The world of MiniQuest is filled with hidden treasures, special items, and power
 
 Over the course of their journey, the player will encounter a variety of non-player characters (NPCs). Interacting with these characters can lead to new quests, access to special items, or even companionship. Building relationships with NPCs can enhance the player's abilities in a variety of ways, and can also lead to new narrative possibilities.
 
+## Story and Characters
+### Plot
+The tranquility of our protagonist's life as a humble farmer is shattered when a devastating dragon attack razes the village, claiming the lives of loved ones and leaving destruction in its wake. Overcome with grief and anger, the protagonist vows to seek revenge against this monstrous adversary, setting them on a globe-trekking journey that will challenge their resolve, forge new friendships, and unveil truths that will shake them to their very core.
+
+Throughout the journey, the protagonist's choices will steer the narrative, influencing relationships with characters, altering the progression of major events, and even leading to different game endings. MiniQuest's story thus evolves as a deeply personal and interactive narrative that binds the protagonist's growth and experiences with the player's actions and decisions.
+
+### Characters
+The protagonist begins their journey as an everyday farmer, thrust into a hero's path by the hands of fate. As the player character, the protagonist's personality, abilities, and destiny are shaped by player choices and actions throughout the game.
+
+The primary antagonist of MiniQuest, this beast's unexpected attack on the protagonist's village sets the game's events into motion. The dragon's motives and origins are shrouded in mystery, providing a compelling focal point for the protagonist's quest for revenge.
+
+MiniQuest is enriched with a diverse cast of supporting characters, each with their own personalities, backgrounds, and roles within the story. From wise mentors and loyal allies to cunning adversaries and enigmatic strangers, these characters infuse the world with life and narrative depth.
+
+## Art and Sound
+### Visual Style
+The visual style of MiniQuest is reminiscent of classic 16-bit RPGs, offering a modern take on nostalgic aesthetics. The pixel art design, though simplistic, is rich in detail and character. Each environment, character, and object in the game is carefully crafted, adding depth and personality to the game world.
+
+## Sound
+The soundtrack, featuring orchestral arrangements with elements of folk and fantasy music, sets the emotional tone for the game. Each area has its own unique theme, helping to differentiate them and enhance the feeling of journeying through a vast, diverse world.
+
+Sound effects are crisp and satisfying, providing immediate feedback for the player's actions. The clashing of swords, the casting of spells, the chimes when a quest is completed - all these sounds contribute to making the game world feel tangible and responsive.
+
+The ambient sounds further enhance immersion, with the chirping of birds in the forests, the bustle of towns, or the eerie echoes in a dungeon. These sounds breathe life into the world, making it feel like a living, breathing entity.
+
+##Technical
+### Platforms
+MiniQuest is initially being designed for the Windows platform. This choice allows us to focus our resources and testing on creating the best possible experience for a large user base. As the game evolves, we will consider expanding to additional platforms based on player demand and feasibility.
+
+### Game Engine and Language
+MiniQuest is developed using the Pygame library, a set of Python modules designed for game creation. It provides the functionality required for game development, including graphics, sound, and input handling, making it an ideal choice for MiniQuest's development.
+
+We chose Python as our programming language due to its readability, simplicity, and vast standard library. Python is well-suited for quickly prototyping and iterating on game concepts, which aligns with our agile approach to game development.
+
+For designing our game's world, we are utilizing Tilemaps. This method allows us to create complex, grid-based environments efficiently and effectively. It's a widely used technique in 2D game development, particularly in creating RPGs like MiniQuest, and provides us the flexibility we need in creating diverse and engaging levels.
+
+### Timeline and Milestones
+##Pre-Production (June 2023)
+- Conceptualization and design of game's mechanics, story, characters, and art style.
+- Plan and design the project with class diagrams and specifications.
+- 
+##Prototype Development (June 2023 - July 2023)
+- Develop a basic playable prototype featuring core gameplay mechanics, such as player movement, basic combat, and interaction with the game world.
+- Establish a solid foundation for the game's code, incorporating good software design practices and clean code principles.
+
+##Alpha Development (July 2023 - August 2023)
+- Develop the first complete version of the game, also known as the alpha version.
+- This version should include all major game systems and mechanics, basic art assets, and a significant portion of the game's content.
+- Continue playtesting and start to gather broader feedback on the game's design and balance.
+
+##Beta Development (August 2023 - September 2023)
+- Polish the game, fix bugs, and implement final assets, including art, sound, and music.
+- Optimize the game for the best performance.
+- Continue playtesting with a broader audience to find and fix as many bugs as possible.
+
+##Release (October 2023)
+- Launch the final version of the game.
+- Monitor for any immediate issues that need to be addressed.
+- Begin post-launch support, including fixing any additional bugs and potentially starting work on additional content or features based on player feedback.
+
+##Post-Release (October 2023 and beyond)
+- Monitor the game for bugs
+- Fix any issues that arise
+
 ## Prototype
 <p align="center">
   <img src="example.gif" alt="prototype1"/>
