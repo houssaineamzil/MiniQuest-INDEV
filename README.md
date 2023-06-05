@@ -89,7 +89,7 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
 ### Pre-Production (June 2023)
 - Conceptualization and design of game's mechanics, story, characters, and art style.
 - Plan and design the project with class diagrams and specifications.
-- 
+
 ### Prototype Development (June 2023 - July 2023)
 - Develop a basic playable prototype featuring core gameplay mechanics, such as player movement, basic combat, and interaction with the game world.
 - Establish a solid foundation for the game's code, incorporating good software design practices and clean code principles.
