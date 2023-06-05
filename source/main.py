@@ -40,7 +40,7 @@ class Player:
         return rect.collidelist(tiles) != -1
 
     def walk_particles(self):
-        if random.random() < 0.2:
+        if random.random() < 0.3:
             x = self.rect.x + self.image.get_width() // 2
             y = self.rect.y + self.image.get_height()
 
