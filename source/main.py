@@ -29,7 +29,7 @@ class Player:
 
         self.collision_rect = (
             pygame.Rect(  # Adjust collision box to be smaller than the sprite
-                0, 0, self.rect.width * 0.5, self.rect.height * 0.5
+                0, 0, self.rect.width, self.rect.height * 0.5
             )
         )  # Make the box smaller
         self.collision_rect.midbottom = (
@@ -81,6 +81,8 @@ class Player:
 
         # Draw player
         gameScreen.blit(self.image, self.rect)
+        # pygame.draw.rect(gameScreen, (255, 0, 0), self.collision_rect, 2)
+        # pygame.draw.rect(gameScreen, (0, 255, 0), self.rect, 2)
 
         # Check for collisions before updating the player's position
         if dx != 0:  # If there is a change in x
@@ -366,7 +368,7 @@ class Enemy:
 
 
 # Create the enemy
-enemy = Enemy(250, 300)
+enemy = Enemy(250, 300)  # Replace with the position where you want the enemy to appear
 # Load the music file
 pygame.mixer.music.load("source/sound/music.wav")
 fireball_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
