@@ -15,7 +15,7 @@ class Player:
         self.red_image = pygame.Surface(self.image.get_size()).convert_alpha()
         self.red_image.fill((255, 0, 0))
         self.collision_rect = pygame.Rect(  # collision smaller than the sprite
-            0, 0, self.rect.width, self.rect.height * 0.5
+            0, 0, self.rect.width - 3, self.rect.height * 0.5
         )
         self.collision_rect.midbottom = (
             self.rect.midbottom

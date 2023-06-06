@@ -42,7 +42,7 @@ class ArrowExplosion(Explosion):
                     random.randint(100, 150),
                     random.randint(100, 150),
                 ),  # different color
-                random.randint(1, 3),
+                random.randint(2, 4),
             )
             for _ in range(20)
         ]

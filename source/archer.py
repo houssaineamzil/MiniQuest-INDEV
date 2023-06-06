@@ -15,8 +15,8 @@ class Archer(Enemy):
         self.speed = 1.5
 
     def get_next_shot_time(self):
-        # Generate a random interval between 1 and 3 seconds (1000 to 3000 milliseconds)
-        return pygame.time.get_ticks() + random.randint(1000, 2000)
+        # Generate a random interval
+        return pygame.time.get_ticks() + random.randint(500, 1000)
 
     def shoot(self, target_x, target_y, projectiles, create_particle):
         current_time = pygame.time.get_ticks()

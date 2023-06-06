@@ -13,6 +13,7 @@ from enemy import Enemy
 from projectile import Arrow
 from projectile import Spell
 from explosion import SpellExplosion, ArrowExplosion
+from map import Map
 
 pygame.init()
 pygame.mixer.init()
@@ -23,9 +24,7 @@ tileSize = 20
 last_shot = 0
 gameScreen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("MiniQuest")
-map = pytmx.load_pygame("source/tile/village.tmx", pixelalpha=True)
 clockObject = pygame.time.Clock()
-collision_tiles = []
 enemies = []
 portal_tiles = []
 
@@ -56,60 +55,10 @@ def walk_particles(self):
         particles.append(new_particle)
 
 
-def drawGroundLayer2():
-    ground_layer = map.get_layer_by_name("ground2")
+map_file = "source/tile/village.tmx"
+map = Map(map_file, screenWidth, screenHeight)
+map.collisionSetup()
 
-    for x, y, gid in ground_layer:
-        tile = map.get_tile_image_by_gid(gid)
-        if tile:
-            gameScreen.blit(tile, (x * map.tilewidth, y * map.tileheight))
-
-
-def drawGroundLayer():
-    ground_layer = map.get_layer_by_name("ground")
-
-    for x, y, gid in ground_layer:
-        tile = map.get_tile_image_by_gid(gid)
-        if tile:
-            gameScreen.blit(tile, (x * map.tilewidth, y * map.tileheight))
-
-
-def drawAboveGroundLayer():
-    above_ground_layer = map.get_layer_by_name("above_ground")
-
-    for x, y, gid in above_ground_layer:
-        tile = map.get_tile_image_by_gid(gid)
-        if tile:
-            gameScreen.blit(tile, (x * map.tilewidth, y * map.tileheight))
-
-
-def collisionSetup():
-    collision = map.get_layer_by_name("collision")
-    portal_layer = map.get_layer_by_name("portal")
-    for x, y, gid in collision:
-        if gid:  # Check if the tile exists
-            collision_tiles.append(
-                pygame.Rect(
-                    x * map.tilewidth,
-                    y * map.tileheight,
-                    map.tilewidth,
-                    map.tileheight,
-                )
-            )
-
-    for x, y, gid in portal_layer:
-        if gid:  # Check if the tile exists
-            portal_tiles.append(
-                pygame.Rect(
-                    x * map.tilewidth,
-                    y * map.tileheight,
-                    map.tilewidth,
-                    map.tileheight,
-                )
-            )
-
-
-collisionSetup()
 # Create the enemy
 for _ in range(1):
     dragon = Dragon(250, 300, "source/img/dragon.png", 60, 1)
@@ -135,44 +84,39 @@ run = True
 while run:
     clockObject.tick(60)
 
-    collision_tiles = []  # Reset the list of collision tiles
-    portal_tiles = []
-    collisionSetup()  # Update the list of collision tiles
+    map.collisionSetup()  # Update the list of collision tiles
+    map.drawGroundLayer2(gameScreen)
+    map.drawGroundLayer(gameScreen)  # Draw ground layer
 
-    drawGroundLayer2()
-    drawGroundLayer()  # Draw ground layer
-
-    for portal in portal_tiles:
-        if player.rect.colliderect(portal):
-            # Load new map
-            map = pytmx.load_pygame("source/tile/path.tmx", pixelalpha=True)
-
-            # Define the position where you want to teleport the player
-            player.rect.x = 560
-            player.rect.y = 760
-            player.collision_rect.x = 560
-            player.collision_rect.y = (
-                760 + player.rect.height - player.collision_rect.height
+    for portal in map.portals:
+        if player.collision_rect.colliderect(portal.rect):
+            map = Map(
+                "source/tile/" + portal.map_file + ".tmx", screenWidth, screenHeight
             )
+            map.collisionSetup()  # Update the list of collision tiles
 
-            # Update the list of collision and portal tiles
-            collisionSetup()
-            for _ in range(1):
-                archer = Archer(250, 400, "source/img/archer.png", 35, 1)
-                enemies.append(archer)
+            # Update the player's position
+            player.rect.x = portal.destination[0]
+            player.rect.y = portal.destination[1]
+            player.collision_rect.x = portal.destination[0]
+            player.collision_rect.y = (
+                portal.destination[1]
+                + player.rect.height
+                - player.collision_rect.height
+            )
             break
 
     for enemy in enemies:  # Loop over each enemy in the list
         if isinstance(enemy, Archer):
             enemy.ai_move(
-                collision_tiles,
+                map.collision_tiles,
                 screenWidth,
                 screenHeight,
                 player.rect.centerx,
                 player.rect.centery,
             )
         else:
-            enemy.ai_move(collision_tiles, screenWidth, screenHeight)
+            enemy.ai_move(map.collision_tiles, screenWidth, screenHeight)
         enemy.draw(gameScreen)
         enemy.shoot(
             player.rect.centerx, player.rect.centery, projectiles, create_particle
@@ -218,7 +162,7 @@ while run:
             ):  # Check if projectile still exists in the list
                 projectiles.remove(projectile)
 
-        if projectile.update(collision_tiles, screenWidth, screenHeight):
+        if projectile.update(map.collision_tiles, screenWidth, screenHeight):
             if isinstance(projectile, Arrow):
                 explosions.append(
                     ArrowExplosion(projectile.rect.centerx, projectile.rect.centery)
@@ -251,14 +195,14 @@ while run:
                 gameScreen.blit(particle.image, particle.rect)
 
     player.movement(
-        collision_tiles, walk_particles, screenWidth, screenHeight
+        map.collision_tiles, walk_particles, screenWidth, screenHeight
     )  # Draw player
     # Draw player
     gameScreen.blit(player.image, player.rect)
     # pygame.draw.rect(gameScreen, (255, 0, 0), player.collision_rect, 2)
     # pygame.draw.rect(gameScreen, (0, 255, 0), player.rect, 2)
 
-    drawAboveGroundLayer()  # Draw above ground layer
+    map.drawAboveGroundLayer(gameScreen)  # Draw above ground layer
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
