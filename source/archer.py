@@ -2,12 +2,12 @@ import random
 import pygame
 import math
 from enemy import Enemy
-from projectile import Projectile
+from projectile import Arrow
 
 
-class Skeleton(Enemy):
+class Archer(Enemy):
     PROJECTILE_LIFE = 20
-    PROJECTILE_SPEED = 10
+    PROJECTILE_SPEED = 20
 
     def __init__(self, x, y, image_path, size, hp):
         super().__init__(x, y, image_path, size, hp)
@@ -21,14 +21,17 @@ class Skeleton(Enemy):
     def shoot(self, target_x, target_y, projectiles, create_particle):
         current_time = pygame.time.get_ticks()
         if current_time >= self.next_shot_time:
-            super().shoot(
+            new_projectile = Arrow(
+                self.rect.centerx,
+                self.rect.centery,
                 target_x,
                 target_y,
-                projectiles,
-                create_particle,
                 self.PROJECTILE_LIFE,
                 self.PROJECTILE_SPEED,
+                self,
+                create_particle,
             )
+            projectiles.append(new_projectile)
             self.next_shot_time = self.get_next_shot_time()
 
     def ai_move(self, collision_tiles, screen_width, screen_height, target_x, target_y):

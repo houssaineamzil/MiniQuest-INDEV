@@ -89,3 +89,63 @@ class Projectile:
 
     def is_collision(self, rect, tiles):  # check for collision function
         return rect.collidelist(tiles) != -1
+
+
+class Spell(Projectile):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.image = pygame.image.load("source/img/spell.png")  # load spell image
+        self.image = pygame.transform.scale(self.image, (20, 20))  # scale image
+
+    # you can override or add new methods unique to the spell here
+
+
+class Arrow(Projectile):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.image = pygame.image.load("source/img/arrow.png")  # load arrow image
+        self.image = pygame.transform.scale(self.image, (30, 10))  # scale image
+        self.image = pygame.transform.rotate(self.image, -math.degrees(self.angle))
+
+    def update(self, tiles, screenWidth, screenHeight):
+        center_x = self.rect.x + self.image.get_width() // 2
+        center_y = self.rect.y + self.image.get_height() // 2
+
+        velocity_x = random.uniform(-0.5, 0.5)
+        velocity_y = random.uniform(-0.5, 0.5)
+
+        new_particle = Particle(
+            center_x,
+            center_y,
+            velocity_x,
+            velocity_y,
+            (
+                random.randint(200, 255),
+                random.randint(200, 255),  # white/silver color
+                random.randint(200, 255),
+            ),
+            random.randint(2, 7),
+        )
+
+        self.create_particle(new_particle)
+
+        # update the position
+        self.rect.x += self.speed * math.cos(self.angle)
+        self.rect.y += self.speed * math.sin(self.angle)
+
+        # decrease lifespan
+        self.lifespan -= 1
+
+        # remove if it leaves the screen or if lifespan is over
+        if (
+            self.rect.x < 0
+            or self.rect.x > screenWidth
+            or self.rect.y < 0
+            or self.rect.y > screenHeight
+        ) or self.lifespan == 0:
+            return True
+
+        # remove if it collides with something
+        if self.is_collision(self.rect, tiles):
+            return True
+        return False

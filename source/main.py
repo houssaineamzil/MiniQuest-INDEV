@@ -7,10 +7,11 @@ from player import Player
 from particle import Particle
 from projectile import Projectile
 from explosion import Explosion
+from archer import Archer
 from dragon import Dragon
-from skeleton import Skeleton
 from enemy import Enemy
-from character import Character
+from projectile import Arrow
+from projectile import Spell
 
 pygame.init()
 pygame.mixer.init()
@@ -102,8 +103,8 @@ for _ in range(1):
     dragon = Dragon(250, 300, "source/img/dragon.png", 60, 3)
     enemies.append(dragon)
 for _ in range(1):
-    skeleton = Skeleton(250, 400, "source/img/skeleton.png", 50, 1)
-    enemies.append(skeleton)
+    archer = Archer(250, 400, "source/img/archer.png", 35, 1)
+    enemies.append(archer)
 
 # Load the music file
 pygame.mixer.music.load("source/sound/music.wav")
@@ -129,7 +130,7 @@ while run:
     drawGroundLayer()  # Draw ground layer
 
     for enemy in enemies:  # Loop over each enemy in the list
-        if isinstance(enemy, Skeleton):
+        if isinstance(enemy, Archer):
             enemy.ai_move(
                 collision_tiles,
                 screenWidth,
@@ -149,10 +150,13 @@ while run:
                 projectile.owner, Enemy
             ):
                 enemy.take_damage()
-                explosions.append(
-                    Explosion(projectile.rect.centerx, projectile.rect.centery)
-                )
-                explosion_sound.play()
+                if not isinstance(
+                    projectile, Arrow
+                ):  # Only add explosion if the projectile isn't an arrow
+                    explosions.append(
+                        Explosion(projectile.rect.centerx, projectile.rect.centery)
+                    )
+                    explosion_sound.play()
                 if (
                     projectile in projectiles
                 ):  # Check if projectile still exists in the list
@@ -181,10 +185,13 @@ while run:
                 projectiles.remove(projectile)
 
         if projectile.update(collision_tiles, screenWidth, screenHeight):
-            explosion_sound.play()
-            explosions.append(
-                Explosion(projectile.rect.centerx, projectile.rect.centery)
-            )
+            if not isinstance(
+                projectile, Arrow
+            ):  # Only add explosion if the projectile isn't an arrow
+                explosions.append(
+                    Explosion(projectile.rect.centerx, projectile.rect.centery)
+                )
+                explosion_sound.play()
             if (
                 projectile in projectiles
             ):  # Check if projectile still exists in the list
@@ -207,7 +214,9 @@ while run:
             for particle in explosion.particles:
                 gameScreen.blit(particle.image, particle.rect)
 
-    player.movement(collision_tiles, walk_particles)  # Draw player
+    player.movement(
+        collision_tiles, walk_particles, screenWidth, screenHeight
+    )  # Draw player
     # Draw player
     gameScreen.blit(player.image, player.rect)
     # pygame.draw.rect(gameScreen, (255, 0, 0), player.collision_rect, 2)
@@ -228,13 +237,13 @@ while run:
                     fireball_sound.play()
 
                     mouse_x, mouse_y = pygame.mouse.get_pos()
-                    new_projectile = Projectile(
+                    new_projectile = Arrow(
                         player.rect.centerx,
                         player.rect.centery,
                         mouse_x,
                         mouse_y,
-                        25,
-                        10,
+                        30,
+                        20,
                         player,
                         create_particle,  # Pass the callback function
                     )

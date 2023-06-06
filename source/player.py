@@ -27,7 +27,7 @@ class Player:
     def hit_by_projectile(self):
         self.image.blit(self.red_image, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
 
-    def movement(self, tiles, walk_particles):
+    def movement(self, tiles, walk_particles, screen_width, screen_height):
         key = pygame.key.get_pressed()
         dx, dy = 0, 0  # Changes in x and y
         # Change 'elif' to 'if' for all directions
@@ -53,13 +53,23 @@ class Player:
         if dx != 0:  # If there is a change in x
             temp_rect = self.collision_rect.copy()
             temp_rect.x += dx
-            if not self.is_collision(temp_rect, tiles):
+            # Check for screen bounds
+            if (
+                temp_rect.right <= screen_width
+                and temp_rect.left >= 0
+                and not self.is_collision(temp_rect, tiles)
+            ):
                 self.rect.x += dx
                 self.collision_rect.x += dx  # Update collision box position
 
         if dy != 0:  # If there is a change in y
             temp_rect = self.collision_rect.copy()
             temp_rect.y += dy
-            if not self.is_collision(temp_rect, tiles):
+            # Check for screen bounds
+            if (
+                temp_rect.bottom <= screen_height
+                and temp_rect.top >= 0
+                and not self.is_collision(temp_rect, tiles)
+            ):
                 self.rect.y += dy
                 self.collision_rect.y += dy  # Update collision box position
