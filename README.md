@@ -121,6 +121,7 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
   <img src="example.gif" alt="prototype1"/>
   <img src="example2.gif" alt="prototype2"/>
   <img src="example3.gif" alt="prototype3"/>
+  <img src="example4.gif" alt="prototype4"/>
 </p>
 
 ## Proposed Class Diagram

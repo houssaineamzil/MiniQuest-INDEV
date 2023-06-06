@@ -27,3 +27,41 @@ class Explosion:
 
         # if all particles are gone, the explosion is done
         return len(self.particles) == 0
+
+
+class ArrowExplosion(Explosion):
+    def __init__(self, x, y):
+        self.particles = [
+            Particle(
+                x,
+                y,
+                (random.uniform(-3, 3)),
+                (random.uniform(-3, 3)),
+                (
+                    random.randint(100, 150),
+                    random.randint(100, 150),
+                    random.randint(100, 150),
+                ),  # different color
+                random.randint(1, 3),
+            )
+            for _ in range(20)
+        ]
+
+
+class SpellExplosion(Explosion):
+    def __init__(self, x, y):
+        self.particles = [
+            Particle(
+                x,
+                y,
+                (random.uniform(-5, 5)),
+                (random.uniform(-5, 5)),
+                (
+                    random.randint(200, 255),
+                    random.randint(50, 100),
+                    0,
+                ),  # different color
+                random.randint(3, 7),
+            )
+            for _ in range(50)  # different number of particles
+        ]
