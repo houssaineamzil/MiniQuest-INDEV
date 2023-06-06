@@ -3,6 +3,8 @@ import pygame
 import pytmx
 import math
 
+from player import Player
+
 pygame.init()
 pygame.mixer.init()
 
@@ -15,92 +17,28 @@ pygame.display.set_caption("MiniQuest")
 villageMap = pytmx.load_pygame("source/tile/village.tmx", pixelalpha=True)
 clockObject = pygame.time.Clock()
 collision = villageMap.get_layer_by_name("collision")
-tiles = []
 
 
-class Player:
-    def __init__(self, x, y):
-        playerIMG = pygame.image.load("source/img/player.png")
-        self.image = pygame.transform.scale(playerIMG, (tileSize + 12, tileSize * 2))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.speed = 3
-
-        self.collision_rect = (
-            pygame.Rect(  # Adjust collision box to be smaller than the sprite
-                0, 0, self.rect.width, self.rect.height * 0.5
-            )
-        )  # Make the box smaller
-        self.collision_rect.midbottom = (
-            self.rect.midbottom
-        )  # Place it at the bottom center
-
-    def is_collision(self, rect):
-        return rect.collidelist(tiles) != -1
-
-    def walk_particles(self):
-        if random.random() < 0.3:
-            x = self.rect.x + self.image.get_width() // 2
-            y = self.rect.y + self.image.get_height()
-
-            velocity_x = random.uniform(-0.2, 0.2)  # Lower velocity values
-            velocity_y = random.uniform(-0.2, 0.2)  # Lower velocity values
-            color = (
-                random.randint(100, 165),
-                random.randint(50, 115),
-                random.randint(10, 45),
-            )  # Brown color
-
-            new_particle = Particle(
-                x, y, velocity_x, velocity_y, color, random.randint(2, 6)
-            )
-            particles.append(new_particle)
-
-    def movement(self):
-        key = pygame.key.get_pressed()
-        dx, dy = 0, 0  # Changes in x and y
-        # Change 'elif' to 'if' for all directions
-        if key[pygame.K_a]:
-            dx -= 1
-        if key[pygame.K_d]:
-            dx += 1
-        if key[pygame.K_w]:
-            dy -= 1
-        if key[pygame.K_s]:
-            dy += 1
-
-        # Normalize direction vector for consistent speed
-        if dx != 0 or dy != 0:
-            dist = math.hypot(dx, dy)
-            dx, dy = dx / dist, dy / dist  # Normalize the speed
-            dx *= self.speed
-            dy *= self.speed
-            if self.speed != 0:
-                self.walk_particles()
-
-        # Draw player
-        gameScreen.blit(self.image, self.rect)
-        # pygame.draw.rect(gameScreen, (255, 0, 0), self.collision_rect, 2)
-        # pygame.draw.rect(gameScreen, (0, 255, 0), self.rect, 2)
-
-        # Check for collisions before updating the player's position
-        if dx != 0:  # If there is a change in x
-            temp_rect = self.collision_rect.copy()
-            temp_rect.x += dx
-            if not self.is_collision(temp_rect):
-                self.rect.x += dx
-                self.collision_rect.x += dx  # Update collision box position
-
-        if dy != 0:  # If there is a change in y
-            temp_rect = self.collision_rect.copy()
-            temp_rect.y += dy
-            if not self.is_collision(temp_rect):
-                self.rect.y += dy
-                self.collision_rect.y += dy  # Update collision box position
+player = Player(400, 700, tileSize)
 
 
-player = Player(400, 700)
+def walk_particles(self):
+    if random.random() < 0.3:
+        x = self.rect.x + self.image.get_width() // 2
+        y = self.rect.y + self.image.get_height()
+
+        velocity_x = random.uniform(-0.2, 0.2)  # random velocity values
+        velocity_y = random.uniform(-0.2, 0.2)
+        color = (
+            random.randint(100, 165),
+            random.randint(50, 115),  # random brown colour
+            random.randint(10, 45),
+        )
+
+        new_particle = Particle(
+            x, y, velocity_x, velocity_y, color, random.randint(2, 6)
+        )
+        particles.append(new_particle)
 
 
 class Projectile:
@@ -132,7 +70,7 @@ class Projectile:
         self.speed = speed
         self.collided = False
 
-        self.lifespan = life  # lifespan in frames, adjust as needed
+        self.lifespan = life
 
     # update method
     def update(self):
@@ -175,7 +113,7 @@ class Projectile:
         return False
 
     def is_collision(self, rect):
-        return rect.collidelist(tiles) != -1
+        return rect.collidelist(collision_tiles) != -1
 
 
 class Explosion:
@@ -256,7 +194,7 @@ def drawAboveGroundLayer():
 def collisionSetup():
     for x, y, tile in collision.tiles():
         if tile:
-            tiles.append(
+            collision_tiles.append(
                 pygame.Rect(
                     [
                         (x * villageMap.tilewidth),
@@ -329,7 +267,7 @@ class Enemy:
             self.hit = False
 
     def is_collision(self, rect):
-        return rect.collidelist(tiles) != -1
+        return rect.collidelist(collision_tiles) != -1
 
     def update(self):
         if self.move_counter > 0:
@@ -387,7 +325,7 @@ run = True
 while run:
     clockObject.tick(60)
 
-    tiles = []  # Reset the list of collision tiles
+    collision_tiles = []  # Reset the list of collision tiles
     collisionSetup()  # Update the list of collision tiles
 
     drawGroundLayer2()
@@ -478,7 +416,11 @@ while run:
         enemy.draw()  # Draw the enemy
         enemy.shoot(player.rect.centerx, player.rect.centery)
 
-    player.movement()  # Draw player
+    player.movement(collision_tiles, walk_particles)  # Draw player
+    # Draw player
+    gameScreen.blit(player.image, player.rect)
+    # pygame.draw.rect(gameScreen, (255, 0, 0), player.collision_rect, 2)
+    # pygame.draw.rect(gameScreen, (0, 255, 0), player.rect, 2)
 
     drawAboveGroundLayer()  # Draw above ground layer
 
