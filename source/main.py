@@ -5,13 +5,10 @@ import math
 
 from player import Player
 from particle import Particle
-from projectile import Projectile
-from explosion import Explosion
 from archer import Archer
 from dragon import Dragon
 from enemy import Enemy
-from projectile import Arrow
-from projectile import Spell
+from projectile import Arrow, Spell
 from explosion import SpellExplosion, ArrowExplosion
 from map import Map
 
@@ -60,10 +57,10 @@ map = Map(map_file, screenWidth, screenHeight)
 map.collisionSetup()
 
 # Create the enemy
-for _ in range(1):
+for _ in range(0):
     dragon = Dragon(250, 300, "source/img/dragon.png", 60, 1)
     enemies.append(dragon)
-for _ in range(0):
+for _ in range(1):
     archer = Archer(250, 400, "source/img/archer.png", 35, 1)
     enemies.append(archer)
 
@@ -75,7 +72,6 @@ explosion_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
 # Play the music indefinitely
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.4)
-# Inside your game loop
 projectiles = []
 particles = []
 explosions = []
@@ -217,13 +213,13 @@ while run:
                     fireball_sound.play()
 
                     mouse_x, mouse_y = pygame.mouse.get_pos()
-                    new_projectile = Arrow(
+                    new_projectile = Spell(
                         player.rect.centerx,
                         player.rect.centery,
                         mouse_x,
                         mouse_y,
-                        20,
-                        20,
+                        30,
+                        15,
                         player,
                         create_particle,  # Pass the callback function
                     )

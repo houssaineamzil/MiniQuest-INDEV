@@ -7,12 +7,12 @@ from projectile import Arrow
 
 class Archer(Enemy):
     PROJECTILE_LIFE = 20
-    PROJECTILE_SPEED = 20
+    PROJECTILE_SPEED = 15
 
     def __init__(self, x, y, image_path, size, hp):
         super().__init__(x, y, image_path, size, hp)
         self.next_shot_time = self.get_next_shot_time()
-        self.speed = 1.5
+        self.speed = 1.2
 
     def get_next_shot_time(self):
         # Generate a random interval
