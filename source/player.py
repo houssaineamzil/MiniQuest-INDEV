@@ -12,7 +12,8 @@ class Player:
         self.rect.x = x
         self.rect.y = y
         self.speed = 3
-
+        self.red_image = pygame.Surface(self.image.get_size()).convert_alpha()
+        self.red_image.fill((255, 0, 0))
         self.collision_rect = pygame.Rect(  # collision smaller than the sprite
             0, 0, self.rect.width, self.rect.height * 0.5
         )
@@ -22,6 +23,9 @@ class Player:
 
     def is_collision(self, rect, tiles):  # check for collision function
         return rect.collidelist(tiles) != -1
+
+    def hit_by_projectile(self):
+        self.image.blit(self.red_image, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
 
     def movement(self, tiles, walk_particles):
         key = pygame.key.get_pressed()
