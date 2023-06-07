@@ -9,8 +9,6 @@ from particle import Particle
 class Projectile:
     def __init__(
         self,
-        start_x,
-        start_y,
         target_x,
         target_y,
         life,
@@ -22,31 +20,33 @@ class Projectile:
         self.owner = owner
         self.image = pygame.image.load(
             "source/img/projectile.png"
-        )  # load your projectile image
-        self.image = pygame.transform.scale(
-            self.image, (20, 20)
-        )  # adjust to your desired size
+        )  # load projectile image
+        self.image = pygame.transform.scale(self.image, (20, 20))  # adjust size
+
+        # Calculate the start position from the owner's midbottom position
+        start_x, start_y = self.owner.rect.center
 
         # calculate the angle from the start to the target position
         dx = target_x - start_x
         dy = target_y - start_y
         self.angle = math.atan2(dy, dx)
 
-        # define a radius for the spawn circle
-        spawn_radius = 20  # adjust as necessary
+        # define a radius for the spawn circle of projectile
+        spawn_radius = 20  # adjust
 
         # calculate the offset position on the spawn circle
         spawn_x = start_x + spawn_radius * math.cos(self.angle)
         spawn_y = start_y + spawn_radius * math.sin(self.angle)
 
-        self.rect = self.image.get_rect()
-        self.rect.x = spawn_x
-        self.rect.y = spawn_y
-
+        self.rect = pygame.FRect(
+            spawn_x, spawn_y, self.image.get_width(), self.image.get_height()
+        )
+        self.rect.x = spawn_x - self.image.get_width() // 2
+        self.rect.y = spawn_y - self.image.get_height() // 2
         self.speed = speed
-        self.collided = False
-
         self.lifespan = life
+
+        self.collided = False
 
     # update method
     def update(self, tiles, screenWidth, screenHeight):
@@ -80,10 +80,12 @@ class Projectile:
             or self.rect.y < 0
             or self.rect.y > screenHeight
         ) or self.lifespan == 0:
+            self.hit_sound.play()
             return True
 
         # remove if it collides with something
         if self.is_collision(self.rect, tiles):
+            self.hit_sound.play()
             return True
         return False
 
@@ -96,16 +98,26 @@ class Spell(Projectile):
         super().__init__(*args, **kwargs)
         self.image = pygame.image.load("source/img/spell.png")  # load spell image
         self.image = pygame.transform.scale(self.image, (20, 20))  # scale image
+        self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
+        self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
+        self.shoot_sound.set_volume(0.4)
+        self.hit_sound.set_volume(0.4)
+        self.shoot_sound.play()
 
-    # you can override or add new methods unique to the spell here
+    # override or add new methods unique to the spell here
 
 
 class Arrow(Projectile):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.image = pygame.image.load("source/img/arrow.png")  # load arrow image
-        self.image = pygame.transform.scale(self.image, (30, 10))  # scale image
+        self.image = pygame.transform.scale(self.image, (25, 10))  # scale image
         self.image = pygame.transform.rotate(self.image, -math.degrees(self.angle))
+        self.shoot_sound = pygame.mixer.Sound("source/sound/arrowrelease.mp3")
+        self.hit_sound = pygame.mixer.Sound("source/sound/arrowimpact.mp3")
+        self.shoot_sound.set_volume(4)
+        self.hit_sound.set_volume(0.4)
+        self.shoot_sound.play()
 
     def update(self, tiles, screenWidth, screenHeight):
         center_x = self.rect.x + self.image.get_width() // 2
@@ -143,9 +155,11 @@ class Arrow(Projectile):
             or self.rect.y < 0
             or self.rect.y > screenHeight
         ) or self.lifespan == 0:
+            self.hit_sound.play()
             return True
 
         # remove if it collides with something
         if self.is_collision(self.rect, tiles):
+            self.hit_sound.play()
             return True
         return False

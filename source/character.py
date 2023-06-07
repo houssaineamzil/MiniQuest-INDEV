@@ -9,7 +9,7 @@ class Character:
         self.original_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(self.original_image, (size, size))
         self.rect = self.image.get_rect()
-        self.rect.x = x
+        self.rect = pygame.FRect(x, y, size, size)
         self.rect.y = y
         self.hp = hp
         self.hit = False

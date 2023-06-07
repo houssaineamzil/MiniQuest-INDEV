@@ -7,20 +7,19 @@ from projectile import Arrow
 
 class Archer(Enemy):
     PROJECTILE_LIFE = 20
-    PROJECTILE_SPEED = 15
+    PROJECTILE_SPEED = 20
 
     def __init__(self, x, y, image_path, size, hp):
         super().__init__(x, y, image_path, size, hp)
         self.next_shot_time = self.get_next_shot_time()
-        self.speed = 1.2
+        self.speed = 1.4
 
     def get_next_shot_time(self):
-        # Generate a random interval
         return pygame.time.get_ticks() + random.randint(500, 1000)
 
     def shoot(self, target_x, target_y, projectiles, create_particle):
         current_time = pygame.time.get_ticks()
-        if current_time >= self.next_shot_time:
+        if current_time >= self.next_shot_time and self.canshoot:
             new_projectile = Arrow(
                 self.rect.centerx,
                 self.rect.centery,

@@ -8,24 +8,33 @@ class Player:
     def __init__(self, x, y, tileSize):
         playerIMG = pygame.image.load("source/img/player.png")
         self.image = pygame.transform.scale(playerIMG, (tileSize + 12, tileSize * 2))
-        self.rect = self.image.get_rect()
+        self.rect = pygame.FRect(x, y, tileSize + 12, tileSize * 2)
         self.rect.x = x
         self.rect.y = y
-        self.speed = 3
+        self.speed = 4
         self.red_image = pygame.Surface(self.image.get_size()).convert_alpha()
         self.red_image.fill((255, 0, 0))
-        self.collision_rect = pygame.Rect(  # collision smaller than the sprite
-            0, 0, self.rect.width - 3, self.rect.height * 0.5
+        self.collision_rect = pygame.FRect(  # collision smaller than the sprite
+            0, 0, self.rect.width - 3, self.rect.height * 0.25
         )
         self.collision_rect.midbottom = (
             self.rect.midbottom
         )  # place it at the bottom center
+        self.canshoot = True
 
     def is_collision(self, rect, tiles):  # check for collision function
         return rect.collidelist(tiles) != -1
 
     def hit_by_projectile(self):
         self.image.blit(self.red_image, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
+
+    def drawRects(self, gameScreen):
+        pygame.draw.rect(
+            gameScreen, (255, 0, 0), self.rect, 2
+        )  # draws player rectangle in red
+        pygame.draw.rect(
+            gameScreen, (0, 255, 0), self.collision_rect, 2
+        )  # draws collision rectangle in green
 
     def movement(self, tiles, walk_particles, screen_width, screen_height):
         key = pygame.key.get_pressed()

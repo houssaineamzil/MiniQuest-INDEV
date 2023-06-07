@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="22">
- <tileset firstgid="1" source="../village.tsx"/>
- <tileset firstgid="1065" source="village.tsx"/>
+ <tileset firstgid="1" source="village.tsx"/>
+ <tileset firstgid="1065" source="houses.tsx"/>
  <layer id="11" name="collision" width="25" height="25">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,8,0,0,0,0,0,
@@ -31,7 +31,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="13" name="ground2" width="25" height="25">
+ <layer id="13" name="floor" width="25" height="25">
   <data encoding="csv">
 0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,
 0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,1,0,
@@ -119,7 +119,7 @@
 </data>
  </layer>
  <objectgroup id="15" name="portal">
-  <object id="18" name="path,560,750" x="544.125" y="0.25" width="63.875" height="5.11364"/>
-  <object id="21" name="inn,365,510" x="193.5" y="222.5" width="31" height="13"/>
+  <object id="18" name="path,575,790" x="544.125" y="0.25" width="63.875" height="5.11364"/>
+  <object id="21" name="inn,383,545" x="193.5" y="222.5" width="31" height="13"/>
  </objectgroup>
 </map>

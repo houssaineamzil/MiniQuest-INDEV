@@ -13,7 +13,7 @@ class Enemy(Character):
         self.move_counter = 0
         self.direction = 0
         self.last_shot = 0
-        self.can_shoot = True
+        self.canshoot = True
 
     def ai_move(self, collision_tiles, screen_width, screen_height):
         if self.move_counter > 0:
@@ -40,7 +40,7 @@ class Enemy(Character):
         projectile_life,
         projectile_speed,
     ):
-        if self.can_shoot:
+        if self.canshoot:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:
                 self.last_shot = current_time

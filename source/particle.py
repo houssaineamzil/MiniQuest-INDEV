@@ -8,7 +8,7 @@ class Particle:
     def __init__(self, start_x, start_y, velocity_x, velocity_y, color, size):
         self.image = pygame.Surface((size, size))  # adjust to your desired size
         self.image.fill(color)
-        self.rect = self.image.get_rect()
+        self.rect = pygame.FRect(start_x, start_y, size, size)
         self.rect.center = (start_x, start_y)
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y

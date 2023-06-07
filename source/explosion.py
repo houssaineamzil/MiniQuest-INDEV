@@ -25,7 +25,6 @@ class Explosion:
             if explosion_particle.update():
                 self.particles.remove(explosion_particle)
 
-        # if all particles are gone, the explosion is done
         return len(self.particles) == 0
 
 
@@ -41,7 +40,7 @@ class ArrowExplosion(Explosion):
                     random.randint(100, 150),
                     random.randint(100, 150),
                     random.randint(100, 150),
-                ),  # different color
+                ),
                 random.randint(2, 4),
             )
             for _ in range(20)
@@ -60,8 +59,8 @@ class SpellExplosion(Explosion):
                     random.randint(200, 255),
                     random.randint(50, 100),
                     0,
-                ),  # different color
-                random.randint(3, 7),
+                ),
+                random.randint(3, 6),
             )
-            for _ in range(50)  # different number of particles
+            for _ in range(20)
         ]

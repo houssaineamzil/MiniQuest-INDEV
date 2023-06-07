@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="houses" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
- <image source="houses.png" width="1024" height="1024"/>
+<tileset version="1.4" tiledversion="1.4.3" name="village" tilewidth="32" tileheight="32" tilecount="1064" columns="8">
+ <image source="../../../Coding/Python/Projects/MiniQuest/source/tile/village.png" width="256" height="4256"/>
 </tileset>

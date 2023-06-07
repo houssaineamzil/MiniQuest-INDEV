@@ -2,32 +2,199 @@ import random
 import pygame
 import pytmx
 import math
+from player import Player
+from particle import Particle
+from archer import Archer
+from dragon import Dragon
+from enemy import Enemy
+from projectile import Arrow, Spell
+from explosion import SpellExplosion, ArrowExplosion
 
 
 class Map:
-    def __init__(self, file, screenWidth, screenHeight):
-        self.map = pytmx.load_pygame(file, pixelalpha=True)
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
+    def __init__(self, map_file, screen_width, screen_height):
+        self.map_file = map_file
+        self.map_data = pytmx.load_pygame(map_file)
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.enemies = []
+        self.projectiles = []
+        self.portals = []
+        self.particles = []
+        self.explosions = []
         self.collision_tiles = []
-        self.portals = {}  # Dictionary linking portals to map files
+
+    def add_enemy(self, enemy):
+        self.enemies.append(enemy)
+
+    def add_particle(self, particle):
+        self.particles.append(particle)
+
+    def add_projectile(self, projectile):
+        self.projectiles.append(projectile)
+
+    def remove_enemy(self, enemy):
+        if enemy in self.enemies:
+            self.enemies.remove(enemy)
+
+    def remove_projectile(self, projectile):
+        if projectile in self.projectiles:
+            self.projectiles.remove(projectile)
+
+    def update(
+        self,
+        gameScreen,
+        player,
+    ):
+        for portal in self.portals:
+            if player.collision_rect.colliderect(portal.rect):
+                self.change_map("source/tile/" + portal.map_file + ".tmx")
+
+                # Update the player's position
+                player.rect.midbottom = (portal.destination[0], portal.destination[1])
+                player.collision_rect.midbottom = (
+                    portal.destination[0],
+                    portal.destination[1],
+                )
+                self.add_enemy(Dragon(250, 300, "source/img/dragon.png", 50, 5))
+                break
+
+        for enemy in self.enemies:  # Loop over each enemy in the list
+            if isinstance(enemy, Archer):
+                enemy.ai_move(
+                    self.collision_tiles,
+                    self.screen_width,
+                    self.screen_height,
+                    player.rect.centerx,
+                    player.rect.centery,
+                )
+            else:
+                enemy.ai_move(
+                    self.collision_tiles, self.screen_width, self.screen_height
+                )
+            enemy.draw(gameScreen)
+            enemy.shoot(
+                player.rect.centerx,
+                player.rect.centery,
+                self.projectiles,
+                self.add_particle,
+            )
+
+            for projectile in self.projectiles:
+                if enemy.rect.colliderect(projectile.rect) and not isinstance(
+                    projectile.owner, Enemy
+                ):
+                    enemy.take_damage()
+                    if isinstance(projectile, Arrow):
+                        self.explosions.append(
+                            ArrowExplosion(
+                                projectile.rect.centerx, projectile.rect.centery
+                            )
+                        )
+                    elif isinstance(projectile, Spell):
+                        self.explosions.append(
+                            SpellExplosion(
+                                projectile.rect.centerx, projectile.rect.centery
+                            )
+                        )
+
+                    if (
+                        projectile in self.projectiles
+                    ):  # Check if projectile still exists in the list
+                        self.projectiles.remove(projectile)
+                    if enemy.hp <= 0:
+                        self.enemies.remove(enemy)  # Remove enemy from the list
+                        break
+
+        for projectile in self.projectiles:
+            if (
+                player.rect.colliderect(projectile.rect)
+                and projectile.owner is not player
+            ):
+                for enemy in self.enemies:
+                    enemy.canshoot = False
+                # Disable player movement
+                player.speed = 0
+                player.canshoot = False
+
+                # Remove the projectile
+                self.projectiles.remove(projectile)
+                # Stop shooting
+                canshoot = False
+                player.hit_by_projectile()
+                player.image = pygame.transform.rotate(
+                    player.image, -90
+                )  # rotate 90 degrees clockwise
+
+                if (
+                    projectile in self.projectiles
+                ):  # Check if projectile still exists in the list
+                    self.projectiles.remove(projectile)
+
+            if projectile.update(
+                self.collision_tiles, self.screen_width, self.screen_height
+            ):
+                if isinstance(projectile, Arrow):
+                    self.explosions.append(
+                        ArrowExplosion(projectile.rect.centerx, projectile.rect.centery)
+                    )
+                elif isinstance(projectile, Spell):
+                    self.explosions.append(
+                        SpellExplosion(projectile.rect.centerx, projectile.rect.centery)
+                    )
+                if (
+                    projectile in self.projectiles
+                ):  # Check if projectile still exists in the list
+                    self.projectiles.remove(projectile)
+            else:
+                gameScreen.blit(projectile.image, projectile.rect)
+
+        for particle in list(self.particles):  # Iterate over a copy of the list
+            if particle.update():
+                if (
+                    particle in self.particles
+                ):  # Check if particle still exists in the list
+                    self.particles.remove(particle)
+            else:
+                gameScreen.blit(particle.image, particle.rect)
+
+        for explosion in list(self.explosions):  # Iterate over a copy of the list
+            if explosion.update():
+                if (
+                    explosion in self.explosions
+                ):  # Check if explosion still exists in the list
+                    self.explosions.remove(explosion)
+            else:
+                for particle in explosion.particles:
+                    gameScreen.blit(particle.image, particle.rect)
+
+    def change_map(self, map_file):
+        self.map_file = map_file
+        self.map_data = pytmx.load_pygame(map_file)  # Load the new map data
+        self.collisionSetup()  # Update the list of collision tiles
+        self.enemies.clear()  # Remove any existing enemies
+        self.projectiles.clear()  # Remove any existing projectiles
+        self.particles.clear()  # Remove any existing particles
+        self.explosions.clear()  # Remove any existing explosions
 
     def collisionSetup(self):
-        collision = self.map.get_layer_by_name("collision")
-        for x, y, gid in collision:
+        collision_layer = self.map_data.get_layer_by_name("collision")
+        self.collision_tiles = []
+        for x, y, gid in collision_layer:
             if gid:  # Check if the tile exists
                 self.collision_tiles.append(
                     pygame.Rect(
-                        x * self.map.tilewidth,
-                        y * self.map.tileheight,
-                        self.map.tilewidth,
-                        self.map.tileheight,
+                        x * self.map_data.tilewidth,
+                        y * self.map_data.tileheight,
+                        self.map_data.tilewidth,
+                        self.map_data.tileheight,
                     )
                 )
 
         self.portals = []
-        for layer in self.map.visible_layers:
+        for layer in self.map_data.visible_layers:
             if isinstance(layer, pytmx.TiledObjectGroup):
+                print("append map.portals[]")
                 if layer.name == "portal":
                     for obj in layer:
                         if obj.name is not None:  # check if name is not None
@@ -46,28 +213,52 @@ class Map:
                             )
 
     def drawGroundLayer(self, gameScreen):
-        ground_layer = self.map.get_layer_by_name("ground")
+        ground_layer = self.map_data.get_layer_by_name("ground")
 
         for x, y, gid in ground_layer:
-            tile = self.map.get_tile_image_by_gid(gid)
+            tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                gameScreen.blit(tile, (x * self.map.tilewidth, y * self.map.tileheight))
+                gameScreen.blit(
+                    tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
+                )
 
-    def drawGroundLayer2(self, gameScreen):
-        ground_layer = self.map.get_layer_by_name("ground2")
+    def drawFloorLayer(self, gameScreen):
+        ground_layer = self.map_data.get_layer_by_name("floor")
 
         for x, y, gid in ground_layer:
-            tile = self.map.get_tile_image_by_gid(gid)
+            tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                gameScreen.blit(tile, (x * self.map.tilewidth, y * self.map.tileheight))
+                gameScreen.blit(
+                    tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
+                )
 
     def drawAboveGroundLayer(self, gameScreen):
-        above_ground_layer = self.map.get_layer_by_name("above_ground")
+        above_ground_layer = self.map_data.get_layer_by_name("above_ground")
 
         for x, y, gid in above_ground_layer:
-            tile = self.map.get_tile_image_by_gid(gid)
+            tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                gameScreen.blit(tile, (x * self.map.tilewidth, y * self.map.tileheight))
+                gameScreen.blit(
+                    tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
+                )
+
+    def walk_particles(self, player):
+        if random.random() < 0.3:
+            x = player.rect.x + player.image.get_width() // 2
+            y = player.rect.y + player.image.get_height()
+
+            velocity_x = random.uniform(-0.2, 0.2)  # random velocity values
+            velocity_y = random.uniform(-0.2, -0.1)
+            color = (
+                random.randint(100, 165),
+                random.randint(50, 115),  # random brown colour
+                random.randint(10, 45),
+            )
+
+            new_particle = Particle(
+                x, y, velocity_x, velocity_y, color, random.randint(2, 6)
+            )
+            self.particles.append(new_particle)
 
 
 class Portal:
