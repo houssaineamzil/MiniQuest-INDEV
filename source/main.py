@@ -32,7 +32,7 @@ map = Map(map_file, screenWidth, screenHeight)
 map.collisionSetup()
 
 
-map.add_enemy(Dragon(250, 300, "source/img/dragon.png", 50, 3))  # Create enemy
+map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 2))  # Create enemy
 
 
 pygame.mixer.music.load("source/sound/music.wav")  # Load music and sounds

@@ -12,7 +12,7 @@ class Archer(Enemy):
     def __init__(self, x, y, image_path, size, hp):
         super().__init__(x, y, image_path, size, hp)
         self.next_shot_time = self.get_next_shot_time()
-        self.speed = 1.4
+        self.speed = 1.2
 
     def get_next_shot_time(self):
         return pygame.time.get_ticks() + random.randint(500, 1000)
@@ -21,8 +21,6 @@ class Archer(Enemy):
         current_time = pygame.time.get_ticks()
         if current_time >= self.next_shot_time and self.canshoot:
             new_projectile = Arrow(
-                self.rect.centerx,
-                self.rect.centery,
                 target_x,
                 target_y,
                 self.PROJECTILE_LIFE,

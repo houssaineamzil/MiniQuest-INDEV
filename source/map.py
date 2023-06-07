@@ -242,10 +242,10 @@ class Map:
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
-    def walk_particles(self, player):
+    def walk_particles(self, entity):
         if random.random() < 0.3:
-            x = player.rect.x + player.image.get_width() // 2
-            y = player.rect.y + player.image.get_height()
+            x = entity.rect.x + entity.image.get_width() // 2
+            y = entity.rect.y + entity.image.get_height()
 
             velocity_x = random.uniform(-0.2, 0.2)  # random velocity values
             velocity_y = random.uniform(-0.2, -0.1)
