@@ -56,7 +56,11 @@ class Map:
                     portal.destination[0],
                     portal.destination[1],
                 )
-                self.add_enemy(Dragon(250, 300, "source/img/dragon.png", 50, 5))
+                # self.add_enemy(Dragon(250, 300, "source/img/dragon.png", 50, 5))
+                if portal.map_file == "path":
+                    self.add_enemy(
+                        Archer(100, 100, "source/img/archer.png", 30, 2)
+                    )  # Create enemy
                 break
 
         for enemy in self.enemies:  # Loop over each enemy in the list
@@ -178,23 +182,10 @@ class Map:
         self.explosions.clear()  # Remove any existing explosions
 
     def collisionSetup(self):
-        collision_layer = self.map_data.get_layer_by_name("collision")
         self.collision_tiles = []
-        for x, y, gid in collision_layer:
-            if gid:  # Check if the tile exists
-                self.collision_tiles.append(
-                    pygame.Rect(
-                        x * self.map_data.tilewidth,
-                        y * self.map_data.tileheight,
-                        self.map_data.tilewidth,
-                        self.map_data.tileheight,
-                    )
-                )
-
         self.portals = []
         for layer in self.map_data.visible_layers:
             if isinstance(layer, pytmx.TiledObjectGroup):
-                print("append map.portals[]")
                 if layer.name == "portal":
                     for obj in layer:
                         if obj.name is not None:  # check if name is not None
@@ -211,6 +202,10 @@ class Map:
                             self.portals.append(
                                 Portal(portal_rect, map_file, destination)
                             )
+            if layer.name == "collision":
+                for obj in layer:
+                    collision_rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                    self.collision_tiles.append(collision_rect)
 
     def drawGroundLayer(self, gameScreen):
         ground_layer = self.map_data.get_layer_by_name("ground")
@@ -247,8 +242,8 @@ class Map:
             x = entity.rect.x + entity.image.get_width() // 2
             y = entity.rect.y + entity.image.get_height()
 
-            velocity_x = random.uniform(-0.2, 0.2)  # random velocity values
-            velocity_y = random.uniform(-0.2, -0.1)
+            velocity_x = random.uniform(-0.3, 0.3)  # random velocity values
+            velocity_y = random.uniform(-0.3, -0.3)
             color = (
                 random.randint(100, 165),
                 random.randint(50, 115),  # random brown colour
@@ -256,7 +251,7 @@ class Map:
             )
 
             new_particle = Particle(
-                x, y, velocity_x, velocity_y, color, random.randint(2, 6)
+                x, y, velocity_x, velocity_y, color, random.randint(2, 4)
             )
             self.particles.append(new_particle)
 

@@ -24,7 +24,7 @@ pygame.display.set_caption("MiniQuest")
 clockObject = pygame.time.Clock()
 
 
-player = Player(400, 700, tileSize)  # Load player
+player = Player(400, 400, tileSize)  # Load players
 
 
 map_file = "source/tile/village.tmx"  # Starting map
@@ -32,14 +32,14 @@ map = Map(map_file, screenWidth, screenHeight)
 map.collisionSetup()
 
 
-map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 2))  # Create enemy
+# map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 2))  # Create enemy
 
 
 pygame.mixer.music.load("source/sound/music.wav")  # Load music and sounds
 pygame.mixer.music.play(
     -1
 )  # Play the music forever - Todo: add different music for every map
-pygame.mixer.music.set_volume(0)
+pygame.mixer.music.set_volume(0.1)
 run = True
 while run:
     clockObject.tick(60)
@@ -55,7 +55,9 @@ while run:
 
     gameScreen.blit(player.image, player.rect)  # Uodate the player
     map.drawAboveGroundLayer(gameScreen)  # Draw above ground layer
+
     # player.drawRects(gameScreen)  # debug
+
     for event in pygame.event.get():  # check for player inputs - Todo: extract methods
         if event.type == pygame.QUIT:
             run = False
@@ -67,10 +69,10 @@ while run:
                     >= 1000  # Checks if it's been 1 second (1000 ms) since the last shot
                 ):
                     mouse_x, mouse_y = pygame.mouse.get_pos()
-                    new_projectile = Arrow(  # create the new projectile
+                    new_projectile = Spell(  # create the new projectile
                         mouse_x,
                         mouse_y,
-                        35,
+                        20,
                         10,
                         player,
                         map.add_particle,  # Pass the callback function

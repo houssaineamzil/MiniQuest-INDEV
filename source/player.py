@@ -11,7 +11,7 @@ class Player:
         self.rect = pygame.FRect(x, y, tileSize + 12, tileSize * 2)
         self.rect.x = x
         self.rect.y = y
-        self.speed = 4
+        self.speed = 3
         self.red_image = pygame.Surface(self.image.get_size()).convert_alpha()
         self.red_image.fill((255, 0, 0))
         self.collision_rect = pygame.FRect(  # collision smaller than the sprite
@@ -55,8 +55,6 @@ class Player:
             dx, dy = dx / dist, dy / dist  # Normalize the speed
             dx *= self.speed
             dy *= self.speed
-            if self.speed != 0:
-                walk_particles(self)
 
         # Check for collisions before updating the player's position
         if dx != 0:  # If there is a change in x
@@ -70,6 +68,9 @@ class Player:
             ):
                 self.rect.x += dx
                 self.collision_rect.x += dx  # Update collision box position
+                walk_particles(
+                    self
+                )  # Call walk_particles function when the position changes
 
         if dy != 0:  # If there is a change in y
             temp_rect = self.collision_rect.copy()
@@ -82,3 +83,6 @@ class Player:
             ):
                 self.rect.y += dy
                 self.collision_rect.y += dy  # Update collision box position
+                walk_particles(
+                    self
+                )  # Call walk_particles function when the position changes
