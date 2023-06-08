@@ -1,8 +1,4 @@
-Welcome to MiniQuest, a  top-down adventure game where  the journey is full of unexpected twists and turns. Play as a village farmer thrown into a heroic journey after a dragon attack devastates your peaceful life. Brace yourself for an epic quest around the world to seek justice, find courage, and make new allies.
-
-## About MiniQuest
-
-MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical thinking, and reflexes. As you journey across a richly detailed world, you'll uncover hidden secrets, acquire new skills, and make unlikely friends. Your choices matter, shaping the narrative and leading to different outcomes.
+Welcome to MiniQuest, a  top-down adventure game where  the journey is full of unexpected twists and turns. Play as a village farmer thrown into a heroic journey after a dragon attack devastates your peaceful life.
 
 Discord: https://discord.gg/KCNbfKsX
 
