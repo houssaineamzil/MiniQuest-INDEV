@@ -8,6 +8,8 @@ Welcome to MiniQuest, a  top-down adventure game where  the journey is full of u
 
 MiniQuest is a thrilling top-down RPG that tests your strategic skills, critical thinking, and reflexes. As you journey across a richly detailed world, you'll uncover hidden secrets, acquire new skills, and make unlikely friends. Your choices matter, shaping the narrative and leading to different outcomes.
 
+Discord: https://discord.gg/KCNbfKsX
+
 ## Gameplay
 ### Mechanics
 The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs around the world, talk to NPCS, cast spells, complete quests and slay monsters.
