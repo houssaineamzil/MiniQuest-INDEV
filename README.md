@@ -3,8 +3,10 @@ Welcome to MiniQuest, a  top-down adventure game where  the journey is full of u
 Discord: https://discord.gg/KCNbfKsX
 
 ## Gameplay
-### Mechanics
+### Overview
 The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs around the world, talk to NPCS, cast spells, complete quests and slay monsters.
+
+There will be 50 to 100 maps to explore. The game will feature a main storyline, but can also be played as open world.
 
 ### Controls
 The player can move their character using the WASD keys. W moves the character forward, A moves them left, S moves them backward, and D moves them to the right. 
