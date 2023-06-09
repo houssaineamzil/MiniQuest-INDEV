@@ -1,6 +1,6 @@
 # game.py
 import pygame
-import pickle
+import os
 from map import Map
 from player import Player
 from projectile import Arrow
@@ -31,14 +31,6 @@ class Game:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
 
-    def save_map(self, map_filename):
-        with open(map_filename, "wb") as f:
-            pickle.dump(self.map, f)
-
-    def load_map(self, map_filename):
-        with open(map_filename, "rb") as f:
-            self.map = pickle.load(f)
-
     def run(self):
         run = True
         while run:
@@ -58,7 +50,12 @@ class Game:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    run = False
+                    print("Current Working Directory:", os.getcwd())
+                    for file in os.listdir("source/tile"):
+                        if file.endswith(".pkl"):
+                            os.remove(os.path.join("source/tile", file))
+                        run = False
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1 & self.player.canshoot:
                         current_time = pygame.time.get_ticks()

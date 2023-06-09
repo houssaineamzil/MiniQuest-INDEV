@@ -5,9 +5,9 @@ import math
 
 
 class Character:
-    def __init__(self, x, y):
+    def __init__(self, x, y, hp):
         self.size = 20
-        self.hp = 1
+        self.hp = hp
         self.speed = 1
 
         self.original_image = pygame.image.load("source/img/skeleton.png")
@@ -19,13 +19,13 @@ class Character:
 
     def move(self, dx, dy, collision_tiles, screen_width, screen_height):
         temp_rect = self.rect.copy()
-        temp_rect.x += dx * self.speed  # multiply delta x by speed
-        temp_rect.y += dy * self.speed  # multiply delta y by speed
+        temp_rect.x += dx * self.speed
+        temp_rect.y += dy * self.speed
         if not self.is_collision(temp_rect, collision_tiles) and self.is_in_screen(
             temp_rect, screen_width, screen_height
         ):
-            self.rect.x += dx * self.speed  # multiply delta x by speed
-            self.rect.y += dy * self.speed  # multiply delta y by speed
+            self.rect.x += dx * self.speed
+            self.rect.y += dy * self.speed
 
     def is_collision(self, rect, collision_tiles):
         return rect.collidelist(collision_tiles) != -1

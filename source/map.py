@@ -1,7 +1,9 @@
 import random
+import os
 import pygame
 import pytmx
 import math
+import pickle
 from player import Player
 from particle import Particle
 from archer import Archer
@@ -14,6 +16,7 @@ from explosion import SpellExplosion, ArrowExplosion, Explosion
 class Map:
     def __init__(self, map_file, screen_width, screen_height):
         self.map_file = map_file
+        self.map_data = pytmx.load_pygame(map_file)
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.enemies = []
@@ -22,14 +25,16 @@ class Map:
         self.particles = []
         self.explosions = []
         self.collision_tiles = []
-        self.change_map(map_file)
+        self.spawn_enemies()
 
     def spawn_enemies(self):
         self.enemy_objects = self.map_data.get_layer_by_name("enemies")
         for obj in self.enemy_objects:
             try:
                 enemy_class = globals()[obj.name]
-                enemy = enemy_class(obj.x + obj.width // 2, obj.y + obj.height // 2)
+                enemy = enemy_class(
+                    obj.x + obj.width / 2, obj.y + obj.height / 2, obj.hp
+                )
                 self.add_enemy(enemy)
             except KeyError:
                 print(f"Warning: Unknown enemy type {obj.name}")
@@ -144,15 +149,25 @@ class Map:
                 for particle in explosion.particles:
                     game_screen.blit(particle.image, particle.rect)
 
-    def change_map(self, map_file):
-        self.map_file = map_file
-        self.map_data = pytmx.load_pygame(map_file)
+    def change_map(self, new_map_file):
+        self.save_state(self.map_file + ".pkl")
+
+        self.map_file = new_map_file
+        self.map_data = pytmx.load_pygame(new_map_file)
         self.collisionSetup()
-        self.enemies.clear()
         self.projectiles.clear()
         self.particles.clear()
         self.explosions.clear()
-        self.spawn_enemies()
+        self.enemies.clear()  # clear the enemies list
+
+        self.load_state(new_map_file + ".pkl")
+        if (
+            not os.path.exists(new_map_file + ".pkl")
+            or os.path.getsize(new_map_file + ".pkl") == 0
+        ):
+            self.spawn_enemies()
+        else:
+            self.load_state(new_map_file + ".pkl")
 
     def collisionSetup(self):
         self.collision_tiles = []
@@ -223,6 +238,31 @@ class Map:
                 x, y, velocity_x, velocity_y, color, random.randint(2, 4)
             )
             self.add_particle(particle)
+
+    def save_state(self, state_filename):
+        state = {
+            "enemies": [
+                (type(enemy).__name__, enemy.rect.x, enemy.rect.y, enemy.hp)
+                for enemy in self.enemies
+            ],
+        }
+        with open(state_filename, "wb") as f:
+            pickle.dump(state, f)
+        print(f"State saved in {state_filename}")
+
+    def load_state(self, state_filename):
+        if not os.path.exists(state_filename) or os.path.getsize(state_filename) == 0:
+            print(f"File {state_filename} not found or empty.")
+            return
+
+        with open(state_filename, "rb") as f:
+            state = pickle.load(f)
+
+        self.enemies = []
+        for enemy_info in state["enemies"]:
+            class_name, x, y, hp = enemy_info
+            enemy_class = globals()[class_name]
+            self.enemies.append(enemy_class(x, y, hp))
 
 
 class Portal:

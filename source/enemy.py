@@ -8,11 +8,11 @@ from projectile import Projectile
 
 
 class Enemy(Character):
-    PROJECTILE_LIFE = 20  # Lifetime of the arrow projectile
-    PROJECTILE_SPEED = 20  # Speed of the arrow projectile
+    PROJECTILE_LIFE = 20
+    PROJECTILE_SPEED = 20
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, hp):
+        super().__init__(x, y, hp)
         self.move_counter = 0
         self.direction = 0
         self.last_shot = 0
@@ -44,11 +44,11 @@ class Enemy(Character):
             if current_time - self.last_shot >= 1000:
                 self.last_shot = current_time
                 self.projectile = Projectile(
-                    target_x,  # target x
-                    target_y,  # target y
-                    self.PROJECTILE_LIFE,  # speed
-                    self.PROJECTILE_SPEED,  # damage
-                    self,  # owner
+                    target_x,
+                    target_y,
+                    self.PROJECTILE_LIFE,
+                    self.PROJECTILE_SPEED,
+                    self,
                 )
                 return True
         return False

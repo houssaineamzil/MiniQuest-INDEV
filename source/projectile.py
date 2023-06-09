@@ -19,25 +19,19 @@ class Projectile:
         owner=None,
     ):
         self.owner = owner
-        self.image = pygame.image.load(
-            "source/img/projectile.png"
-        )  # load projectile image
-        self.image = pygame.transform.scale(self.image, (20, 20))  # adjust size
+        self.image = pygame.image.load("source/img/projectile.png")
+        self.image = pygame.transform.scale(self.image, (20, 20))
         self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
         self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
 
-        # Calculate the start position from the owner's midbottom position
         start_x, start_y = self.owner.rect.center
 
-        # calculate the angle from the start to the target position
         dx = target_x - start_x
         dy = target_y - start_y
         self.angle = math.atan2(dy, dx)
 
-        # define a radius for the spawn circle of projectile
-        spawn_radius = 20  # adjust
+        spawn_radius = 20
 
-        # calculate the offset position on the spawn circle
         spawn_x = start_x + spawn_radius * math.cos(self.angle)
         spawn_y = start_y + spawn_radius * math.sin(self.angle)
 
@@ -64,7 +58,6 @@ class Projectile:
 
         self.lifespan -= 1
 
-        # remove if it leaves the screen or if lifespan is over
         if (
             (
                 self.rect.x < 0
@@ -88,7 +81,7 @@ class Projectile:
         )
         return False
 
-    def is_collision(self, rect, tiles):  # check for collision function
+    def is_collision(self, rect, tiles):
         return rect.collidelist(tiles) != -1
 
 
@@ -97,15 +90,13 @@ class Spell(Projectile):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.image = pygame.image.load("source/img/spell.png")  # load spell image
-        self.image = pygame.transform.scale(self.image, (20, 20))  # scale image
+        self.image = pygame.image.load("source/img/spell.png")
+        self.image = pygame.transform.scale(self.image, (20, 20))
         self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
         self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
         self.shoot_sound.set_volume(0.4)
         self.hit_sound.set_volume(0.4)
         self.shoot_sound.play()
-
-    # override or add new methods unique to the spell here
 
 
 class Arrow(Projectile):
@@ -113,8 +104,8 @@ class Arrow(Projectile):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.image = pygame.image.load("source/img/arrow.png")  # load arrow image
-        self.image = pygame.transform.scale(self.image, (25, 10))  # scale image
+        self.image = pygame.image.load("source/img/arrow.png")
+        self.image = pygame.transform.scale(self.image, (25, 10))
         self.image = pygame.transform.rotate(self.image, -math.degrees(self.angle))
         self.shoot_sound = pygame.mixer.Sound("source/sound/arrowrelease.mp3")
         self.hit_sound = pygame.mixer.Sound("source/sound/arrowimpact.mp3")
@@ -129,14 +120,11 @@ class Arrow(Projectile):
         velocity_x = random.uniform(-0.5, 0.5)
         velocity_y = random.uniform(-0.5, 0.5)
 
-        # update the position
         self.rect.x += self.speed * math.cos(self.angle)
         self.rect.y += self.speed * math.sin(self.angle)
 
-        # decrease lifespan
         self.lifespan -= 1
 
-        # remove if it leaves the screen or if lifespan is over
         if (
             self.rect.x < 0
             or self.rect.x > screenWidth
@@ -146,7 +134,6 @@ class Arrow(Projectile):
             self.hit_sound.play()
             return True
 
-        # remove if it collides with something
         if self.is_collision(self.rect, tiles):
             self.hit_sound.play()
             return True
@@ -158,7 +145,7 @@ class Arrow(Projectile):
             velocity_y,
             (
                 random.randint(200, 255),
-                random.randint(200, 255),  # white/silver color
+                random.randint(200, 255),
                 random.randint(200, 255),
             ),
             random.randint(2, 7),

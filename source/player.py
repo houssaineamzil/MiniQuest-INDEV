@@ -14,42 +14,33 @@ class Player:
         self.speed = 3
         self.red_image = pygame.Surface(self.image.get_size()).convert_alpha()
         self.red_image.fill((255, 0, 0))
-        self.collision_rect = pygame.FRect(  # collision smaller than the sprite
+        self.collision_rect = pygame.FRect(
             0, 0, self.rect.width - 3, self.rect.height * 0.25
         )
-        self.collision_rect.midbottom = (
-            self.rect.midbottom
-        )  # place it at the bottom center
+        self.collision_rect.midbottom = self.rect.midbottom
         self.canshoot = True
 
-    def is_collision(self, rect, tiles):  # check for collision function
+    def is_collision(self, rect, tiles):
         return rect.collidelist(tiles) != -1
 
     def hit_by_projectile(self):
         self.image.blit(self.red_image, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
         self.speed = 0
         self.canshoot = False
-        self.image = pygame.transform.rotate(
-            self.image, -90
-        )  # rotate 90 degrees clockwise
+        self.image = pygame.transform.rotate(self.image, -90)
 
     def teleport(self, x, y):
         self.rect.midbottom = (x, y)
         self.collision_rect.midbottom = (x, y)
 
     def drawRects(self, gameScreen):
-        pygame.draw.rect(
-            gameScreen, (255, 0, 0), self.rect, 2
-        )  # draws player rectangle in red
-        pygame.draw.rect(
-            gameScreen, (0, 255, 0), self.collision_rect, 2
-        )  # draws collision rectangle in green
+        pygame.draw.rect(gameScreen, (255, 0, 0), self.rect, 2)
+        pygame.draw.rect(gameScreen, (0, 255, 0), self.collision_rect, 2)
 
     def movement(self, tiles, screen_width, screen_height):
         self.moved = False
         key = pygame.key.get_pressed()
-        dx, dy = 0, 0  # Changes in x and y
-        # Change 'elif' to 'if' for all directions
+        dx, dy = 0, 0
         if key[pygame.K_a]:
             dx -= 1
         if key[pygame.K_d]:
@@ -59,37 +50,33 @@ class Player:
         if key[pygame.K_s]:
             dy += 1
 
-        # Normalize direction vector for consistent speed
         if dx != 0 or dy != 0:
             dist = math.hypot(dx, dy)
-            dx, dy = dx / dist, dy / dist  # Normalize the speed
+            dx, dy = dx / dist, dy / dist
             dx *= self.speed
             dy *= self.speed
 
-        # Check for collisions before updating the player's position
-        if dx != 0:  # If there is a change in x
+        if dx != 0:
             temp_rect = self.collision_rect.copy()
             temp_rect.x += dx
-            # Check for screen bounds
             if (
                 temp_rect.right <= screen_width
                 and temp_rect.left >= 0
                 and not self.is_collision(temp_rect, tiles)
             ):
                 self.rect.x += dx
-                self.collision_rect.x += dx  # Update collision box position
+                self.collision_rect.x += dx
                 self.moved = True
 
-        if dy != 0:  # If there is a change in y
+        if dy != 0:
             temp_rect = self.collision_rect.copy()
             temp_rect.y += dy
-            # Check for screen bounds
             if (
                 temp_rect.bottom <= screen_height
                 and temp_rect.top >= 0
                 and not self.is_collision(temp_rect, tiles)
             ):
                 self.rect.y += dy
-                self.collision_rect.y += dy  # Update collision box position
+                self.collision_rect.y += dy
                 self.moved = True
         return self.moved
