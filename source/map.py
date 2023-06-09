@@ -61,6 +61,7 @@ class Map:
             if player.collision_rect.colliderect(portal.rect):
                 self.change_map("source/tile/" + portal.map_file + ".tmx")
                 player.teleport(portal.destination[0], portal.destination[1])
+                self.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 2))
                 break
 
         for enemy in self.enemies:  # Loop over each enemy in the list

@@ -31,7 +31,7 @@ map = Map(map_file, screenWidth, screenHeight)
 map.collisionSetup()
 
 
-map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 1))  # Create enemy
+# map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 1))  # Create enemy
 
 
 pygame.mixer.music.load("source/sound/music.wav")  # Load music
@@ -48,9 +48,10 @@ while run:
     # Map handles update of its entities
     map.update(gameScreen, player)
 
-    player.movement(  # Movement for player
-        map.collision_tiles, map.walk_particles, screenWidth, screenHeight
-    )
+    if player.movement(  # Movement for player
+        map.collision_tiles, screenWidth, screenHeight
+    ):
+        map.walk_particles(player)
 
     gameScreen.blit(player.image, player.rect)  # Uodate the player
     map.drawAboveGroundLayer(gameScreen)  # Draw above ground layer

@@ -19,7 +19,7 @@ class Archer(Enemy):
     def get_next_shot_time(
         self,
     ):  # Get the next shot time by adding a random number between 500 to 1000 to the current time
-        return pygame.time.get_ticks() + random.randint(3000, 4000)
+        return pygame.time.get_ticks() + random.randint(1000, 4000)
 
     def shoot(self, target_x, target_y):
         # Shoot a projectile if the current time is larger than the next shot time

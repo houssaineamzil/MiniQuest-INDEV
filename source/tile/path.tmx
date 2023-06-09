@@ -124,6 +124,6 @@
  </layer>
  <objectgroup id="6" name="portal">
   <object id="1" name="village,575,25" x="545.167" y="797.364" width="62" height="2.46969"/>
-  <object id="3" name="secretforest,50,540" x="797.818" y="515.455" width="1.81818" height="26.9091"/>
+  <object id="3" name="secretforest,50,540" x="797.818" y="512.205" width="1.81818" height="31.6591"/>
  </objectgroup>
 </map>

@@ -45,7 +45,8 @@ class Player:
             gameScreen, (0, 255, 0), self.collision_rect, 2
         )  # draws collision rectangle in green
 
-    def movement(self, tiles, walk_particles, screen_width, screen_height):
+    def movement(self, tiles, screen_width, screen_height):
+        self.moved = False
         key = pygame.key.get_pressed()
         dx, dy = 0, 0  # Changes in x and y
         # Change 'elif' to 'if' for all directions
@@ -77,9 +78,7 @@ class Player:
             ):
                 self.rect.x += dx
                 self.collision_rect.x += dx  # Update collision box position
-                walk_particles(
-                    self
-                )  # Call walk_particles function when the position changes
+                self.moved = True
 
         if dy != 0:  # If there is a change in y
             temp_rect = self.collision_rect.copy()
@@ -92,6 +91,5 @@ class Player:
             ):
                 self.rect.y += dy
                 self.collision_rect.y += dy  # Update collision box position
-                walk_particles(
-                    self
-                )  # Call walk_particles function when the position changes
+                self.moved = True
+        return self.moved

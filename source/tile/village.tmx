@@ -22,7 +22,7 @@
   <object id="58" name="tree" x="130.455" y="0.363632" width="60.1818" height="30.9091"/>
   <object id="60" name="tree" x="706.091" y="128.545" width="60.1818" height="30.9091"/>
   <object id="61" name="tree" x="706" y="351.939" width="60.1818" height="30.9091"/>
-  <object id="62" name="house" x="149.712" y="159.545" width="148.591" height="72.4091"/>
+  <object id="62" name="house" x="149.712" y="159.545" width="148.591" height="67.6818"/>
   <object id="63" name="wall" x="523.375" y="-0.125" width="9.375" height="156.25"/>
   <object id="64" name="wall" x="618.875" y="0" width="9.75" height="155.625"/>
   <object id="66" name="sign" x="515.938" y="164.875" width="24.0625" height="18.125"/>
@@ -125,7 +125,7 @@
 </data>
  </layer>
  <objectgroup id="15" name="portal">
-  <object id="18" name="path,575,790" x="544.125" y="0.25" width="63.875" height="5.11364"/>
-  <object id="21" name="inn,383,545" x="192.5" y="229.5" width="31" height="4.875"/>
+  <object id="18" name="path,575,790" x="533.125" y="0.25" width="85.6023" height="5.11364"/>
+  <object id="21" name="inn,383,545" x="192.818" y="227.602" width="61.75" height="3.11364"/>
  </objectgroup>
 </map>
