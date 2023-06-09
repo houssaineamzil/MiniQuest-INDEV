@@ -8,7 +8,7 @@ from archer import Archer
 from dragon import Dragon
 from enemy import Enemy
 from projectile import Arrow, Spell
-from explosion import SpellExplosion, ArrowExplosion
+from explosion import SpellExplosion, ArrowExplosion, Explosion
 
 
 class Map:
@@ -23,6 +23,17 @@ class Map:
         self.particles = []
         self.explosions = []
         self.collision_tiles = []
+        self.spawn_enemies()
+
+    def spawn_enemies(self):
+        self.enemy_objects = self.map_data.get_layer_by_name("enemies")
+        for obj in self.enemy_objects:
+            try:
+                enemy_class = globals()[obj.name]
+                enemy = enemy_class(obj.x + obj.width // 2, obj.y + obj.height // 2)
+                self.add_enemy(enemy)
+            except KeyError:
+                print(f"Warning: Unknown enemy type {obj.name}")
 
     def add_enemy(self, enemy):
         self.enemies.append(enemy)
@@ -52,19 +63,22 @@ class Map:
         if explosion in self.particles:
             self.explosions.remove(explosion)
 
-    def update(
-        self,
-        gameScreen,
-        player,
-    ):
+    def update(self, game_screen, player):
+        self.update_portals(player)
+        self.update_enemies(game_screen, player)
+        self.update_projectiles(game_screen, player)
+        self.update_particles(game_screen)
+        self.update_explosions(game_screen)
+
+    def update_portals(self, player):
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
                 self.change_map("source/tile/" + portal.map_file + ".tmx")
                 player.teleport(portal.destination[0], portal.destination[1])
-                self.add_enemy(Dragon(250, 300, "source/img/dragon.png", 50, 2))
                 break
 
-        for enemy in self.enemies:  # Loop over each enemy in the list
+    def update_enemies(self, game_screen, player):
+        for enemy in self.enemies:
             enemy.ai_move(
                 self.collision_tiles,
                 self.screen_width,
@@ -76,7 +90,7 @@ class Map:
             if enemy.shoot(player.rect.centerx, player.rect.centery):
                 self.add_projectile(enemy.projectile)
 
-            enemy.draw(gameScreen)
+            enemy.draw(game_screen)
 
             for projectile in self.projectiles:
                 if enemy.rect.colliderect(projectile.rect) and isinstance(
@@ -93,6 +107,7 @@ class Map:
                         self.enemies.remove(enemy)
                         break
 
+    def update_projectiles(self, game_screen, player):
         for projectile in self.projectiles:
             if (
                 player.rect.colliderect(projectile.rect)
@@ -113,32 +128,32 @@ class Map:
                 self.remove_projectile(projectile)
             else:
                 self.add_particle(projectile.particle)
-                gameScreen.blit(projectile.image, projectile.rect)
+                game_screen.blit(projectile.image, projectile.rect)
 
+    def update_particles(self, game_screen):
         for particle in list(self.particles):
-            if not isinstance(particle, Particle):
-                print(f"Unexpected particle type: {type(particle)}")
+            if particle.update():
+                self.remove_particle(particle)
             else:
-                if particle.update():
-                    self.remove_particle(particle)
-                else:
-                    gameScreen.blit(particle.image, particle.rect)
+                game_screen.blit(particle.image, particle.rect)
 
+    def update_explosions(self, game_screen):
         for explosion in list(self.explosions):
             if explosion.update():
                 self.remove_explosion(explosion)
             else:
                 for particle in explosion.particles:
-                    gameScreen.blit(particle.image, particle.rect)
+                    game_screen.blit(particle.image, particle.rect)
 
     def change_map(self, map_file):
         self.map_file = map_file
-        self.map_data = pytmx.load_pygame(map_file)  # Load the new map data
-        self.collisionSetup()  # Update the list of collision tiles
-        self.enemies.clear()  # Remove any existing enemies
-        self.projectiles.clear()  # Remove any existing projectiles
-        self.particles.clear()  # Remove any existing particles
-        self.explosions.clear()  # Remove any existing explosions
+        self.map_data = pytmx.load_pygame(map_file)
+        self.collisionSetup()
+        self.enemies.clear()
+        self.projectiles.clear()
+        self.particles.clear()
+        self.explosions.clear()
+        self.spawn_enemies()
 
     def collisionSetup(self):
         self.collision_tiles = []
@@ -147,17 +162,13 @@ class Map:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 if layer.name == "portal":
                     for obj in layer:
-                        if obj.name is not None:  # check if name is not None
+                        if obj.name is not None:
                             portal_rect = pygame.Rect(
                                 obj.x, obj.y, obj.width, obj.height
                             )
-                            portal_info = obj.name.split(
-                                ","
-                            )  # Split the portal name into parts
+                            portal_info = obj.name.split(",")
                             map_file = portal_info[0]
-                            destination = tuple(
-                                int(i) for i in portal_info[1:]
-                            )  # convert to integers and pack in a tuple
+                            destination = tuple(int(i) for i in portal_info[1:])
                             self.portals.append(
                                 Portal(portal_rect, map_file, destination)
                             )
@@ -166,33 +177,33 @@ class Map:
                     collision_rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
                     self.collision_tiles.append(collision_rect)
 
-    def drawGroundLayer(self, gameScreen):
+    def drawGroundLayer(self, game_screen):
         ground_layer = self.map_data.get_layer_by_name("ground")
 
         for x, y, gid in ground_layer:
             tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                gameScreen.blit(
+                game_screen.blit(
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
-    def drawFloorLayer(self, gameScreen):
+    def drawFloorLayer(self, game_screen):
         ground_layer = self.map_data.get_layer_by_name("floor")
 
         for x, y, gid in ground_layer:
             tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                gameScreen.blit(
+                game_screen.blit(
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
-    def drawAboveGroundLayer(self, gameScreen):
+    def drawAboveGroundLayer(self, game_screen):
         above_ground_layer = self.map_data.get_layer_by_name("above_ground")
 
         for x, y, gid in above_ground_layer:
             tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                gameScreen.blit(
+                game_screen.blit(
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
@@ -201,11 +212,11 @@ class Map:
             x = entity.rect.x + entity.image.get_width() // 2
             y = entity.rect.y + entity.image.get_height()
 
-            velocity_x = random.uniform(-0.3, 0.3)  # random velocity values
+            velocity_x = random.uniform(-0.3, 0.3)
             velocity_y = random.uniform(-0.3, -0.3)
             color = (
                 random.randint(100, 165),
-                random.randint(50, 115),  # random brown colour
+                random.randint(50, 115),
                 random.randint(10, 45),
             )
 

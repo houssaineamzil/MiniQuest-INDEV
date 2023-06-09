@@ -2,23 +2,6 @@
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="35">
  <tileset firstgid="1" source="village.tsx"/>
  <tileset firstgid="1065" source="interior.tsx"/>
- <objectgroup id="16" name="collision">
-  <object id="18" x="256" y="376" width="64" height="72"/>
-  <object id="19" x="416" y="344" width="137.5" height="72"/>
-  <object id="20" x="544" y="416" width="9.75" height="148"/>
-  <object id="21" x="245.955" y="375.333" width="10.0455" height="188.334"/>
-  <object id="24" x="256.333" y="552.5" width="95.7576" height="11.5417"/>
-  <object id="25" x="414.125" y="552.5" width="129.875" height="11.3333"/>
-  <object id="26" x="341.167" y="576.167" width="85.6667" height="19.4167"/>
-  <object id="27" x="310.182" y="280" width="9.81818" height="95.6364"/>
-  <object id="28" x="320" y="280" width="96" height="72"/>
-  <object id="29" x="416" y="280" width="10" height="72"/>
-  <object id="30" x="321.87" y="352" width="28.0282" height="30.2841"/>
-  <object id="31" x="356.091" y="419.909" width="54" height="24.2727"/>
-  <object id="32" x="260" y="475.402" width="53.75" height="54.5985"/>
-  <object id="33" x="325.25" y="480.125" width="20.625" height="32"/>
-  <object id="34" x="520" y="523.5" width="16.125" height="20.5"/>
- </objectgroup>
  <layer id="13" name="floor" width="25" height="25">
   <data encoding="csv">
 1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,1789,
@@ -106,6 +89,23 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="16" name="collision">
+  <object id="18" x="256" y="376" width="64" height="72"/>
+  <object id="19" x="416" y="344" width="137.5" height="72"/>
+  <object id="20" x="544" y="416" width="9.75" height="148"/>
+  <object id="21" x="245.955" y="375.333" width="10.0455" height="188.334"/>
+  <object id="24" x="256.333" y="552.5" width="95.7576" height="11.5417"/>
+  <object id="25" x="414.125" y="552.5" width="129.875" height="11.3333"/>
+  <object id="26" x="341.167" y="576.167" width="85.6667" height="19.4167"/>
+  <object id="27" x="310.182" y="280" width="9.81818" height="95.6364"/>
+  <object id="28" x="320" y="280" width="96" height="72"/>
+  <object id="29" x="416" y="280" width="10" height="72"/>
+  <object id="30" x="321.87" y="352" width="28.0282" height="30.2841"/>
+  <object id="31" x="356.091" y="419.909" width="54" height="24.2727"/>
+  <object id="32" x="260" y="475.402" width="53.75" height="54.5985"/>
+  <object id="33" x="325.25" y="480.125" width="20.625" height="32"/>
+  <object id="34" x="520" y="523.5" width="16.125" height="20.5"/>
+ </objectgroup>
  <objectgroup id="15" name="portal">
   <object id="17" name="village,210,260" x="352.167" y="572.833" width="64.4167" height="3.0833"/>
  </objectgroup>

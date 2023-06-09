@@ -11,8 +11,8 @@ class Enemy(Character):
     PROJECTILE_LIFE = 20  # Lifetime of the arrow projectile
     PROJECTILE_SPEED = 20  # Speed of the arrow projectile
 
-    def __init__(self, x, y, image_path, size, hp):
-        super().__init__(x, y, image_path, size, hp)
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.move_counter = 0
         self.direction = 0
         self.last_shot = 0

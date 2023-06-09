@@ -5,16 +5,17 @@ import math
 
 
 class Character:
-    def __init__(self, x, y, image_path, size, hp):
-        self.original_image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(self.original_image, (size, size))
+    def __init__(self, x, y):
+        self.size = 20
+        self.hp = 1
+        self.speed = 1
+
+        self.original_image = pygame.image.load("source/img/skeleton.png")
+        self.image = pygame.transform.scale(self.original_image, (self.size, self.size))
         self.rect = self.image.get_rect()
-        self.rect = pygame.FRect(x, y, size, size)
-        self.rect.y = y
-        self.hp = hp
+        self.rect = pygame.FRect(x, y, self.size, self.size)
         self.hit = False
         self.hit_counter = 0
-        self.speed = 1  # added speed attribute
 
     def move(self, dx, dy, collision_tiles, screen_width, screen_height):
         temp_rect = self.rect.copy()

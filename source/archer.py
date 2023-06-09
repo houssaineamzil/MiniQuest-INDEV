@@ -9,12 +9,18 @@ class Archer(Enemy):
     PROJECTILE_LIFE = 20  # Lifetime of the arrow projectile
     PROJECTILE_SPEED = 20  # Speed of the arrow projectile
 
-    def __init__(self, x, y, image_path, size, hp):
-        super().__init__(x, y, image_path, size, hp)
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.size = 30
+        self.hp = 1
+        self.speed = 1.2
+        self.original_image = pygame.image.load("source/img/archer.png")
+        self.image = pygame.transform.scale(self.original_image, (self.size, self.size))
+        self.rect = self.image.get_rect()
+        self.rect = pygame.FRect(x, y, self.size, self.size)
         self.next_shot_time = (
             self.get_next_shot_time()  # Time when the next shot can be fired
         )
-        self.speed = 1.2  # Speed of the archer
 
     def get_next_shot_time(
         self,

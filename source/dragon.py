@@ -11,8 +11,19 @@ class Dragon(Enemy):
     PROJECTILE_LIFE = 30
     PROJECTILE_SPEED = 20
 
-    def __init__(self, x, y, image_path, size, hp):
-        super().__init__(x, y, image_path, size, hp)
+    def __init__(self, x, y):
+        super().__init__(x, y)
+
+        self.size = 50
+        self.hp = 1
+        self.speed = 1
+
+        self.original_image = pygame.image.load("source/img/dragon.png")
+        self.image = pygame.transform.scale(self.original_image, (self.size, self.size))
+        self.rect = self.image.get_rect()
+        self.rect = pygame.FRect(x, y, self.size, self.size)
+        self.hit = False
+        self.hit_counter = 0
 
     def shoot(
         self,
