@@ -33,6 +33,9 @@ class Map:
     def add_projectile(self, projectile):
         self.projectiles.append(projectile)
 
+    def add_explosion(self, explosion):
+        self.explosions.append(explosion)
+
     def remove_enemy(self, enemy):
         if enemy in self.enemies:
             self.enemies.remove(enemy)
@@ -40,6 +43,14 @@ class Map:
     def remove_projectile(self, projectile):
         if projectile in self.projectiles:
             self.projectiles.remove(projectile)
+
+    def remove_particle(self, particle):
+        if particle in self.particles:
+            self.particles.remove(particle)
+
+    def remove_explosion(self, explosion):
+        if explosion in self.particles:
+            self.explosions.remove(explosion)
 
     def update(
         self,
@@ -49,65 +60,36 @@ class Map:
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
                 self.change_map("source/tile/" + portal.map_file + ".tmx")
-
-                # Update the player's position
-                player.rect.midbottom = (portal.destination[0], portal.destination[1])
-                player.collision_rect.midbottom = (
-                    portal.destination[0],
-                    portal.destination[1],
-                )
-                # self.add_enemy(Dragon(250, 300, "source/img/dragon.png", 50, 5))
-                if portal.map_file == "path":
-                    self.add_enemy(
-                        Archer(100, 100, "source/img/archer.png", 30, 2)
-                    )  # Create enemy
+                player.teleport(portal.destination[0], portal.destination[1])
                 break
 
         for enemy in self.enemies:  # Loop over each enemy in the list
-            if isinstance(enemy, Archer):
-                enemy.ai_move(
-                    self.collision_tiles,
-                    self.screen_width,
-                    self.screen_height,
-                    player.rect.centerx,
-                    player.rect.centery,
-                )
-            else:
-                enemy.ai_move(
-                    self.collision_tiles, self.screen_width, self.screen_height
-                )
-            enemy.draw(gameScreen)
-            enemy.shoot(
+            enemy.ai_move(
+                self.collision_tiles,
+                self.screen_width,
+                self.screen_height,
                 player.rect.centerx,
                 player.rect.centery,
-                self.projectiles,
-                self.add_particle,
             )
 
+            if enemy.shoot(player.rect.centerx, player.rect.centery):
+                self.add_projectile(enemy.projectile)
+
+            enemy.draw(gameScreen)
+
             for projectile in self.projectiles:
-                if enemy.rect.colliderect(projectile.rect) and not isinstance(
-                    projectile.owner, Enemy
+                if enemy.rect.colliderect(projectile.rect) and isinstance(
+                    projectile.owner, Player
                 ):
                     enemy.take_damage()
-                    if isinstance(projectile, Arrow):
-                        self.explosions.append(
-                            ArrowExplosion(
-                                projectile.rect.centerx, projectile.rect.centery
-                            )
-                        )
-                    elif isinstance(projectile, Spell):
-                        self.explosions.append(
-                            SpellExplosion(
-                                projectile.rect.centerx, projectile.rect.centery
-                            )
-                        )
+                    explosion = projectile.explosion(
+                        projectile.rect.centerx, projectile.rect.centery
+                    )
+                    self.add_explosion(explosion)
 
-                    if (
-                        projectile in self.projectiles
-                    ):  # Check if projectile still exists in the list
-                        self.projectiles.remove(projectile)
+                    self.remove_projectile(projectile)
                     if enemy.hp <= 0:
-                        self.enemies.remove(enemy)  # Remove enemy from the list
+                        self.enemies.remove(enemy)
                         break
 
         for projectile in self.projectiles:
@@ -117,57 +99,33 @@ class Map:
             ):
                 for enemy in self.enemies:
                     enemy.canshoot = False
-                # Disable player movement
-                player.speed = 0
-                player.canshoot = False
-
-                # Remove the projectile
                 self.projectiles.remove(projectile)
-                # Stop shooting
-                canshoot = False
                 player.hit_by_projectile()
-                player.image = pygame.transform.rotate(
-                    player.image, -90
-                )  # rotate 90 degrees clockwise
-
-                if (
-                    projectile in self.projectiles
-                ):  # Check if projectile still exists in the list
-                    self.projectiles.remove(projectile)
 
             if projectile.update(
                 self.collision_tiles, self.screen_width, self.screen_height
             ):
-                if isinstance(projectile, Arrow):
-                    self.explosions.append(
-                        ArrowExplosion(projectile.rect.centerx, projectile.rect.centery)
-                    )
-                elif isinstance(projectile, Spell):
-                    self.explosions.append(
-                        SpellExplosion(projectile.rect.centerx, projectile.rect.centery)
-                    )
-                if (
-                    projectile in self.projectiles
-                ):  # Check if projectile still exists in the list
-                    self.projectiles.remove(projectile)
+                explosion = projectile.explosion(
+                    projectile.rect.centerx, projectile.rect.centery
+                )
+                self.add_explosion(explosion)
+                self.remove_projectile(projectile)
             else:
+                self.add_particle(projectile.particle)
                 gameScreen.blit(projectile.image, projectile.rect)
 
-        for particle in list(self.particles):  # Iterate over a copy of the list
-            if particle.update():
-                if (
-                    particle in self.particles
-                ):  # Check if particle still exists in the list
-                    self.particles.remove(particle)
+        for particle in list(self.particles):
+            if not isinstance(particle, Particle):
+                print(f"Unexpected particle type: {type(particle)}")
             else:
-                gameScreen.blit(particle.image, particle.rect)
+                if particle.update():
+                    self.remove_particle(particle)
+                else:
+                    gameScreen.blit(particle.image, particle.rect)
 
-        for explosion in list(self.explosions):  # Iterate over a copy of the list
+        for explosion in list(self.explosions):
             if explosion.update():
-                if (
-                    explosion in self.explosions
-                ):  # Check if explosion still exists in the list
-                    self.explosions.remove(explosion)
+                self.remove_explosion(explosion)
             else:
                 for particle in explosion.particles:
                     gameScreen.blit(particle.image, particle.rect)
@@ -250,10 +208,10 @@ class Map:
                 random.randint(10, 45),
             )
 
-            new_particle = Particle(
+            particle = Particle(
                 x, y, velocity_x, velocity_y, color, random.randint(2, 4)
             )
-            self.particles.append(new_particle)
+            self.add_particle(particle)
 
 
 class Portal:

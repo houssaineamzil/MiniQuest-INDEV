@@ -4,9 +4,12 @@ import pytmx
 import math
 
 from particle import Particle
+from explosion import Explosion, SpellExplosion, ArrowExplosion
 
 
 class Projectile:
+    explosion = Explosion
+
     def __init__(
         self,
         target_x,
@@ -14,14 +17,14 @@ class Projectile:
         life,
         speed,
         owner=None,
-        create_particle=None,
     ):
-        self.create_particle = create_particle
         self.owner = owner
         self.image = pygame.image.load(
             "source/img/projectile.png"
         )  # load projectile image
         self.image = pygame.transform.scale(self.image, (20, 20))  # adjust size
+        self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
+        self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
 
         # Calculate the start position from the owner's midbottom position
         start_x, start_y = self.owner.rect.center
@@ -56,7 +59,26 @@ class Projectile:
         velocity_x = random.uniform(-1, 1)
         velocity_y = random.uniform(-1, 1)
 
-        new_particle = Particle(
+        self.rect.x += self.speed * math.cos(self.angle)
+        self.rect.y += self.speed * math.sin(self.angle)
+
+        self.lifespan -= 1
+
+        # remove if it leaves the screen or if lifespan is over
+        if (
+            (
+                self.rect.x < 0
+                or self.rect.x > screenWidth
+                or self.rect.y < 0
+                or self.rect.y > screenHeight
+            )
+            or self.lifespan == 0
+            or self.is_collision(self.rect, tiles)
+        ):
+            self.hit_sound.play()
+            return True
+
+        self.particle = Particle(
             center_x,
             center_y,
             velocity_x,
@@ -64,29 +86,6 @@ class Projectile:
             (255, random.randint(0, 100), 0),
             random.randint(3, 7),
         )
-        self.create_particle(new_particle)
-
-        # update the position
-        self.rect.x += self.speed * math.cos(self.angle)
-        self.rect.y += self.speed * math.sin(self.angle)
-
-        # decrease lifespan
-        self.lifespan -= 1
-
-        # remove if it leaves the screen or if lifespan is over
-        if (
-            self.rect.x < 0
-            or self.rect.x > screenWidth
-            or self.rect.y < 0
-            or self.rect.y > screenHeight
-        ) or self.lifespan == 0:
-            self.hit_sound.play()
-            return True
-
-        # remove if it collides with something
-        if self.is_collision(self.rect, tiles):
-            self.hit_sound.play()
-            return True
         return False
 
     def is_collision(self, rect, tiles):  # check for collision function
@@ -94,6 +93,8 @@ class Projectile:
 
 
 class Spell(Projectile):
+    explosion = SpellExplosion
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.image = pygame.image.load("source/img/spell.png")  # load spell image
@@ -108,6 +109,8 @@ class Spell(Projectile):
 
 
 class Arrow(Projectile):
+    explosion = ArrowExplosion
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.image = pygame.image.load("source/img/arrow.png")  # load arrow image
@@ -126,21 +129,6 @@ class Arrow(Projectile):
         velocity_x = random.uniform(-0.5, 0.5)
         velocity_y = random.uniform(-0.5, 0.5)
 
-        new_particle = Particle(
-            center_x,
-            center_y,
-            velocity_x,
-            velocity_y,
-            (
-                random.randint(200, 255),
-                random.randint(200, 255),  # white/silver color
-                random.randint(200, 255),
-            ),
-            random.randint(2, 7),
-        )
-
-        self.create_particle(new_particle)
-
         # update the position
         self.rect.x += self.speed * math.cos(self.angle)
         self.rect.y += self.speed * math.sin(self.angle)
@@ -162,4 +150,17 @@ class Arrow(Projectile):
         if self.is_collision(self.rect, tiles):
             self.hit_sound.play()
             return True
+
+        self.particle = Particle(
+            center_x,
+            center_y,
+            velocity_x,
+            velocity_y,
+            (
+                random.randint(200, 255),
+                random.randint(200, 255),  # white/silver color
+                random.randint(200, 255),
+            ),
+            random.randint(2, 7),
+        )
         return False

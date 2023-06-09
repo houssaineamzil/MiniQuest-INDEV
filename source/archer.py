@@ -10,32 +10,32 @@ class Archer(Enemy):
     PROJECTILE_SPEED = 20  # Speed of the arrow projectile
 
     def __init__(self, x, y, image_path, size, hp):
-        super().__init__(x, y, image_path, size, hp)  # Call parent class's init
+        super().__init__(x, y, image_path, size, hp)
         self.next_shot_time = (
-            self.get_next_shot_time()
-        )  # Time when the next shot can be fired
+            self.get_next_shot_time()  # Time when the next shot can be fired
+        )
         self.speed = 1.2  # Speed of the archer
 
-    def get_next_shot_time(self):
-        # Get the next shot time by adding a random number between 500 to 1000 to the current time
-        return pygame.time.get_ticks() + random.randint(500, 1000)
+    def get_next_shot_time(
+        self,
+    ):  # Get the next shot time by adding a random number between 500 to 1000 to the current time
+        return pygame.time.get_ticks() + random.randint(3000, 4000)
 
-    def shoot(self, target_x, target_y, projectiles, create_particle):
+    def shoot(self, target_x, target_y):
         # Shoot a projectile if the current time is larger than the next shot time
         current_time = pygame.time.get_ticks()
         if current_time >= self.next_shot_time and self.canshoot:
-            # Create a new projectile (Arrow) and append it to the projectiles list
-            new_projectile = Arrow(
+            # Create a new projectile and append it to the projectiles list
+            self.projectile = Arrow(
                 target_x,
                 target_y,
                 self.PROJECTILE_LIFE,
                 self.PROJECTILE_SPEED,
                 self,
-                create_particle,
             )
-            projectiles.append(new_projectile)
-            # Reset the next shot time
             self.next_shot_time = self.get_next_shot_time()
+            return True
+        return False
 
     def ai_move(self, collision_tiles, screen_width, screen_height, target_x, target_y):
         # AI movement logic for the archer

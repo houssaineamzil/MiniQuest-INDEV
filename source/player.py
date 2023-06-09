@@ -27,6 +27,15 @@ class Player:
 
     def hit_by_projectile(self):
         self.image.blit(self.red_image, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
+        self.speed = 0
+        self.canshoot = False
+        self.image = pygame.transform.rotate(
+            self.image, -90
+        )  # rotate 90 degrees clockwise
+
+    def teleport(self, x, y):
+        self.rect.midbottom = (x, y)
+        self.collision_rect.midbottom = (x, y)
 
     def drawRects(self, gameScreen):
         pygame.draw.rect(

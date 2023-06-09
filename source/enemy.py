@@ -15,7 +15,7 @@ class Enemy(Character):
         self.last_shot = 0
         self.canshoot = True
 
-    def ai_move(self, collision_tiles, screen_width, screen_height):
+    def ai_move(self, collision_tiles, screen_width, screen_height, *args):
         if self.move_counter > 0:
             self.move_counter -= 1
             speed = 2
@@ -35,7 +35,6 @@ class Enemy(Character):
         self,
         target_x,
         target_y,
-        projectiles,
         create_particle,
         projectile_life,
         projectile_speed,
@@ -44,9 +43,7 @@ class Enemy(Character):
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:
                 self.last_shot = current_time
-
-                # Create a new projectile
-                new_projectile = Projectile(
+                self.projectile = Projectile(
                     self.rect.centerx,  # start x
                     self.rect.centery,  # start y
                     target_x,  # target x
@@ -56,6 +53,5 @@ class Enemy(Character):
                     self,  # owner
                     create_particle,  # create_particle function
                 )
-
-                # Add the new projectile to the list
-                projectiles.append(new_projectile)
+                return True
+        return False

@@ -7,7 +7,6 @@ from player import Player
 from particle import Particle
 from archer import Archer
 from dragon import Dragon
-from enemy import Enemy
 from projectile import Arrow, Spell, Projectile
 from explosion import SpellExplosion, ArrowExplosion
 from map import Map
@@ -32,10 +31,10 @@ map = Map(map_file, screenWidth, screenHeight)
 map.collisionSetup()
 
 
-# map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 2))  # Create enemy
+map.add_enemy(Archer(250, 300, "source/img/archer.png", 30, 1))  # Create enemy
 
 
-pygame.mixer.music.load("source/sound/music.wav")  # Load music and sounds
+pygame.mixer.music.load("source/sound/music.wav")  # Load music
 pygame.mixer.music.play(
     -1
 )  # Play the music forever - Todo: add different music for every map
@@ -72,10 +71,9 @@ while run:
                     new_projectile = Spell(  # create the new projectile
                         mouse_x,
                         mouse_y,
+                        30,
                         20,
-                        10,
                         player,
-                        map.add_particle,  # Pass the callback function
                     )
                     map.projectiles.append(
                         new_projectile
