@@ -18,23 +18,17 @@ class Dragon(Enemy):
         self,
         target_x,
         target_y,
-        create_particle,
-        projectile_life,
-        projectile_speed,
     ):
         if self.canshoot:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:
                 self.last_shot = current_time
                 self.projectile = Spell(
-                    self.rect.centerx,  # start x
-                    self.rect.centery,  # start y
                     target_x,  # target x
                     target_y,  # target y
-                    projectile_life,  # speed
-                    projectile_speed,  # damage
+                    self.PROJECTILE_LIFE,  # speed
+                    self.PROJECTILE_SPEED,  # damage
                     self,  # owner
-                    create_particle,  # create_particle function
                 )
                 return True
         return False

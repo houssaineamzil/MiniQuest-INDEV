@@ -69,7 +69,7 @@ while run:
                     >= 1000  # Checks if it's been 1 second (1000 ms) since the last shot
                 ):
                     mouse_x, mouse_y = pygame.mouse.get_pos()
-                    new_projectile = Spell(  # create the new projectile
+                    new_projectile = Arrow(  # create the new projectile
                         mouse_x,
                         mouse_y,
                         30,
