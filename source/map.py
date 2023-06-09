@@ -14,7 +14,6 @@ from explosion import SpellExplosion, ArrowExplosion, Explosion
 class Map:
     def __init__(self, map_file, screen_width, screen_height):
         self.map_file = map_file
-        self.map_data = pytmx.load_pygame(map_file)
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.enemies = []
@@ -23,7 +22,7 @@ class Map:
         self.particles = []
         self.explosions = []
         self.collision_tiles = []
-        self.spawn_enemies()
+        self.change_map(map_file)
 
     def spawn_enemies(self):
         self.enemy_objects = self.map_data.get_layer_by_name("enemies")
