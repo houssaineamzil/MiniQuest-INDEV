@@ -25,12 +25,13 @@ class Projectile:
         self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
 
         start_x, start_y = self.owner.rect.center
+        start_y = start_y + 10
 
         dx = target_x - start_x
         dy = target_y - start_y
         self.angle = math.atan2(dy, dx)
 
-        spawn_radius = 20
+        spawn_radius = 10
 
         spawn_x = start_x + spawn_radius * math.cos(self.angle)
         spawn_y = start_y + spawn_radius * math.sin(self.angle)

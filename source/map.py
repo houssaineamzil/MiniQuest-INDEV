@@ -158,7 +158,7 @@ class Map:
         self.projectiles.clear()
         self.particles.clear()
         self.explosions.clear()
-        self.enemies.clear()  # clear the enemies list
+        self.enemies.clear()
 
         self.load_state(new_map_file + ".pkl")
         if (
@@ -223,8 +223,8 @@ class Map:
 
     def walk_particles(self, entity):
         if random.random() < 0.3:
-            x = entity.rect.x + entity.image.get_width() // 2
-            y = entity.rect.y + entity.image.get_height()
+            x = entity.rect.x + entity.size_x // 2
+            y = entity.rect.y + entity.size_y
 
             velocity_x = random.uniform(-0.3, 0.3)
             velocity_y = random.uniform(-0.3, -0.3)
@@ -238,6 +238,10 @@ class Map:
                 x, y, velocity_x, velocity_y, color, random.randint(2, 4)
             )
             self.add_particle(particle)
+
+    def drawRects(self, gameScreen, player):
+        pygame.draw.rect(gameScreen, (255, 0, 0), player.rect, 2)
+        pygame.draw.rect(gameScreen, (0, 255, 0), player.collision_rect, 2)
 
     def save_state(self, state_filename):
         state = {

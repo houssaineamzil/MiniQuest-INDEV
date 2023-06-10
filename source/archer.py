@@ -11,19 +11,22 @@ class Archer(Enemy):
 
     def __init__(self, x, y, hp):
         super().__init__(x, y, hp)
-        self.size = 30
+        self.size_x = 30
+        self.size_y = 42
         self.hp = hp
-        self.speed = 1.3
+        self.speed = 0
         self.original_image = pygame.image.load("source/img/archer.png")
-        self.image = pygame.transform.scale(self.original_image, (self.size, self.size))
+        self.image = pygame.transform.scale(
+            self.original_image, (self.size_x, self.size_y)
+        )
         self.rect = self.image.get_rect()
-        self.rect = pygame.FRect(x, y, self.size, self.size)
+        self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.next_shot_time = self.get_next_shot_time()
 
     def get_next_shot_time(
         self,
     ):
-        return pygame.time.get_ticks() + random.randint(1000, 4000)
+        return pygame.time.get_ticks() + random.randint(500, 2000)
 
     def shoot(self, target_x, target_y):
         current_time = pygame.time.get_ticks()

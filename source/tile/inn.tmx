@@ -103,7 +103,7 @@
   <object id="30" x="321.87" y="352" width="28.0282" height="30.2841"/>
   <object id="31" x="356.091" y="419.909" width="54" height="24.2727"/>
   <object id="32" x="260" y="475.402" width="53.75" height="54.5985"/>
-  <object id="33" x="325.25" y="480.125" width="20.625" height="32"/>
+  <object id="33" x="325.25" y="479.957" width="20.625" height="32.1685"/>
   <object id="34" x="520" y="523.5" width="16.125" height="20.5"/>
  </objectgroup>
  <objectgroup id="15" name="portal">
