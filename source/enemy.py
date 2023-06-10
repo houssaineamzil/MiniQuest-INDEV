@@ -34,11 +34,7 @@ class Enemy(Character):
             self.move_counter = 60
             self.direction = random.randint(0, 3)
 
-    def shoot(
-        self,
-        target_x,
-        target_y,
-    ):
+    def shoot(self, target_x, target_y, *args):
         if self.canshoot:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:

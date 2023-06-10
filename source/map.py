@@ -91,7 +91,9 @@ class Map:
                 player.rect.centery,
             )
 
-            if enemy.shoot(player.rect.centerx, player.rect.centery):
+            if enemy.shoot(
+                player.rect.centerx, player.rect.centery, self.collision_tiles
+            ):
                 self.add_projectile(enemy.projectile)
 
             enemy.draw(game_screen)

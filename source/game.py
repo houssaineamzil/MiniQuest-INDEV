@@ -67,7 +67,6 @@ class Game:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    print("Current Working Directory:", os.getcwd())
                     for file in os.listdir("source/tile"):
                         if file.endswith(".pkl"):
                             os.remove(os.path.join("source/tile", file))

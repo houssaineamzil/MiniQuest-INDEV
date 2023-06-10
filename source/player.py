@@ -85,8 +85,6 @@ class Player:
                 dx += 1
                 self.current_animation = self.animation_east
                 self.current_animation.direction = "east"
-            print(self.current_animation.direction)
-
             if dx == 0 and dy == 0:
                 if self.current_animation.direction == "north":
                     self.current_animation = self.standing_animation_north

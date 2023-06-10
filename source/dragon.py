@@ -23,11 +23,7 @@ class Dragon(Enemy):
         self.hit = False
         self.hit_counter = 0
 
-    def shoot(
-        self,
-        target_x,
-        target_y,
-    ):
+    def shoot(self, target_x, target_y, *args):
         if self.canshoot:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:

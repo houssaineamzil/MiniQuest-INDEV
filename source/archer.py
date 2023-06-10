@@ -28,9 +28,13 @@ class Archer(Enemy):
     ):
         return pygame.time.get_ticks() + random.randint(500, 2000)
 
-    def shoot(self, target_x, target_y):
+    def shoot(self, target_x, target_y, collision_tiles):
         current_time = pygame.time.get_ticks()
-        if current_time >= self.next_shot_time and self.canshoot:
+        if (
+            current_time >= self.next_shot_time
+            and self.canshoot
+            and self.has_line_of_sight(target_x, target_y, collision_tiles)
+        ):
             self.projectile = Arrow(
                 target_x,
                 target_y,
