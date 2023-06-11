@@ -133,7 +133,7 @@
   <object id="3" name="secretforest,20,530" x="795.653" y="511.018" width="4.17045" height="32.7841"/>
  </objectgroup>
  <objectgroup id="8" name="enemies">
-  <object id="51" name="Dragon" x="74.8333" y="368" width="70" height="63">
+  <object id="51" name="Dragon" x="65.8333" y="45" width="70" height="63">
    <properties>
     <property name="hp" type="int" value="2"/>
    </properties>

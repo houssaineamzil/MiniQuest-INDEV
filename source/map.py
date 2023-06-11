@@ -11,6 +11,7 @@ from dragon import Dragon
 from enemy import Enemy
 from projectile import Arrow, Spell
 from explosion import SpellExplosion, ArrowExplosion, Explosion
+from chest import Chest
 
 
 class Map:
@@ -25,6 +26,7 @@ class Map:
         self.particles = []
         self.explosions = []
         self.collision_tiles = []
+        self.chests = []
         self.spawn_enemies()
 
     def spawn_enemies(self):

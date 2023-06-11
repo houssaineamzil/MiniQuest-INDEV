@@ -4,8 +4,17 @@ import os
 from map import Map
 from player import Player
 from projectile import Arrow, Spell
-from equipment import Equipment, Armour, Weapon
+from equipment import (
+    Equipment,
+    Armour,
+    Weapon,
+    Shortbow,
+    LeatherPants,
+    BlackBoots,
+    Chainmail,
+)
 from spritesheet import Spritesheet
+from chest import Chest
 
 
 class Game:
@@ -24,19 +33,18 @@ class Game:
         pygame.display.set_caption("MiniQuest")
         self.clock_object = pygame.time.Clock()
 
-        self.chainmail = Armour(Spritesheet("source/img/chainmail.png"), 1)
-        self.leatherpants = Armour(Spritesheet("source/img/leatherpants.png"), 1)
-        self.blackboots = Armour(Spritesheet("source/img/blackboots.png"), 1)
-
-        # self.shortbow = Weapon(Spritesheet("source/img/shortbow.png"), Arrow, 10, 30)
-        self.firestaff = Weapon(Spritesheet("source/img/blackboots.png"), Spell, 30, 10)
-
         self.player = Player(player_x, player_y)
 
-        self.player.equip_armour(self.chainmail)
+        self.chainmail = Chainmail(Spritesheet("source/img/chainmail.png"), 1)
+        self.leatherpants = LeatherPants(Spritesheet("source/img/leatherpants.png"), 1)
+        self.blackboots = BlackBoots(Spritesheet("source/img/blackboots.png"), 1)
+        self.shortbow = Shortbow(Spritesheet("source/img/shortbow.png"), Arrow, 10, 30)
+
         self.player.equip_armour(self.leatherpants)
         self.player.equip_armour(self.blackboots)
-        # self.player.equip_weapon(self.shortbow)
+
+        self.player.inventory.add_item(self.shortbow)
+        self.player.inventory.add_item(self.chainmail)
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
         self.map.collisionSetup()
@@ -65,6 +73,9 @@ class Game:
             self.player.draw(self.game_screen)
             self.map.drawAboveGroundLayer(self.game_screen)
 
+            if self.player.inventory_open:
+                self.player.inventory.draw_inventory(self.game_screen, 5, 5)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     for file in os.listdir("source/tile"):
@@ -73,19 +84,32 @@ class Game:
                         run = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if (
-                        event.button == 1
-                        and not self.player.dead
-                        and self.player.weapon
-                    ):
+                    if event.button == 1 and not self.player.dead:
                         current_time = pygame.time.get_ticks()
-                        if current_time - self.last_shot >= 1000:
+                        if current_time - self.last_shot >= 1000 and self.player.weapon:
                             mouse_x, mouse_y = pygame.mouse.get_pos()
                             self.map.add_projectile(
                                 self.player.weapon.shoot(self.player, mouse_x, mouse_y)
                             )
                             self.last_shot = current_time
-
+                        if self.player.inventory_open == True:
+                            click_pos = event.pos
+                            inv_pos_x, inv_pos_y = (0, 0)
+                            for i, item_rect in enumerate(
+                                self.player.inventory.get_item_rects()
+                            ):
+                                item_rect.move_ip(inv_pos_x, inv_pos_y)
+                                if item_rect.collidepoint(click_pos):
+                                    item = self.player.inventory.items[i]
+                                    if isinstance(item, Weapon):
+                                        self.player.equip_weapon(item)
+                                        self.player.inventory.remove_item(item)
+                                    elif isinstance(item, Armour):
+                                        self.player.equip_armour(item)
+                                        self.player.inventory.remove_item(item)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_i:
+                        self.player.inventory_open = not self.player.inventory_open
             pygame.display.flip()
 
         pygame.quit()

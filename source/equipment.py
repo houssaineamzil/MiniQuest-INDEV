@@ -22,6 +22,7 @@ class Equipment:
         }
 
         self.current_direction = "south"
+        self.name = "Undefined"
 
     def update(self, direction, is_moving):
         self.current_direction = direction
@@ -64,3 +65,27 @@ class Armour(Equipment):
 
     def apply_buff(self, character):
         pass  # replace with actual implementation
+
+
+class Shortbow(Weapon):
+    def __init__(self, spritesheet, projectile_type, life, speed):
+        super().__init__(spritesheet, projectile_type, life, speed)
+        self.name = "Shortbow"
+
+
+class LeatherPants(Armour):
+    def __init__(self, spritesheet, hp_buff):
+        super().__init__(spritesheet, hp_buff)
+        self.name = "Leather Pants"
+
+
+class BlackBoots(Armour):
+    def __init__(self, spritesheet, hp_buff):
+        super().__init__(spritesheet, hp_buff)
+        self.name = "Black Boots"
+
+
+class Chainmail(Armour):
+    def __init__(self, spritesheet, hp_buff):
+        super().__init__(spritesheet, hp_buff)
+        self.name = "Chainmail"

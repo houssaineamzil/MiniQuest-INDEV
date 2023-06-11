@@ -5,6 +5,7 @@ import math
 
 from spritesheet import Spritesheet
 from animation import Animation
+from inventory import Inventory
 
 
 class Player:
@@ -25,7 +26,9 @@ class Player:
 
         self.current_animation = self.animation_south
         self.armours = []
+        self.inventory = Inventory()
         self.weapon = None
+        self.inventory_open = False
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 3
         self.dead = False
