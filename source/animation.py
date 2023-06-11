@@ -9,7 +9,7 @@ class Animation:
         ]
         self.current_frame = 0
         self.last_update = pygame.time.get_ticks()
-        self.frame_rate = 150
+        self.frame_rate = 100
         self.direction = "south"
 
     def update(self):
@@ -18,9 +18,11 @@ class Animation:
             self.last_update = now
             self.current_frame = (self.current_frame + 1) % len(self.frames)
 
-    def draw(self, screen, x, y):
+    def draw(self, screen, x, y, size_x, size_y):
         image = self.frames[self.current_frame]
-        screen.blit(image, (x, y))
+        image_rect = image.get_rect()
+        image_rect.midbottom = (x + size_x // 2, y + size_y + 2)
+        screen.blit(image, image_rect.topleft)
 
     def reset(self):
         self.current_frame = 0

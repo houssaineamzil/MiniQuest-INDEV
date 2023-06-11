@@ -4,15 +4,15 @@ from projectile import Arrow, Spell
 
 class Equipment:
     def __init__(self, spritesheet):
-        self.animation_north = Animation(spritesheet, 3, 0, 0, 32, 50)
-        self.animation_east = Animation(spritesheet, 3, 0, 50, 32, 50)
-        self.animation_south = Animation(spritesheet, 3, 0, 100, 32, 50)
-        self.animation_west = Animation(spritesheet, 3, 0, 150, 32, 50)
+        self.animation_north = Animation(spritesheet, 8, 65, 513, 64, 64)
+        self.animation_east = Animation(spritesheet, 8, 65, 705, 64, 64)
+        self.animation_south = Animation(spritesheet, 8, 65, 641, 64, 64)
+        self.animation_west = Animation(spritesheet, 8, 65, 577, 64, 64)
 
-        self.standing_animation_north = Animation(spritesheet, 1, 0, 0, 32, 50)
-        self.standing_animation_east = Animation(spritesheet, 1, 0, 50, 32, 50)
-        self.standing_animation_south = Animation(spritesheet, 1, 0, 100, 32, 50)
-        self.standing_animation_west = Animation(spritesheet, 1, 0, 150, 32, 50)
+        self.standing_animation_north = Animation(spritesheet, 1, 0, 513, 64, 64)
+        self.standing_animation_east = Animation(spritesheet, 1, 0, 705, 64, 64)
+        self.standing_animation_south = Animation(spritesheet, 1, 0, 641, 64, 64)
+        self.standing_animation_west = Animation(spritesheet, 1, 0, 577, 64, 64)
 
         self.directions = {
             "north": (self.animation_north, self.standing_animation_north),
@@ -32,11 +32,15 @@ class Equipment:
                 else:
                     standing_animation.update()
 
-    def draw(self, screen, x, y, is_moving):
+    def draw(self, screen, x, y, size_x, size_y, is_moving):
         if is_moving:
-            self.directions[self.current_direction][0].draw(screen, x, y)
+            self.directions[self.current_direction][0].draw(
+                screen, x, y, size_x, size_y
+            )
         else:
-            self.directions[self.current_direction][1].draw(screen, x, y)
+            self.directions[self.current_direction][1].draw(
+                screen, x, y, size_x, size_y
+            )
 
 
 class Weapon(Equipment):

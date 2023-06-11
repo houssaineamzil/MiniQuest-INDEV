@@ -60,12 +60,7 @@ class Character:
         x0, y0 = self.rect.center
         x1, y1 = target_x, target_y
 
-        rect_list = [
-            pygame.Rect(tile.x, tile.y, tile.width, tile.height)
-            for tile in collision_tiles
-        ]
-
-        for rect in rect_list:
+        for rect in collision_tiles:
             if rect.clipline(x0, y0, x1, y1):
                 return False
 

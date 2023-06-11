@@ -13,23 +13,24 @@ class Player:
         self.size_y = 50
         self.spritesheet = Spritesheet("source/img/player.png")
 
-        self.animation_north = Animation(self.spritesheet, 3, 0, 0, 32, 50)
-        self.animation_east = Animation(self.spritesheet, 3, 0, 50, 32, 50)
-        self.animation_south = Animation(self.spritesheet, 3, 0, 100, 32, 50)
-        self.animation_west = Animation(self.spritesheet, 3, 0, 150, 32, 50)
+        self.animation_north = Animation(self.spritesheet, 8, 65, 513, 64, 64)
+        self.animation_east = Animation(self.spritesheet, 8, 65, 705, 64, 64)
+        self.animation_south = Animation(self.spritesheet, 8, 65, 641, 64, 64)
+        self.animation_west = Animation(self.spritesheet, 8, 65, 577, 64, 64)
 
-        self.standing_animation_north = Animation(self.spritesheet, 1, 0, 0, 32, 50)
-        self.standing_animation_east = Animation(self.spritesheet, 1, 0, 50, 32, 50)
-        self.standing_animation_south = Animation(self.spritesheet, 1, 0, 100, 32, 50)
-        self.standing_animation_west = Animation(self.spritesheet, 1, 0, 150, 32, 50)
+        self.standing_animation_north = Animation(self.spritesheet, 1, 0, 513, 64, 64)
+        self.standing_animation_east = Animation(self.spritesheet, 1, 0, 705, 64, 64)
+        self.standing_animation_south = Animation(self.spritesheet, 1, 0, 641, 64, 64)
+        self.standing_animation_west = Animation(self.spritesheet, 1, 0, 577, 64, 64)
 
         self.current_animation = self.animation_south
         self.armours = []
+        self.weapon = None
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 3
         self.dead = False
         self.collision_rect = pygame.FRect(
-            self.rect.x, self.rect.y, self.rect.width - 3, self.rect.height * 0.35
+            self.rect.x, self.rect.y, self.rect.width - 3, self.rect.height * 0.4
         )
         self.collision_rect.midbottom = self.rect.midbottom
 
@@ -47,13 +48,21 @@ class Player:
         self.current_animation.update()
         for armour in self.armours:
             armour.update(self.current_animation.direction, self.moved)
-        self.weapon.update(self.current_animation.direction, self.moved)
+        if self.weapon:
+            self.weapon.update(self.current_animation.direction, self.moved)
 
     def draw(self, screen):
-        self.current_animation.draw(screen, self.rect.x, self.rect.y)
+        self.current_animation.draw(
+            screen, self.rect.x, self.rect.y, self.size_x, self.size_y
+        )
         for armour in self.armours:
-            armour.draw(screen, self.rect.x, self.rect.y, self.moved)
-        self.weapon.draw(screen, self.rect.x, self.rect.y, self.moved)
+            armour.draw(
+                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.moved
+            )
+        if self.weapon:
+            self.weapon.draw(
+                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.moved
+            )
 
     def equip_armour(self, armour):
         self.armours.append(armour)

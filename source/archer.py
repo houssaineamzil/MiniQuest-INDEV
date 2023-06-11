@@ -7,7 +7,7 @@ from projectile import Arrow
 
 class Archer(Enemy):
     PROJECTILE_LIFE = 20
-    PROJECTILE_SPEED = 20
+    PROJECTILE_SPEED = 15
 
     def __init__(self, x, y, hp):
         super().__init__(x, y, hp)
@@ -26,7 +26,7 @@ class Archer(Enemy):
     def get_next_shot_time(
         self,
     ):
-        return pygame.time.get_ticks() + random.randint(500, 2000)
+        return pygame.time.get_ticks() + random.randint(3000, 4000)
 
     def shoot(self, target_x, target_y, collision_tiles):
         current_time = pygame.time.get_ticks()
