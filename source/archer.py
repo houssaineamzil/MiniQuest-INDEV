@@ -14,7 +14,7 @@ class Archer(Enemy):
         self.size_x = 30
         self.size_y = 42
         self.hp = hp
-        self.speed = 0
+        self.speed = 1.2
         self.original_image = pygame.image.load("source/img/archer.png")
         self.image = pygame.transform.scale(
             self.original_image, (self.size_x, self.size_y)

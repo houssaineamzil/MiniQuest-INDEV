@@ -28,7 +28,7 @@ class Game:
         self.blackpants = Armour(Spritesheet("source/img/blackpants.png"), 1)
         self.brownboots = Armour(Spritesheet("source/img/brownboots.png"), 1)
 
-        self.shortbow = Weapon(Spritesheet("source/img/brownboots.png"), Arrow, 10, 30)
+        self.shortbow = Weapon(Spritesheet("source/img/shortbow.png"), Arrow, 10, 30)
         self.firestaff = Weapon(Spritesheet("source/img/brownboots.png"), Spell, 30, 10)
 
         self.player = Player(player_x, player_y)
@@ -36,7 +36,7 @@ class Game:
         self.player.equip_armour(self.whiteshirt)
         self.player.equip_armour(self.blackpants)
         self.player.equip_armour(self.brownboots)
-        self.player.equip_weapon(self.firestaff)
+        self.player.equip_weapon(self.shortbow)
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
         self.map.collisionSetup()
@@ -49,6 +49,7 @@ class Game:
         run = True
         while run:
             self.clock_object.tick(60)
+
             self.map.drawFloorLayer(self.game_screen)
             self.map.drawGroundLayer(self.game_screen)
 

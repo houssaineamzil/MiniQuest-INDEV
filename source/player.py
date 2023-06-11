@@ -38,9 +38,6 @@ class Player:
 
     def hit_by_projectile(self):
         self.dead = True
-        dead_image = pygame.image.load("source/img/player_dead.png")
-        dead_image = pygame.transform.scale(dead_image, (self.size_x, self.size_y))
-        self.image = dead_image
 
     def teleport(self, x, y):
         self.rect.midbottom = (x, y)
