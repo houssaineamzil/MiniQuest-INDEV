@@ -111,6 +111,7 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
 - Fix any issues that arise
 
 ## Prototype
+**NOTE:** Subject to change
 <p align="center">
   <img src="example.gif" alt="prototype1"/>
   <img src="example2.gif" alt="prototype2"/>
