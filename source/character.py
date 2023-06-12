@@ -61,7 +61,9 @@ class Character:
         x1, y1 = target_x, target_y
 
         for rect in collision_tiles:
-            if rect.clipline(x0, y0, x1, y1):
+            expanded_rect = rect.inflate(4, 4)
+
+            if expanded_rect.clipline(x0, y0, x1, y1):
                 return False
 
         return True

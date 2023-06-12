@@ -21,7 +21,6 @@ class Projectile:
         self.owner = owner
 
         start_x, start_y = self.owner.rect.center
-        start_y = start_y + 10
 
         dx = target_x - start_x
         dy = target_y - start_y
