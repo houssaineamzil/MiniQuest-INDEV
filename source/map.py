@@ -101,12 +101,13 @@ class Map:
             enemy.draw(game_screen)
 
             for projectile in self.projectiles:
-                if enemy.rect.colliderect(projectile.rect) and isinstance(
+                if enemy.rect.colliderect(projectile.collision_rect) and isinstance(
                     projectile.owner, Player
                 ):
                     enemy.take_damage()
                     explosion = projectile.explosion(
-                        projectile.rect.centerx, projectile.rect.centery
+                        projectile.collision_rect.centerx,
+                        projectile.collision_rect.centery,
                     )
                     self.add_explosion(explosion)
 
@@ -117,8 +118,9 @@ class Map:
 
     def update_projectiles(self, game_screen, player):
         for projectile in self.projectiles:
+            # self.drawRects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
             if (
-                player.rect.colliderect(projectile.rect)
+                player.rect.colliderect(projectile.collision_rect)
                 and projectile.owner is not player
             ):
                 for enemy in self.enemies:
@@ -130,7 +132,7 @@ class Map:
                 self.collision_tiles, self.screen_width, self.screen_height
             ):
                 explosion = projectile.explosion(
-                    projectile.rect.centerx, projectile.rect.centery
+                    projectile.collision_rect.centerx, projectile.collision_rect.centery
                 )
                 self.add_explosion(explosion)
                 self.remove_projectile(projectile)
@@ -243,9 +245,9 @@ class Map:
             )
             self.add_particle(particle)
 
-    def drawRects(self, gameScreen, player):
-        pygame.draw.rect(gameScreen, (255, 0, 0), player.rect, 2)
-        pygame.draw.rect(gameScreen, (0, 255, 0), player.collision_rect, 2)
+    def drawRects(self, gameScreen, entity):
+        # pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)
+        pygame.draw.rect(gameScreen, (0, 255, 0), entity.collision_rect, 2)
 
     def save_state(self, state_filename):
         state = {

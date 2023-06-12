@@ -23,6 +23,9 @@ class Game:
         self.screen_height = screen_height
         self.map_file = map_file
         self.last_shot = 0
+        self.game_over = False
+        self.fade_in_time = 2000
+        self.fade_in_start = None
 
         pygame.init()
         pygame.mixer.init()
@@ -38,7 +41,7 @@ class Game:
         self.chainmail = Chainmail(Spritesheet("source/img/chainmail.png"), 1)
         self.leatherpants = LeatherPants(Spritesheet("source/img/leatherpants.png"), 1)
         self.blackboots = BlackBoots(Spritesheet("source/img/blackboots.png"), 1)
-        self.shortbow = Shortbow(Spritesheet("source/img/shortbow.png"), Arrow, 10, 30)
+        self.shortbow = Shortbow(Spritesheet("source/img/shortbow.png"), Arrow, 15, 20)
 
         self.player.equip_armour(self.leatherpants)
         self.player.equip_armour(self.blackboots)
@@ -55,7 +58,16 @@ class Game:
 
     def run(self):
         run = True
-        while run:
+        while run == True:
+            if self.game_over:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        for file in os.listdir("source/tile"):
+                            if file.endswith(".pkl"):
+                                os.remove(os.path.join("source/tile", file))
+                            run = False
+                continue
+
             self.clock_object.tick(60)
 
             self.map.drawFloorLayer(self.game_screen)
@@ -110,6 +122,23 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_i:
                         self.player.inventory_open = not self.player.inventory_open
-            pygame.display.flip()
 
-        pygame.quit()
+            if self.player.dead:
+                game_over_font = pygame.font.Font(None, 50)
+                game_over_text = game_over_font.render("You Died.", True, (150, 0, 0))
+                text_surface = pygame.Surface(
+                    game_over_text.get_size(), pygame.SRCALPHA
+                )
+                text_rect = text_surface.get_rect(
+                    center=(self.screen_width / 2, self.screen_height / 2)
+                )
+
+                self.game_screen.fill((0, 0, 0))
+
+                text_surface.blit(game_over_text, (0, 0))
+
+                self.game_screen.blit(text_surface, text_rect)
+
+                self.game_over = True
+
+            pygame.display.flip()
