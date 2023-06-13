@@ -1,5 +1,40 @@
 {
     "maps": [
+        {
+            "fileName": "village.tmx",
+            "height": 800,
+            "width": 800,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "fileName": "path.tmx",
+            "height": 800,
+            "width": 800,
+            "x": 0,
+            "y": -800
+        },
+        {
+            "fileName": "secretforest.tmx",
+            "height": 800,
+            "width": 800,
+            "x": 800,
+            "y": -800
+        },
+        {
+            "fileName": "inn.tmx",
+            "height": 800,
+            "width": 800,
+            "x": 0,
+            "y": 800
+        },
+        {
+            "fileName": "field.tmx",
+            "height": 800,
+            "width": 800,
+            "x": -800,
+            "y": -800
+        }
     ],
     "onlyShowAdjacentMaps": false,
     "type": "world"

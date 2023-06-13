@@ -29,6 +29,7 @@ class Player:
         self.inventory = Inventory()
         self.weapon = None
         self.inventory_open = False
+        self.current_chest = None
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 3
         self.dead = False

@@ -1,5 +1,6 @@
 from animation import Animation
 from projectile import Arrow, Spell
+from spritesheet import Spritesheet
 
 
 class Equipment:
@@ -68,24 +69,28 @@ class Armour(Equipment):
 
 
 class Shortbow(Weapon):
-    def __init__(self, spritesheet, projectile_type, life, speed):
-        super().__init__(spritesheet, projectile_type, life, speed)
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 20, 15)
+        self.class_name = self.__class__.__name__
         self.name = "Shortbow"
 
 
 class LeatherPants(Armour):
-    def __init__(self, spritesheet, hp_buff):
-        super().__init__(spritesheet, hp_buff)
-        self.name = "Leather Pants"
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/leatherpants.png"), 1)
+        self.class_name = self.__class__.__name__
+        self.name = "LeatherPants"
 
 
 class BlackBoots(Armour):
-    def __init__(self, spritesheet, hp_buff):
-        super().__init__(spritesheet, hp_buff)
-        self.name = "Black Boots"
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/blackboots.png"), 1)
+        self.class_name = self.__class__.__name__
+        self.name = "BlackBoots"
 
 
 class Chainmail(Armour):
-    def __init__(self, spritesheet, hp_buff):
-        super().__init__(spritesheet, hp_buff)
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/chainmail.png"), 1)
+        self.class_name = self.__class__.__name__
         self.name = "Chainmail"

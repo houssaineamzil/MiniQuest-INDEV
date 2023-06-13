@@ -27,6 +27,7 @@ class Map:
         self.explosions = []
         self.collision_tiles = []
         self.chests = []
+        self.load_chests()
         self.spawn_enemies()
 
     def spawn_enemies(self):
@@ -40,6 +41,12 @@ class Map:
                 self.add_enemy(enemy)
             except KeyError:
                 print(f"Warning: Unknown enemy type {obj.name}")
+
+    def load_chests(self):
+        chest_objects = self.map_data.get_layer_by_name("chests")
+        for obj in chest_objects:
+            chest = Chest(obj.x, obj.y, obj.width, obj.height, obj.items)
+            self.chests.append(chest)
 
     def add_enemy(self, enemy):
         self.enemies.append(enemy)
@@ -72,8 +79,8 @@ class Map:
     def update(self, game_screen, player):
         self.update_portals(player)
         self.update_enemies(game_screen, player)
-        self.update_projectiles(game_screen, player)
         self.update_particles(game_screen)
+        self.update_projectiles(game_screen, player)
         self.update_explosions(game_screen)
 
     def update_portals(self, player):
@@ -160,11 +167,12 @@ class Map:
 
         self.map_file = new_map_file
         self.map_data = pytmx.load_pygame(new_map_file)
-        self.collisionSetup()
+        self.objectSetup()
         self.projectiles.clear()
         self.particles.clear()
         self.explosions.clear()
         self.enemies.clear()
+        self.chests.clear()
 
         self.load_state(new_map_file + ".pkl")
         if (
@@ -172,10 +180,11 @@ class Map:
             or os.path.getsize(new_map_file + ".pkl") == 0
         ):
             self.spawn_enemies()
+            self.load_chests()
         else:
             self.load_state(new_map_file + ".pkl")
 
-    def collisionSetup(self):
+    def objectSetup(self):
         self.collision_tiles = []
         self.portals = []
         for layer in self.map_data.visible_layers:
@@ -195,6 +204,18 @@ class Map:
             if layer.name == "collision":
                 for obj in layer:
                     collision_rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                    self.collision_tiles.append(collision_rect)
+            if layer.name == "chests":
+                for obj in layer:
+                    x = obj.x + (
+                        obj.width // 4
+                    )  # Shift the x-coordinate by a quarter of the width
+                    y = obj.y + (
+                        obj.height // 4
+                    )  # Shift the y-coordinate by a quarter of the height
+                    width = obj.width // 2  # Reduce the width by half
+                    height = obj.height // 2  # Reduce the height by half
+                    collision_rect = pygame.Rect(x, y, width, height)
                     self.collision_tiles.append(collision_rect)
 
     def drawGroundLayer(self, game_screen):
@@ -251,6 +272,16 @@ class Map:
 
     def save_state(self, state_filename):
         state = {
+            "chests": [
+                (
+                    chest.rect.x,
+                    chest.rect.y,
+                    chest.rect.width,
+                    chest.rect.height,
+                    [item.name for item in chest.items],
+                )
+                for chest in self.chests
+            ],
             "enemies": [
                 (type(enemy).__name__, enemy.rect.x, enemy.rect.y, enemy.hp)
                 for enemy in self.enemies
@@ -273,6 +304,12 @@ class Map:
             class_name, x, y, hp = enemy_info
             enemy_class = globals()[class_name]
             self.enemies.append(enemy_class(x, y, hp))
+        self.chests = []
+        for chest_info in state["chests"]:
+            x, y, width, height, items = chest_info
+            items_string = ",".join(items)
+            chest = Chest(x, y, width, height, items_string)
+            self.chests.append(chest)
 
 
 class Portal:

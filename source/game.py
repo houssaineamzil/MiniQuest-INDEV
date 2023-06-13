@@ -14,7 +14,6 @@ from equipment import (
     Chainmail,
 )
 from spritesheet import Spritesheet
-from chest import Chest
 
 
 class Game:
@@ -38,19 +37,10 @@ class Game:
 
         self.player = Player(player_x, player_y)
 
-        self.chainmail = Chainmail(Spritesheet("source/img/chainmail.png"), 1)
-        self.leatherpants = LeatherPants(Spritesheet("source/img/leatherpants.png"), 1)
-        self.blackboots = BlackBoots(Spritesheet("source/img/blackboots.png"), 1)
-        self.shortbow = Shortbow(Spritesheet("source/img/shortbow.png"), Arrow, 15, 20)
-
-        self.player.equip_armour(self.leatherpants)
-        self.player.equip_armour(self.blackboots)
-
-        self.player.inventory.add_item(self.shortbow)
-        self.player.inventory.add_item(self.chainmail)
+        self.player.equip_armour(LeatherPants())
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
-        self.map.collisionSetup()
+        self.map.objectSetup()
 
         pygame.mixer.music.load("source/sound/music.wav")
         pygame.mixer.music.play(-1)
@@ -74,7 +64,7 @@ class Game:
             self.map.drawGroundLayer(self.game_screen)
 
             self.map.update(self.game_screen, self.player)
-            # self.map.drawRects(self.game_screen, self.player)  # debug player collision
+            # self.map.drawRects(self.game_screen, self.player)  #PLAYER COLLISION DEBUG
 
             if self.player.movement(
                 self.map.collision_tiles, self.screen_width, self.screen_height
@@ -86,7 +76,15 @@ class Game:
             self.map.drawAboveGroundLayer(self.game_screen)
 
             if self.player.inventory_open:
-                self.player.inventory.draw_inventory(self.game_screen, 5, 5)
+                self.player.inventory.draw_inventory(self.game_screen)
+
+            for chest in self.map.chests:
+                if chest.opened:
+                    chest.draw_inventory(self.game_screen)
+                if chest.opened and not self.player.collision_rect.colliderect(
+                    chest.rect
+                ):
+                    chest.opened = False
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -98,7 +96,11 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1 and not self.player.dead:
                         current_time = pygame.time.get_ticks()
-                        if current_time - self.last_shot >= 1000 and self.player.weapon:
+                        if (
+                            current_time - self.last_shot >= 1000
+                            and self.player.weapon
+                            and self.player.inventory_open == False
+                        ):
                             mouse_x, mouse_y = pygame.mouse.get_pos()
                             self.map.add_projectile(
                                 self.player.weapon.shoot(self.player, mouse_x, mouse_y)
@@ -119,9 +121,35 @@ class Game:
                                     elif isinstance(item, Armour):
                                         self.player.equip_armour(item)
                                         self.player.inventory.remove_item(item)
+
+                        mouse_pos = pygame.mouse.get_pos()
+                        if self.player.current_chest:
+                            for i, item_rect in enumerate(
+                                self.player.current_chest.get_item_rects()
+                            ):
+                                if item_rect.collidepoint(mouse_pos):
+                                    self.player.current_chest.move_item(
+                                        self.player.current_chest.items[i],
+                                        self.player.inventory,
+                                    )
+                                    break
+
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_i:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if event.key == pygame.K_TAB:
                         self.player.inventory_open = not self.player.inventory_open
+
+                    if event.key == pygame.K_e:
+                        for chest in self.map.chests:
+                            if self.player.collision_rect.colliderect(chest.rect):
+                                if not chest.opened:
+                                    chest.opened = True
+                                    self.player.inventory_open = True
+                                    self.player.current_chest = chest
+                                else:
+                                    chest.opened = False
+                                    self.player.inventory_open = False
+                                    self.player.current_chest = None
 
             if self.player.dead:
                 game_over_font = pygame.font.Font(None, 50)
