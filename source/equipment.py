@@ -80,7 +80,7 @@ class LeatherPants(Armour):
     def __init__(self):
         super().__init__(Spritesheet("source/img/leatherpants.png"), 1)
         self.class_name = self.__class__.__name__
-        self.name = "LeatherPants"
+        self.name = "Leather Pants"
         self.equipment_slot = "Legs"
 
 
@@ -88,7 +88,7 @@ class BlackBoots(Armour):
     def __init__(self):
         super().__init__(Spritesheet("source/img/blackboots.png"), 1)
         self.class_name = self.__class__.__name__
-        self.name = "BlackBoots"
+        self.name = "Black Boots"
         self.equipment_slot = "Feet"
 
 

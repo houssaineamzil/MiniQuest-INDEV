@@ -81,15 +81,16 @@ class Player:
         if self.worn_equipment[slot]:
             self.inventory.add_item(self.worn_equipment[slot])
         self.worn_equipment[slot] = equipment
-
-    def unequip_item(self, slot):
-        self.worn_equipment[slot] = None
+        self.sync_animation(self.worn_equipment[slot])
 
     def sync_animation(self, equipment):
         for direction, (animation, _) in equipment.directions.items():
             player_animation = self.get_player_animation(direction)
             animation.current_frame = player_animation.current_frame
             animation.last_update = player_animation.last_update
+
+    def unequip_item(self, slot):
+        self.worn_equipment[slot] = None
 
     def get_player_animation(self, direction):
         if direction == "north":

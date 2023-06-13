@@ -274,7 +274,7 @@ class Map:
                     chest.rect.y,
                     chest.rect.width,
                     chest.rect.height,
-                    [item.name for item in chest.items],
+                    [item.class_name for item in chest.items],
                 )
                 for chest in self.chests
             ],
