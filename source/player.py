@@ -25,9 +25,16 @@ class Player:
         self.standing_animation_west = Animation(self.spritesheet, 1, 0, 577, 64, 64)
 
         self.current_animation = self.animation_south
-        self.armours = []
         self.inventory = Inventory()
-        self.weapon = None
+
+        self.worn_equipment = {
+            "Head": None,
+            "Torso": None,
+            "Legs": None,
+            "Feet": None,
+            "Weapon": None,
+        }
+
         self.inventory_open = False
         self.current_chest = None
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
@@ -50,31 +57,33 @@ class Player:
 
     def update(self):
         self.current_animation.update()
-        for armour in self.armours:
-            armour.update(self.current_animation.direction, self.moved)
-        if self.weapon:
-            self.weapon.update(self.current_animation.direction, self.moved)
+        for item in self.worn_equipment.values():
+            if item is not None:
+                item.update(self.current_animation.direction, self.moved)
 
     def draw(self, screen):
         self.current_animation.draw(
             screen, self.rect.x, self.rect.y, self.size_x, self.size_y
         )
-        for armour in self.armours:
-            armour.draw(
-                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.moved
-            )
-        if self.weapon:
-            self.weapon.draw(
-                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.moved
-            )
+        for item in self.worn_equipment.values():
+            if item is not None:
+                item.draw(
+                    screen,
+                    self.rect.x,
+                    self.rect.y,
+                    self.size_x,
+                    self.size_y,
+                    self.moved,
+                )
 
-    def equip_armour(self, armour):
-        self.armours.append(armour)
-        self.sync_animation(armour)
+    def equip_item(self, equipment):
+        slot = equipment.equipment_slot
+        if self.worn_equipment[slot]:
+            self.inventory.add_item(self.worn_equipment[slot])
+        self.worn_equipment[slot] = equipment
 
-    def equip_weapon(self, weapon):
-        self.weapon = weapon
-        self.sync_animation(weapon)
+    def unequip_item(self, slot):
+        self.worn_equipment[slot] = None
 
     def sync_animation(self, equipment):
         for direction, (animation, _) in equipment.directions.items():

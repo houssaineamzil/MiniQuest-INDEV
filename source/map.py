@@ -145,7 +145,7 @@ class Map:
             else:
                 self.add_particle(projectile.particle)
                 game_screen.blit(projectile.image, projectile.rect)
-            # self.drawRects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
+            # self.draw_rects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
 
     def update_particles(self, game_screen):
         for particle in list(self.particles):
@@ -262,7 +262,7 @@ class Map:
             )
             self.add_particle(particle)
 
-    def drawRects(self, gameScreen, entity):
+    def draw_rects(self, gameScreen, entity):
         pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)
         pygame.draw.rect(gameScreen, (0, 255, 0), entity.collision_rect, 2)
 

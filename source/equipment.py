@@ -73,6 +73,7 @@ class Shortbow(Weapon):
         super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 20, 15)
         self.class_name = self.__class__.__name__
         self.name = "Shortbow"
+        self.equipment_slot = "Weapon"
 
 
 class LeatherPants(Armour):
@@ -80,6 +81,7 @@ class LeatherPants(Armour):
         super().__init__(Spritesheet("source/img/leatherpants.png"), 1)
         self.class_name = self.__class__.__name__
         self.name = "LeatherPants"
+        self.equipment_slot = "Legs"
 
 
 class BlackBoots(Armour):
@@ -87,6 +89,7 @@ class BlackBoots(Armour):
         super().__init__(Spritesheet("source/img/blackboots.png"), 1)
         self.class_name = self.__class__.__name__
         self.name = "BlackBoots"
+        self.equipment_slot = "Feet"
 
 
 class Chainmail(Armour):
@@ -94,3 +97,4 @@ class Chainmail(Armour):
         super().__init__(Spritesheet("source/img/chainmail.png"), 1)
         self.class_name = self.__class__.__name__
         self.name = "Chainmail"
+        self.equipment_slot = "Torso"

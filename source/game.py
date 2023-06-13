@@ -36,7 +36,7 @@ class Game:
         self.clock_object = pygame.time.Clock()
 
         self.player = Player(player_x, player_y)
-        self.player.equip_armour(LeatherPants())
+        self.player.equip_item(LeatherPants())
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
         self.map.object_setup()
@@ -71,12 +71,12 @@ class Game:
 
             self.player.update()
             self.player.draw(self.game_screen)
-            # self.map.drawRects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
+            # self.map.draw_rects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
 
             self.map.draw_above_ground_layer(self.game_screen)
 
             if self.player.inventory_open:
-                self.player.inventory.draw_inventory(self.game_screen)
+                self.player.inventory.draw_inventory(self.game_screen, self.player)
 
             for chest in self.map.chests:  # < refactor
                 if chest.opened:
@@ -100,48 +100,59 @@ class Game:
                         current_time = pygame.time.get_ticks()
                         if (
                             current_time - self.last_shot >= 1000
-                            and self.player.weapon
+                            and self.player.worn_equipment["Weapon"] is not None
                             and self.player.inventory_open == False
+                            and self.player.current_chest == None
                         ):
                             mouse_x, mouse_y = pygame.mouse.get_pos()
                             self.map.add_projectile(
-                                self.player.weapon.shoot(self.player, mouse_x, mouse_y)
+                                self.player.worn_equipment["Weapon"].shoot(
+                                    self.player, mouse_x, mouse_y
+                                )
                             )
                             self.last_shot = current_time
-                        if self.player.inventory_open == True:
-                            click_pos = event.pos
-                            inv_pos_x, inv_pos_y = (0, 0)
-                            for i, item_rect in enumerate(
-                                self.player.inventory.get_item_rects()
-                            ):
-                                item_rect.move_ip(inv_pos_x, inv_pos_y)
-                                if item_rect.collidepoint(click_pos):
-                                    item = self.player.inventory.items[i]
-                                    if self.player.current_chest:
-                                        self.player.inventory.remove_item(item)
-                                        self.player.current_chest.add_item(item)
-                                    else:
-                                        if isinstance(item, Weapon):
-                                            self.player.equip_weapon(item)
-                                            self.player.inventory.remove_item(item)
-                                        elif isinstance(item, Armour):
-                                            self.player.equip_armour(item)
+                        click_pos = event.pos
+                        inv_pos_x, inv_pos_y = (0, 0)
+
+                        for i, item_rect in enumerate(
+                            self.player.inventory.get_item_rects()
+                        ):
+                            item_rect.move_ip(inv_pos_x, inv_pos_y)
+                            if item_rect.collidepoint(click_pos):
+                                item = self.player.inventory.items[i]
+                                if self.player.current_chest:
+                                    self.player.inventory.remove_item(item)
+                                    self.player.current_chest.add_item(item)
+                                else:
+                                    if isinstance(item, (Weapon, Armour)):
+                                        if (
+                                            self.player.worn_equipment[
+                                                item.equipment_slot
+                                            ]
+                                            is None
+                                        ):
+                                            self.player.equip_item(item)
                                             self.player.inventory.remove_item(item)
 
-                            mouse_pos = pygame.mouse.get_pos()
-                            if self.player.current_chest:
-                                for i, item_rect in enumerate(
-                                    self.player.current_chest.get_item_rects()
-                                ):
-                                    if item_rect.collidepoint(mouse_pos):
-                                        self.player.current_chest.move_item(
-                                            self.player.current_chest.items[i],
-                                            self.player.inventory,
-                                        )
-                                        break
+                        for i, item_rect in enumerate(
+                            self.player.inventory.get_equipment_rects(self.player)
+                        ):
+                            if item_rect.collidepoint(click_pos):
+                                slot, item = list(self.player.worn_equipment.items())[i]
+                                if item:
+                                    self.player.unequip_item(slot)
+                                    self.player.inventory.add_item(item)
+
+                        if self.player.current_chest:
+                            for i, item_rect in enumerate(
+                                self.player.current_chest.get_item_rects()
+                            ):
+                                if item_rect.collidepoint(click_pos):
+                                    item = self.player.current_chest.items[i]
+                                    self.player.current_chest.remove_item(item)
+                                    self.player.inventory.add_item(item)
 
                 if event.type == pygame.KEYDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
                     if event.key == pygame.K_TAB:
                         self.player.inventory_open = not self.player.inventory_open
 
