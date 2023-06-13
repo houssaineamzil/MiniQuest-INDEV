@@ -85,27 +85,26 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
 - Develop a basic playable prototype featuring core gameplay mechanics, such as player movement, basic combat, and interaction with the game world.
 - Establish a solid foundation for the game's code, incorporating good software design practices and clean code principles.
 
-### Alpha Development (July 2023 - August 2023)
+### Alpha Development (July 2023 - TBD)
 - Develop the first complete version of the game, also known as the alpha version.
 - This version should include all major game systems and mechanics, basic art assets, and a significant portion of the game's content.
 - Continue playtesting and start to gather broader feedback on the game's design and balance.
 
-### Beta Development (August 2023 - September 2023)
+### Beta Development (TBD - TBD)
 - Polish the game, fix bugs, and implement final assets, including art, sound, and music.
 - Optimize the game for the best performance.
 - Continue playtesting with a broader audience to find and fix as many bugs as possible.
 
-### Release (October 2023)
+### Release (TBD)
 - Launch the final version of the game.
 - Monitor for any immediate issues that need to be addressed.
 - Begin post-launch support, including fixing any additional bugs and potentially starting work on additional content or features based on player feedback.
 
-### Post-Release (October 2023 and beyond)
+### Post-Release (TBD)
 - Monitor the game for bugs
 - Fix any issues that arise
 
-## Prototype
-**NOTE: Subject to change**
+## Progress Over Time
 <p align="center">
   <img src="example.gif" alt="prototype1"/>
   <img src="example2.gif" alt="prototype2"/>
