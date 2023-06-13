@@ -36,7 +36,6 @@ class Game:
         self.clock_object = pygame.time.Clock()
 
         self.player = Player(player_x, player_y)
-
         self.player.equip_armour(LeatherPants())
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
