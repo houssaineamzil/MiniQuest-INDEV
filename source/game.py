@@ -63,7 +63,7 @@ class Game:
             self.map.drawGroundLayer(self.game_screen)
 
             self.map.update(self.game_screen, self.player)
-            # self.map.drawRects(self.game_screen, self.player)  #PLAYER COLLISION DEBUG
+            # self.map.drawRects(self.game_screen, self.player) #PLAYER COLLISION DEBUG
 
             if self.player.movement(
                 self.map.collision_tiles, self.screen_width, self.screen_height
