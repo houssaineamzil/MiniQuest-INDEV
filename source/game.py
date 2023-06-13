@@ -77,7 +77,7 @@ class Game:
             if self.player.inventory_open:
                 self.player.inventory.draw_inventory(self.game_screen)
 
-            for chest in self.map.chests:
+            for chest in self.map.chests:  # < refactor
                 if chest.opened:
                     chest.draw_inventory(self.game_screen)
                 if chest.opened and not self.player.collision_rect.colliderect(
