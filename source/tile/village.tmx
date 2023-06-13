@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="103">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="107">
  <tileset firstgid="1" source="village.tsx"/>
  <tileset firstgid="1065" source="houses.tsx"/>
  <tileset firstgid="2089" source="interior.tsx"/>
@@ -39,7 +39,7 @@
 1,66,49,1,0,0,0,0,0,0,49,1,1,1,1,1,209,291,291,209,1,1,1,1,1,
 1,1,1,1,0,0,0,0,0,0,1,1,46,1,1,1,209,291,291,209,1,1,0,0,1,
 1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,218,291,291,218,1,1,19,20,1,
-1,176,1,1,0,1742,1743,1743,1742,0,1,66,0,0,1,1,236,291,291,1,1,1,1,1,1,
+1,176,1,1,0,1742,1743,1743,1742,0,1,66,0,0,1,1,0,291,291,1,1,1,1,1,1,
 1,287,288,1,1834,1837,1839,1838,1837,1843,1,1,19,20,1,56,1,291,291,1,1,167,1,1,1,
 1,1,58,1,1866,1869,1870,1870,1869,1875,1,1,1,1,1,1,1,291,291,1,1,1,1,1,1,
 1,1,1,1,54,0,291,291,1,49,1,1,1,1,1,1,1,291,291,1,1,1,1,1,1,
@@ -113,7 +113,6 @@
   <object id="62" name="house" x="149.712" y="159.545" width="148.591" height="67.6818"/>
   <object id="63" name="wall" x="523.375" y="-0.125" width="9.375" height="156.25"/>
   <object id="64" name="wall" x="618.875" y="0" width="9.75" height="155.625"/>
-  <object id="66" name="sign" x="515.938" y="164.875" width="24.0625" height="18.125"/>
   <object id="68" name="stump" x="392.31" y="103.063" width="15.5511" height="11.4886"/>
   <object id="69" name="rock" x="35.3627" y="71.1004" width="23.5056" height="16.1931"/>
   <object id="70" name="rock" x="356.12" y="166.903" width="22.517" height="17.1931"/>
@@ -131,6 +130,16 @@
  </objectgroup>
  <objectgroup id="18" name="enemies">
   <object id="101" name="Archer" x="559.333" y="20.6667" width="15" height="13.6667">
+   <properties>
+    <property name="hp" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="105" name="Archer" x="587.833" y="51.8333" width="15" height="13.6667">
+   <properties>
+    <property name="hp" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="106" name="Archer" x="563.5" y="98.8333" width="15" height="13.6667">
    <properties>
     <property name="hp" type="int" value="2"/>
    </properties>

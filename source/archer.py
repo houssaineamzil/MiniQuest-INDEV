@@ -7,7 +7,7 @@ from projectile import Arrow
 
 class Archer(Enemy):
     PROJECTILE_LIFE = 20
-    PROJECTILE_SPEED = 15
+    PROJECTILE_SPEED = 20
 
     def __init__(self, x, y, hp):
         super().__init__(x, y, hp)

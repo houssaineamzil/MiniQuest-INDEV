@@ -27,7 +27,7 @@ class Map:
         self.explosions = []
         self.collision_tiles = []
         self.chests = []
-        self.load_chests()
+        self.spawn_chests()
         self.spawn_enemies()
 
     def spawn_enemies(self):
@@ -42,7 +42,7 @@ class Map:
             except KeyError:
                 print(f"Warning: Unknown enemy type {obj.name}")
 
-    def load_chests(self):
+    def spawn_chests(self):
         chest_objects = self.map_data.get_layer_by_name("chests")
         for obj in chest_objects:
             chest = Chest(obj.x, obj.y, obj.width, obj.height, obj.items)
@@ -125,7 +125,6 @@ class Map:
 
     def update_projectiles(self, game_screen, player):
         for projectile in self.projectiles:
-            # self.drawRects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
             if (
                 player.rect.colliderect(projectile.collision_rect)
                 and projectile.owner is not player
@@ -146,6 +145,7 @@ class Map:
             else:
                 self.add_particle(projectile.particle)
                 game_screen.blit(projectile.image, projectile.rect)
+            # self.drawRects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
 
     def update_particles(self, game_screen):
         for particle in list(self.particles):
@@ -167,7 +167,7 @@ class Map:
 
         self.map_file = new_map_file
         self.map_data = pytmx.load_pygame(new_map_file)
-        self.objectSetup()
+        self.object_setup()
         self.projectiles.clear()
         self.particles.clear()
         self.explosions.clear()
@@ -180,11 +180,11 @@ class Map:
             or os.path.getsize(new_map_file + ".pkl") == 0
         ):
             self.spawn_enemies()
-            self.load_chests()
+            self.spawn_chests()
         else:
             self.load_state(new_map_file + ".pkl")
 
-    def objectSetup(self):
+    def object_setup(self):
         self.collision_tiles = []
         self.portals = []
         for layer in self.map_data.visible_layers:
@@ -207,18 +207,14 @@ class Map:
                     self.collision_tiles.append(collision_rect)
             if layer.name == "chests":
                 for obj in layer:
-                    x = obj.x + (
-                        obj.width // 4
-                    )  # Shift the x-coordinate by a quarter of the width
-                    y = obj.y + (
-                        obj.height // 4
-                    )  # Shift the y-coordinate by a quarter of the height
-                    width = obj.width // 2  # Reduce the width by half
-                    height = obj.height // 2  # Reduce the height by half
+                    x = obj.x + (obj.width // 4)
+                    y = obj.y + (obj.height // 4)
+                    width = obj.width // 2
+                    height = obj.height // 2
                     collision_rect = pygame.Rect(x, y, width, height)
                     self.collision_tiles.append(collision_rect)
 
-    def drawGroundLayer(self, game_screen):
+    def draw_ground_layer(self, game_screen):
         ground_layer = self.map_data.get_layer_by_name("ground")
 
         for x, y, gid in ground_layer:
@@ -228,7 +224,7 @@ class Map:
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
-    def drawFloorLayer(self, game_screen):
+    def draw_floor_layer(self, game_screen):
         ground_layer = self.map_data.get_layer_by_name("floor")
 
         for x, y, gid in ground_layer:
@@ -238,7 +234,7 @@ class Map:
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
-    def drawAboveGroundLayer(self, game_screen):
+    def draw_above_ground_layer(self, game_screen):
         above_ground_layer = self.map_data.get_layer_by_name("above_ground")
 
         for x, y, gid in above_ground_layer:
@@ -267,7 +263,7 @@ class Map:
             self.add_particle(particle)
 
     def drawRects(self, gameScreen, entity):
-        # pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)
+        pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)
         pygame.draw.rect(gameScreen, (0, 255, 0), entity.collision_rect, 2)
 
     def save_state(self, state_filename):
@@ -299,11 +295,17 @@ class Map:
         with open(state_filename, "rb") as f:
             state = pickle.load(f)
 
+        self.load_enemies_state(state)
+        self.load_chests_state(state)
+
+    def load_enemies_state(self, state):
         self.enemies = []
         for enemy_info in state["enemies"]:
             class_name, x, y, hp = enemy_info
             enemy_class = globals()[class_name]
             self.enemies.append(enemy_class(x, y, hp))
+
+    def load_chests_state(self, state):
         self.chests = []
         for chest_info in state["chests"]:
             x, y, width, height, items = chest_info

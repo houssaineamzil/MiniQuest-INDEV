@@ -70,9 +70,29 @@ class Player:
 
     def equip_armour(self, armour):
         self.armours.append(armour)
+        self.sync_animation(armour)
 
     def equip_weapon(self, weapon):
         self.weapon = weapon
+        self.sync_animation(weapon)
+
+    def sync_animation(self, equipment):
+        for direction, (animation, _) in equipment.directions.items():
+            player_animation = self.get_player_animation(direction)
+            animation.current_frame = player_animation.current_frame
+            animation.last_update = player_animation.last_update
+
+    def get_player_animation(self, direction):
+        if direction == "north":
+            return self.animation_north
+        elif direction == "east":
+            return self.animation_east
+        elif direction == "south":
+            return self.animation_south
+        elif direction == "west":
+            return self.animation_west
+        else:
+            return None
 
     def movement(self, tiles, screen_width, screen_height):
         if not self.dead:

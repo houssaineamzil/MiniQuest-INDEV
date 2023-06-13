@@ -110,7 +110,7 @@ class Arrow(Projectile):
         self.orig_image = pygame.transform.scale(self.orig_image, (30, 30))
         super().__init__(*args, **kwargs)
 
-        self.collision_radius = 12
+        self.collision_radius = 10
         self.collision_rect = pygame.FRect(
             0, 0, self.collision_radius, self.collision_radius
         )
