@@ -76,6 +76,14 @@ class Shortbow(Weapon):
         self.equipment_slot = "Weapon"
 
 
+class FireStaff(Weapon):
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/firestaff.png"), Spell, 20, 15)
+        self.class_name = self.__class__.__name__
+        self.name = "Fire Staff"
+        self.equipment_slot = "Weapon"
+
+
 class LeatherPants(Armour):
     def __init__(self):
         super().__init__(Spritesheet("source/img/leatherpants.png"), 1)

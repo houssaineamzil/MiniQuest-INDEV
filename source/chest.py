@@ -1,7 +1,7 @@
 import pygame
 from equipment import Equipment
 
-from equipment import Shortbow, LeatherPants, BlackBoots, Chainmail
+from equipment import Shortbow, LeatherPants, BlackBoots, Chainmail, FireStaff
 
 
 class Chest:

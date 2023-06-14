@@ -25,7 +25,7 @@ class Inventory:
             self.remove_item(item)
             target_inventory.add_item(item)
 
-    def draw_inventory(self, screen, player):
+    def draw_inventory(self, screen):
         pygame.draw.rect(
             self.inv_image, (123, 123, 123), (0, 0, self.inv_width, self.inv_height)
         )
@@ -36,7 +36,9 @@ class Inventory:
         for i, item in enumerate(self.items):
             text_surface = self.font.render(item.name, True, (255, 255, 255))
             self.inv_image.blit(text_surface, (10, 50 * (i + 1) + 10))
+        screen.blit(self.inv_image, (self.inv_pos_x, self.inv_pos_y))
 
+    def draw_equipment(self, screen, player):
         pygame.draw.rect(
             self.equip_inv_image,
             (123, 123, 123),
@@ -54,11 +56,9 @@ class Inventory:
             else:
                 item_text = self.font.render(f"No {slot}", True, (255, 255, 255))
             self.equip_inv_image.blit(item_text, (10, 50 * (i + 1) + 10))
-
-        screen.blit(self.inv_image, (self.inv_pos_x, self.inv_pos_y))
         screen.blit(self.equip_inv_image, (self.inv_pos_x, self.equip_inv_pos_y))
 
-    def get_item_rects(self):
+    def get_inventory_rects(self):
         rects = []
         for i, item in enumerate(self.items):
             rect = pygame.Rect(

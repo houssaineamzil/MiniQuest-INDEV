@@ -38,7 +38,6 @@ class Projectile:
         self.orig_rect.y = spawn_y - self.orig_image.get_height() // 2
         self.speed = speed
         self.lifespan = life
-
         self.collided = False
 
     def update(self, tiles, screenWidth, screenHeight):

@@ -76,7 +76,8 @@ class Game:
             self.map.draw_above_ground_layer(self.game_screen)
 
             if self.player.inventory_open:
-                self.player.inventory.draw_inventory(self.game_screen, self.player)
+                self.player.inventory.draw_inventory(self.game_screen)
+                self.player.inventory.draw_equipment(self.game_screen, self.player)
 
             for chest in self.map.chests:  # < refactor
                 if chest.opened:
@@ -115,7 +116,7 @@ class Game:
                         inv_pos_x, inv_pos_y = (0, 0)
 
                         for i, item_rect in enumerate(
-                            self.player.inventory.get_item_rects()
+                            self.player.inventory.get_inventory_rects()
                         ):
                             item_rect.move_ip(inv_pos_x, inv_pos_y)
                             if item_rect.collidepoint(click_pos):
