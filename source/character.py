@@ -5,17 +5,15 @@ import math
 
 
 class Character:
-    def __init__(self, x, y, hp):
-        self.size = 20
+    def __init__(self, hp):
         self.hp = hp
-        self.speed = 1
 
-        self.original_image = pygame.image.load("source/img/skeleton.png")
-        self.image = pygame.transform.scale(self.original_image, (self.size, self.size))
-        self.rect = self.image.get_rect()
-        self.rect = pygame.FRect(x, y, self.size, self.size)
         self.hit = False
         self.hit_counter = 0
+        self.move_counter = 0
+        self.direction = 0
+        self.last_shot = 0
+        self.canshoot = True
 
     def move(self, dx, dy, collision_tiles, screen_width, screen_height):
         temp_rect = self.rect.copy()
@@ -63,5 +61,4 @@ class Character:
         for rect in collision_tiles:
             if rect.clipline(x0, y0, x1, y1):
                 return False
-
         return True

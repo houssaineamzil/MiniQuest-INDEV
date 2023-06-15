@@ -44,6 +44,9 @@ class Game:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
 
+        pygame.mouse.set_visible(False)
+        self.cursor_img = pygame.image.load("source/img/cursor.png")
+
     def run(self):
         run = True
         while run == True:
@@ -168,6 +171,9 @@ class Game:
                                     self.player.inventory_open = False
                                     self.player.current_chest = None
                                     self.player.selected_item = None
+
+            mx, my = pygame.mouse.get_pos()
+            self.game_screen.blit(self.cursor_img, (mx, my))
 
             if self.player.dead:
                 game_over_font = pygame.font.Font(None, 50)

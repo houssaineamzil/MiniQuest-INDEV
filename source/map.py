@@ -8,7 +8,6 @@ from player import Player
 from particle import Particle
 from archer import Archer
 from dragon import Dragon
-from enemy import Enemy
 from projectile import Arrow, Spell
 from explosion import SpellExplosion, ArrowExplosion, Explosion
 from chest import Chest

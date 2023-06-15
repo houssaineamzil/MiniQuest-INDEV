@@ -1,19 +1,18 @@
 import random
 import pygame
 import math
-from enemy import Enemy
 from projectile import Arrow
+from character import Character
 
 
-class Archer(Enemy):
+class Archer(Character):
     PROJECTILE_LIFE = 20
     PROJECTILE_SPEED = 20
 
     def __init__(self, x, y, hp):
-        super().__init__(x, y, hp)
+        super().__init__(hp)
         self.size_x = 30
         self.size_y = 42
-        self.hp = hp
         self.speed = 1.2
         self.original_image = pygame.image.load("source/img/archer.png")
         self.image = pygame.transform.scale(
@@ -59,7 +58,7 @@ class Archer(Enemy):
             elif self.direction == 3:
                 self.move(-speed, 0, collision_tiles, screen_width, screen_height)
         else:
-            self.move_counter = 60
+            self.move_counter = 30
             self.direction = self.get_direction(target_x, target_y, collision_tiles)
 
     def get_direction(self, target_x, target_y, collision_tiles):
