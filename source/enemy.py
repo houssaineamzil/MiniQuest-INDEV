@@ -4,7 +4,7 @@ import pytmx
 import math
 
 from character import Character
-from projectile import Projectile
+from projectile import Spell
 
 
 class Enemy(Character):
@@ -34,12 +34,14 @@ class Enemy(Character):
             self.move_counter = 60
             self.direction = random.randint(0, 3)
 
-    def shoot(self, target_x, target_y, *args):
-        if self.canshoot:
+    def shoot(self, target_x, target_y, collision_tiles):
+        if self.canshoot and self.has_line_of_sight(
+            target_x, target_y, collision_tiles
+        ):
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:
                 self.last_shot = current_time
-                self.projectile = Projectile(
+                self.projectile = Spell(
                     target_x,
                     target_y,
                     self.PROJECTILE_LIFE,

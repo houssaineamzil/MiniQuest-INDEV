@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="107">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="109">
  <tileset firstgid="1" source="village.tsx"/>
  <tileset firstgid="1065" source="houses.tsx"/>
  <tileset firstgid="2089" source="interior.tsx"/>
@@ -54,7 +54,7 @@
 1,1,46,1,1,49,1,1,1,1,1,177,0,1,0,1,0,1,1,0,177,1,1,1,1,
 1,1,1,1,1,1,1,54,1,49,1,177,1,1,1,1,1,0,1,1,177,1,1,1,1,
 1,1,1,0,0,1,1,1,1,1,1,177,1,1,1,1,1,1,1,1,177,1,1,1,1,
-1,1,1,19,20,1,1,1,1,1,1,187,185,185,181,0,0,189,185,185,188,1,1,1,1,
+1,1,1,19,20,1,1,1,1,1,1,187,185,185,185,185,185,185,185,185,188,1,1,1,1,
 1,49,1,1,1,1,1,1,49,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,66,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,49,1,1,1,49,1,1,1,1,1,49,1,46,1,1,1,1,1,58,1,1,1,
@@ -98,11 +98,9 @@
   <object id="39" name="collision" x="374.896" y="300.729" width="52.0739" height="12.1041"/>
   <object id="40" name="collision" x="382.125" y="299.292" width="35.8333" height="1.45827"/>
   <object id="42" name="collision" x="384.091" y="373.227" width="30.9091" height="8.63636"/>
-  <object id="43" name="fence" x="364.667" y="517.167" width="295.333" height="22.5"/>
-  <object id="44" name="fence" x="362.333" y="531.667" width="10.6667" height="136.333"/>
-  <object id="46" name="fence" x="555.667" y="644" width="105.333" height="24.6667"/>
-  <object id="48" name="fence" x="650" y="531.5" width="10.6667" height="136"/>
-  <object id="49" name="fence" x="363" y="645.167" width="105.333" height="23"/>
+  <object id="43" name="fence" x="363.808" y="517.167" width="296.415" height="22.5"/>
+  <object id="44" name="fence" x="363.788" y="531.667" width="8.33715" height="113.087"/>
+  <object id="48" name="fence" x="651.688" y="531.5" width="8.5417" height="113.326"/>
   <object id="53" name="tree" x="97.8182" y="640.091" width="60.1818" height="30.9091"/>
   <object id="54" name="tree" x="65.9053" y="384.112" width="60.1818" height="30.9091"/>
   <object id="55" name="tree" x="385.727" y="192.364" width="60.1818" height="30.9091"/>
@@ -123,6 +121,7 @@
   <object id="76" name="stump" x="73.2869" y="551.256" width="13.8011" height="10.1818"/>
   <object id="78" x="32" y="192.25" width="62.0909" height="29"/>
   <object id="98" name="collision" x="363.463" y="309.573" width="73.5739" height="12.1041"/>
+  <object id="108" name="fence" x="363.787" y="644.762" width="296.88" height="23.2422"/>
  </objectgroup>
  <objectgroup id="15" name="portal">
   <object id="18" name="path,575,790" x="533.125" y="0.25" width="85.6023" height="4.86364"/>
@@ -130,6 +129,11 @@
  </objectgroup>
  <objectgroup id="18" name="enemies">
   <object id="101" name="Archer" x="559.333" y="20.6667" width="15" height="13.6667">
+   <properties>
+    <property name="hp" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="107" name="Dragon" x="483.5" y="569.167" width="15" height="13.6667">
    <properties>
     <property name="hp" type="int" value="2"/>
    </properties>

@@ -22,20 +22,3 @@ class Dragon(Enemy):
         self.rect = pygame.FRect(x, y, self.size, self.size)
         self.hit = False
         self.hit_counter = 0
-
-    def shoot(self, target_x, target_y, collision_tiles):
-        if self.canshoot and self.has_line_of_sight(
-            target_x, target_y, collision_tiles
-        ):
-            current_time = pygame.time.get_ticks()
-            if current_time - self.last_shot >= 1000:
-                self.last_shot = current_time
-                self.projectile = Spell(
-                    target_x,
-                    target_y,
-                    self.PROJECTILE_LIFE,
-                    self.PROJECTILE_SPEED,
-                    self,
-                )
-                return True
-        return False

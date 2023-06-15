@@ -1,4 +1,3 @@
-# game.py
 import pygame
 import os
 from map import Map
