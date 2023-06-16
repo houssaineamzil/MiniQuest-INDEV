@@ -29,6 +29,7 @@ class Game:
             self.perform_game_operations()
             self.handle_game_events()
             self.update_game_screen()
+            self.update_ui()
         while not self.game_running():
             self.handle_quit_event()
 
@@ -76,7 +77,6 @@ class Game:
         # self.map.draw_rects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
 
         self.map.draw_above_ground_layer(self.game_screen)
-        self.update_ui()
 
     def update_ui(self):
         if self.player.inventory_open:
