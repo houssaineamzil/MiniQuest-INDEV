@@ -112,7 +112,11 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
   <img src="example4.gif" alt="prototype4"/>
   <img src="example5.gif" alt="prototype5"/>
   <img src="example6.gif" alt="prototype6"/>
-https://www.youtube.com/watch?v=jrMUJ1OxZMo
+
+
+https://github.com/harrybridgen/MiniQuest/assets/105605342/b80f5364-bb12-4556-b1e2-e099d37db3e9
+
+
 </p>
 
 ## Proposed Class Diagram
