@@ -37,6 +37,7 @@ class Player:
 
         self.inventory_open = False
         self.current_chest = None
+        self.chest_open = False
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 3
         self.dead = False
@@ -60,6 +61,17 @@ class Player:
         for item in self.worn_equipment.values():
             if item is not None:
                 item.update(self.current_animation.direction, self.moved)
+
+    def toggle_inventory(self):
+        self.inventory_open = not self.inventory_open
+
+    def open_chest(self, chest):
+        self.inventory_open = True
+        self.current_chest = chest
+
+    def close_chest(self):
+        self.inventory_open = False
+        self.current_chest = None
 
     def draw(self, screen):
         self.current_animation.draw(
