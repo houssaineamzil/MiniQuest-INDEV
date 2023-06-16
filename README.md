@@ -112,7 +112,7 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
   <img src="example4.gif" alt="prototype4"/>
   <img src="example5.gif" alt="prototype5"/>
   <img src="example6.gif" alt="prototype6"/>
-[![Everything Is AWESOME](http://i.imgur.com/Ot5DWAW.png)](https://youtu.be/StTqXEQ2l-Y?t=35s "Everything Is AWESOME")
+https://www.youtube.com/watch?v=jrMUJ1OxZMo
 </p>
 
 ## Proposed Class Diagram
