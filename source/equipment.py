@@ -1,5 +1,5 @@
 from animation import Animation
-from projectile import Arrow, Spell
+from projectile import Arrow, FireBall
 from spritesheet import Spritesheet
 
 
@@ -78,7 +78,7 @@ class Shortbow(Weapon):
 
 class FireStaff(Weapon):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/firestaff.png"), Spell, 20, 15)
+        super().__init__(Spritesheet("source/img/firestaff.png"), FireBall, 20, 15)
         self.class_name = self.__class__.__name__
         self.name = "Fire Staff"
         self.equipment_slot = "Weapon"

@@ -34,7 +34,7 @@ class ArrowExplosion(Explosion):
         ]
 
 
-class SpellExplosion(Explosion):
+class FireBallExplosion(Explosion):
     def __init__(self, x, y):
         self.particles = [
             Particle(

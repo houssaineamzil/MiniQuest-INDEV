@@ -25,3 +25,21 @@ class Particle:
         if alpha <= 0:
             return True
         return False
+
+
+class FireBallParticle(Particle):
+    def __init__(self, start_x, start_y, velocity_x, velocity_y):
+        color = (255, random.randint(0, 100), 0)
+        size = random.randint(3, 7)
+        super().__init__(start_x, start_y, velocity_x, velocity_y, color, size)
+
+
+class ArrowParticle(Particle):
+    def __init__(self, start_x, start_y, velocity_x, velocity_y):
+        color = (
+            random.randint(200, 255),
+            random.randint(200, 255),
+            random.randint(200, 255),
+        )
+        size = random.randint(2, 7)
+        super().__init__(start_x, start_y, velocity_x, velocity_y, color, size)

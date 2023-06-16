@@ -8,8 +8,8 @@ from player import Player
 from particle import Particle
 from archer import Archer
 from dragon import Dragon
-from projectile import Arrow, Spell
-from explosion import SpellExplosion, ArrowExplosion, Explosion
+from projectile import Arrow, FireBall
+from explosion import FireBallExplosion, ArrowExplosion, Explosion
 from chest import Chest
 
 
@@ -119,7 +119,7 @@ class Map:
 
                     self.remove_projectile(projectile)
                     if enemy.hp <= 0:
-                        self.enemies.remove(enemy)
+                        self.remove_enemy(enemy)
                         break
 
     def update_projectiles(self, game_screen, player):
@@ -130,7 +130,7 @@ class Map:
             ):
                 for enemy in self.enemies:
                     enemy.canshoot = False
-                self.projectiles.remove(projectile)
+                self.remove_projectile(projectile)
                 player.hit_by_projectile()
 
             if projectile.update(

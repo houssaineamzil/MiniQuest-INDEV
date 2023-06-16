@@ -3,13 +3,11 @@ import pygame
 import pytmx
 import math
 
-from particle import Particle
-from explosion import Explosion, SpellExplosion, ArrowExplosion
+from particle import FireBallParticle, ArrowParticle
+from explosion import FireBallExplosion, ArrowExplosion
 
 
 class Projectile:
-    explosion = Explosion
-
     def __init__(
         self,
         target_x,
@@ -40,6 +38,28 @@ class Projectile:
         self.lifespan = life
         self.collided = False
 
+    def is_collision(self, rect, tiles):
+        return rect.collidelist(tiles) != -1
+
+
+class FireBall(Projectile):
+    explosion = FireBallExplosion
+
+    def __init__(self, *args, **kwargs):
+        self.orig_image = pygame.image.load("source/img/fireball.png")
+        self.orig_image = pygame.transform.scale(self.orig_image, (20, 20))
+        super().__init__(*args, **kwargs)
+
+        self.image = self.orig_image
+        self.collision_rect = self.image.get_rect(center=self.orig_rect.center)
+        self.rect = self.image.get_rect(center=self.orig_rect.center)
+
+        self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
+        self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
+        self.shoot_sound.set_volume(0.4)
+        self.hit_sound.set_volume(0.4)
+        self.shoot_sound.play()
+
     def update(self, tiles, screenWidth, screenHeight):
         center_x = self.rect.x + self.orig_image.get_width() // 2
         center_y = self.rect.y + self.orig_image.get_height() // 2
@@ -68,37 +88,8 @@ class Projectile:
             self.hit_sound.play()
             return True
 
-        self.particle = Particle(
-            center_x,
-            center_y,
-            velocity_x,
-            velocity_y,
-            (255, random.randint(0, 100), 0),
-            random.randint(3, 7),
-        )
+        self.particle = FireBallParticle(center_x, center_y, velocity_x, velocity_y)
         return False
-
-    def is_collision(self, rect, tiles):
-        return rect.collidelist(tiles) != -1
-
-
-class Spell(Projectile):
-    explosion = SpellExplosion
-
-    def __init__(self, *args, **kwargs):
-        self.orig_image = pygame.image.load("source/img/spell.png")
-        self.orig_image = pygame.transform.scale(self.orig_image, (20, 20))
-        super().__init__(*args, **kwargs)
-
-        self.image = self.orig_image
-        self.collision_rect = self.image.get_rect(center=self.orig_rect.center)
-        self.rect = self.image.get_rect(center=self.orig_rect.center)
-
-        self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
-        self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
-        self.shoot_sound.set_volume(0.4)
-        self.hit_sound.set_volume(0.4)
-        self.shoot_sound.play()
 
 
 class Arrow(Projectile):
@@ -164,16 +155,5 @@ class Arrow(Projectile):
             self.hit_sound.play()
             return True
 
-        self.particle = Particle(
-            center_x,
-            center_y,
-            velocity_x,
-            velocity_y,
-            (
-                random.randint(200, 255),
-                random.randint(200, 255),
-                random.randint(200, 255),
-            ),
-            random.randint(2, 7),
-        )
+        self.particle = ArrowParticle(center_x, center_y, velocity_x, velocity_y)
         return False

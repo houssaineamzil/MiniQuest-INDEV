@@ -3,7 +3,7 @@ import pygame
 import pytmx
 import math
 
-from projectile import Spell
+from projectile import FireBall
 from character import Character
 
 
@@ -43,7 +43,7 @@ class Dragon(Character):
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot >= 1000:
                 self.last_shot = current_time
-                self.projectile = Spell(
+                self.projectile = FireBall(
                     target_x,
                     target_y,
                     self.PROJECTILE_LIFE,

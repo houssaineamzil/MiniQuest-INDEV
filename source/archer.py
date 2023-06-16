@@ -58,7 +58,7 @@ class Archer(Character):
             elif self.direction == 3:
                 self.move(-speed, 0, collision_tiles, screen_width, screen_height)
         else:
-            self.move_counter = 30
+            self.move_counter = 50
             self.direction = self.get_direction(target_x, target_y, collision_tiles)
 
     def get_direction(self, target_x, target_y, collision_tiles):

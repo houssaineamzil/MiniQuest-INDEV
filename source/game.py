@@ -2,7 +2,7 @@ import pygame
 import os
 from map import Map
 from player import Player
-from projectile import Arrow, Spell
+from projectile import Arrow, FireBall
 from equipment import (
     Equipment,
     Armour,
