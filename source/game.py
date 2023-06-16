@@ -197,13 +197,9 @@ class Game:
             text_rect = text_surface.get_rect(
                 center=(self.screen_width / 2, self.screen_height / 2)
             )
-
             self.game_screen.fill((0, 0, 0))
-
             text_surface.blit(game_over_text, (0, 0))
-
             self.game_screen.blit(text_surface, text_rect)
-
             self.game_over = True
 
             self.handle_quit_event()
