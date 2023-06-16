@@ -30,8 +30,6 @@ class Game:
             self.handle_game_events()
             self.update_game_screen()
             self.update_ui()
-        while not self.game_running():
-            self.handle_quit_event()
 
     def init_game_loop(self, player_x, player_y):
         pygame.init()
@@ -106,7 +104,7 @@ class Game:
         for file in os.listdir("source/tile"):
             if file.endswith(".pkl"):
                 os.remove(os.path.join("source/tile", file))
-        self.stop_game()
+        self.game_over = True
 
     def handle_mouse_button_down_event(self, event):
         if event.button == 1 and not self.player.dead:
@@ -194,3 +192,5 @@ class Game:
             self.game_screen.blit(text_surface, text_rect)
 
             self.game_over = True
+
+            self.handle_quit_event()
