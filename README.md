@@ -105,14 +105,17 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
 - Fix any issues that arise
 
 ## Progress Over Time
-<p align="center">
   <img src="example.gif" alt="prototype1"/>
   <img src="example2.gif" alt="prototype2"/>
   <img src="example3.gif" alt="prototype3"/>
   <img src="example4.gif" alt="prototype4"/>
   <img src="example5.gif" alt="prototype5"/>
   <img src="example6.gif" alt="prototype6"/>
-</p>
+
+
+https://github.com/harrybridgen/MiniQuest/assets/105605342/45db2253-14c6-42b1-a8cb-79d0bdb87637
+
+
 
 ## Proposed Class Diagram
 <p align="center">
