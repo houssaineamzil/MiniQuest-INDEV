@@ -28,14 +28,16 @@ The player can move their character using the WASD keys. W moves the character f
 
 The player can attack enemies by left-clicking the screen. The type of attack performed depends on the weapon the character is currently holding. For example, a sword might trigger a slashing motion, while a bow would release an arrow towards the cursor.
 
-The E key is used for interactions. This includes opening chests, entering doors, reading signs, and initiating conversations with NPCs.
+The player can activate arefacts by right-clicking the screen. Some artefacts will be click position dependant (such as a teleport artefact) and others will not rely on click position (such as an invisibility artefact).
+
+The E key is used for interactions. This includes opening chests, unlocking doors, reading signs, initiating conversations with NPCs and activating hidden passageways and secrets.
  
 The player can access their inventory and game menus by pressing the TAB and Esc keys, respectively. In the inventory, players can equip new items, use consumables, and view their character's stats and abilities. The game menu provides access to options such as saving and loading the game, adjusting settings, and exiting to the desktop.
 
 ### Level Design
 MiniQuest employs a sprawling world map that consists of multiple, distinct smaller maps, each featuring its own unique environment, challenges, and storylines. The player's journey will lead them through a variety of landscapes - from verdant forests and treacherous mountains, to bustling towns and eerie dungeons.
 
-The world map is vast and interconnected, fostering a sense of a continuous, cohesive world. Some areas are easily accessible from the beginning, inviting early exploration, while others are gated by story progress, character abilities, or challenging enemies, rewarding players for growth and progression. Some maps may be secret and hidden, not explicitly being told to the player. 
+The world map is vast and interconnected, fostering a sense of a continuous, cohesive world. Some areas are easily accessible from the beginning, inviting early exploration, while others are gated by story progress, artefact abilities, or challenging enemies, rewarding players for growth and progression. Some maps may be secret and hidden, not explicitly being told to the player. 
 
 Each map is designed with its own unique layout, aesthetic, and theme. Areas may include a variety of terrains and points of interest, such as natural landmarks, NPC hubs, enemy encampments, secret paths, and treasure caches. This variety encourages thorough exploration and offers diverse gameplay experiences.
 
@@ -48,7 +50,7 @@ The world will feature a day/night cycle and a weather system.
 ### Character Progression
 At the start of the game, the player begins as a humble farmer, starting at level one with only basic tools and no combat abilities.
 
-The world of MiniQuest is filled with hidden treasures, special items, and powerful equipment. As the player explores, they will find weapons to increase their combat abilities, armor to protect them from damage and artifacts with special effectss. Some items will be straightforward to find, while others will require solving challenging puzzles, defeating powerful enemies, or completing complex quests.
+The world of MiniQuest is filled with hidden treasures, special items, and powerful equipment. As the player explores, they will find weapons to increase their combat abilities, armor to protect them from damage and artifacts with special effects. Some items will be straightforward to find, while others will require solving challenging puzzles, defeating powerful enemies, or completing complex quests.
 
 Over the course of their journey, the player will encounter a variety of non-player characters (NPCs). Interacting with these characters can lead to new quests, access to special items, or even companionship. Building relationships with NPCs can allow the player to gain them as followers, or unlock new story line narratives and quests.
 
@@ -168,6 +170,7 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97
     - [x] Weapon
 6. Story:
     - [ ] Quests
+    - [ ] Random events and encounters
 7. Map:
     - [x] Multiple maps
     - [x] Portal objects
@@ -176,6 +179,8 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97
     - [x] Chest objects
     - [ ] Tree objects?
     - [ ] Trigger objects
+    - [ ] Day/night cycle
+    - [ ] Weather
 
 ## Proposed Class Diagram
 <p align="center">
