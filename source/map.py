@@ -78,7 +78,6 @@ class Map:
     def update(self, game_screen, player):
         self.update_portals(player)
         self.update_enemies(game_screen, player)
-        self.update_particles(game_screen)
         self.update_projectiles(game_screen, player)
         self.update_explosions(game_screen)
 

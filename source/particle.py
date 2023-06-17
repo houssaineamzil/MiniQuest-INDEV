@@ -47,8 +47,8 @@ class ArrowParticle(Particle):
 
 class TeleportParticle(Particle):
     def __init__(self, start_x, start_y):
-        angle = random.uniform(0, 2 * math.pi)  # Angle in radians
-        speed = random.uniform(2, 5)  # You can adjust this range for different speeds
+        angle = random.uniform(0, 2 * math.pi)
+        speed = random.uniform(0, 1)
         velocity_x = speed * math.cos(angle)
         velocity_y = speed * math.sin(angle)
 
@@ -56,21 +56,19 @@ class TeleportParticle(Particle):
             random.randint(50, 100),
             random.randint(50, 100),
             random.randint(50, 100),
-        )  # Randomized color
-        size = random.randint(2, 5)  # Randomized size
+        )
+        size = random.randint(2, 5)
 
         super().__init__(start_x, start_y, velocity_x, velocity_y, color, size)
 
     def update(self):
-        self.velocity_y += 0.1  # Adds a bit of 'gravity' to the particles
+        self.velocity_y -= 0.03
 
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
 
-        self.lifetime += 1  # Increase the rate at which particles fade
-        alpha = max(
-            255 - self.lifetime * 10, 0
-        )  # Increase the rate at which particles fade
+        self.lifetime += 0.5
+        alpha = max(255 - self.lifetime * 10, 0)
         self.image.set_alpha(alpha)
 
         if alpha <= 0:

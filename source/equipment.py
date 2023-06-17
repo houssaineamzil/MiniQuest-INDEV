@@ -1,4 +1,5 @@
 import pygame
+import random
 from animation import Animation
 from projectile import Arrow, FireBall
 from spritesheet import Spritesheet
@@ -126,6 +127,7 @@ class TeleportScroll(Artefact):
 
     def __init__(self):
         super().__init__(Spritesheet("source/img/chainmail.png"))
+        self.class_name = self.__class__.__name__
         self.name = "Teleport Scroll"
         self.equipment_slot = "Artefact"
         self.teleport_radius = 1000
@@ -143,20 +145,24 @@ class TeleportScroll(Artefact):
         potential_rect = pygame.Rect(
             0, 0, player.collision_rect.width, player.collision_rect.height
         )
-        potential_rect.midbottom = (mouse_x, mouse_y)  # Adjust rect's position
+        potential_rect.midbottom = (mouse_x, mouse_y)
 
         if self.is_collision(potential_rect, tiles):
             return False
 
-        self.add_smoke_effect(player.rect.x, player.rect.y, map)
+        self.add_smoke_effect(player.rect, map)
 
         player.teleport(mouse_x, mouse_y)
 
-        self.add_smoke_effect(mouse_x, mouse_y, map)
+        destination_rect = pygame.Rect(player.rect)
+        destination_rect.midbottom = (mouse_x, mouse_y)
+        self.add_smoke_effect(destination_rect, map)
         return True
 
-    def add_smoke_effect(self, x, y, map):
-        for _ in range(20):  # Change this number to add more/less smoke
+    def add_smoke_effect(self, rect, map):
+        for _ in range(50):
+            x = random.randint(int((rect.left * 0.99)), int((rect.right) * 1.01))
+            y = random.randint(int((rect.top * 0.99)), int((rect.bottom) * 1.01))
             map.add_particle(TeleportParticle(x, y))
 
     def is_in_radius(self, center, point):

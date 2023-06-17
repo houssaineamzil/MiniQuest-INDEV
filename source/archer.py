@@ -6,8 +6,8 @@ from character import Character
 
 
 class Archer(Character):
-    PROJECTILE_LIFE = 20
-    PROJECTILE_SPEED = 20
+    PROJECTILE_LIFE = 25
+    PROJECTILE_SPEED = 10
 
     def __init__(self, x, y, hp):
         super().__init__(hp)

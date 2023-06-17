@@ -69,12 +69,12 @@ class Game:
         if self.player.movement(
             self.map.collision_tiles, self.screen_width, self.screen_height
         ):
-            self.map.walk_particles(self.player)
+            pass  # self.map.walk_particles(self.player)
 
         self.player.update()
         self.player.draw(self.game_screen)
         # self.map.draw_rects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
-
+        self.map.update_particles(self.game_screen)
         self.map.draw_above_ground_layer(self.game_screen)
         self.update_ui()
 
@@ -145,6 +145,9 @@ class Game:
             self.last_shot = current_time
 
     def handle_inventory_click(self, event):
+        if not self.player.inventory_open:
+            return
+
         click_pos = event.pos
         inv_pos_x, inv_pos_y = (0, 0)
 
@@ -161,6 +164,9 @@ class Game:
                         self.player.inventory.remove_item(item)
 
     def handle_equipment_click(self, event):
+        if not self.player.inventory_open:
+            return
+
         click_pos = event.pos
 
         for i, item_rect in enumerate(
