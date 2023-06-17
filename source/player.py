@@ -28,12 +28,12 @@ class Player:
         self.inventory = Inventory()
 
         self.worn_equipment = {
+            "Artefact": None,
             "Head": None,
             "Torso": None,
             "Legs": None,
             "Feet": None,
             "Weapon": None,
-            "Artefact": None,
         }
 
         self.inventory_open = False
