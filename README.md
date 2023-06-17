@@ -2,12 +2,6 @@
   <img src="mq.png" alt="miniquest"/>
 </p>
 
-## About MiniQuest
-
-Welcome to MiniQuest, a  top-down adventure game where  the journey is full of unexpected twists and turns. Play as a village farmer thrown into a heroic journey after a dragon attack devastates your peaceful life. Brace yourself for an epic quest around the world to seek justice, explore the world, complete quests, collect items, discover secrets and make new allies.
-
-Discord: https://discord.gg/2jxRmm8j3Q
-
 ## Table of Contents
 1. [About MiniQuest](#about-miniquest)
 2. [Gameplay](#gameplay)
@@ -19,9 +13,15 @@ Discord: https://discord.gg/2jxRmm8j3Q
 8. [Todo](#todo)
 9. [Proposed Class Diagram](#proposed-class-diagram)
 
+## About MiniQuest
+
+Welcome to MiniQuest, a  top-down adventure game where  the journey is full of unexpected twists and turns. Play as a village farmer thrown into a heroic journey after a dragon attack devastates your peaceful life. Brace yourself for an epic quest around the world to seek justice, explore the world, complete quests, collect items, discover secrets and make new allies.
+
+Discord: https://discord.gg/2jxRmm8j3Q
+
 ## Gameplay
 ### Mechanics
-The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.
+The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.The player will be able to ontain different weaponry, which will have its own projectile, damage, speed, and artefacts, that grant player the player unique ways to play the game through magical abilites.
 
 ### Controls
 The player can move their character using the WASD keys. W moves the character forward, A moves them left, S moves them backward, and D moves them to the right. 
