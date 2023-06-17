@@ -21,7 +21,7 @@ Discord: https://discord.gg/2jxRmm8j3Q
 
 ## Gameplay
 ### Mechanics
-The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.The player will be able to obtain different weaponry, which will have its own projectile, damage, speed, and artefacts, that grant player the player unique ways to play the game through magical abilites.
+The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.The player will be able to obtain different weaponry, which will have its own projectile, damage and speed. The player can also obtain artefacts that grant unique ways to play the game through magical abilites.
 
 ### Controls
 The player can move their character using the WASD keys. W moves the character forward, A moves them left, S moves them backward, and D moves them to the right. 
