@@ -136,6 +136,7 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/c2860954-feff-458f-98
 https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97ed-2e469900539f
 
 ## Todo
+(NOT COMPLETE LIST!)
 1. Projectiles:
     - [x] Arrows
     - [x] Fireball
@@ -143,8 +144,38 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97
     - [x] Bows
     - [x] Staffs
     - [ ] Swords
+3. NPCS:
+    - [x] Enemies
+    - [ ] Quest givers
+    - [ ] Merchants
+    - [ ] Generic townsfolk
+4. UI:
+    - [x] Chests
+    - [x] Inventory
+    - [x] Equipment
+    - [ ] Pause menu
+    - [ ] Start menu
+    - [ ] Game over
+    - [ ] Settings
+5. Equipment:
+    - [x] Head
+    - [x] Torso
+    - [x] Legs
+    - [x] Feet
+    - [x] Artefact
+    - [x] Weapon
+6. Story:
+    - [ ] Quests
+7. Map:
+    - [x] Multiple maps
+    - [x] Travel through multiple maps
+    - [x] Collision
+    - [x] Objects
+    - [ ] Trigger objects
 
 ## Proposed Class Diagram
 <p align="center">
   <img src="class_diagram.JPG" alt="class_diagram"/>
 </p>
+
+
