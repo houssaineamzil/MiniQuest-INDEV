@@ -157,6 +157,8 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97
     - [ ] Start menu
     - [ ] Game over
     - [ ] Settings
+    - [ ] Resizable client
+    - [ ] Camera that follows player
 5. Equipment:
     - [x] Head
     - [x] Torso
