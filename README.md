@@ -121,6 +121,10 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/c2860954-feff-458f-98
 
 
 
+
+https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97ed-2e469900539f
+
+
 ## Proposed Class Diagram
 <p align="center">
   <img src="class_diagram.JPG" alt="class_diagram"/>
