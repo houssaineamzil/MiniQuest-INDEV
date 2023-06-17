@@ -1,6 +1,8 @@
+import pygame
 from animation import Animation
 from projectile import Arrow, FireBall
 from spritesheet import Spritesheet
+from particle import TeleportParticle
 
 
 class Equipment:
@@ -48,6 +50,7 @@ class Equipment:
 class Weapon(Equipment):
     def __init__(self, spritesheet, projectile_type, life, speed):
         super().__init__(spritesheet)
+        self.name = "Undefined Weapon"
         self.life = life
         self.speed = speed
         self.projectile_type = projectile_type
@@ -62,9 +65,19 @@ class Weapon(Equipment):
 class Armour(Equipment):
     def __init__(self, spritesheet, hp_buff):
         super().__init__(spritesheet)
+        self.name = "Undefined Armour"
         self.hp_buff = hp_buff
 
     def apply_buff(self, character):
+        pass  # replace with actual implementation
+
+
+class Artefact(Equipment):
+    def __init__(self, spritesheet):
+        super().__init__(spritesheet)
+        self.name = "Undefined Artefact"
+
+    def activate_effect(self, player, mouse_x, mouse_y, tiles):
         pass  # replace with actual implementation
 
 
@@ -106,3 +119,51 @@ class Chainmail(Armour):
         self.class_name = self.__class__.__name__
         self.name = "Chainmail"
         self.equipment_slot = "Torso"
+
+
+class TeleportScroll(Artefact):
+    COOLDOWN = 500
+
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/chainmail.png"))
+        self.name = "Teleport Scroll"
+        self.equipment_slot = "Artefact"
+        self.teleport_radius = 1000
+        self.last_activation = 0
+
+    def activate_effect(self, player, mouse_x, mouse_y, tiles, map):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_activation < self.COOLDOWN:
+            return False
+
+        self.last_activation = current_time
+        if not self.is_in_radius(player.rect.center, (mouse_x, mouse_y)):
+            return False
+
+        potential_rect = pygame.Rect(
+            0, 0, player.collision_rect.width, player.collision_rect.height
+        )
+        potential_rect.midbottom = (mouse_x, mouse_y)  # Adjust rect's position
+
+        if self.is_collision(potential_rect, tiles):
+            return False
+
+        self.add_smoke_effect(player.rect.x, player.rect.y, map)
+
+        player.teleport(mouse_x, mouse_y)
+
+        self.add_smoke_effect(mouse_x, mouse_y, map)
+        return True
+
+    def add_smoke_effect(self, x, y, map):
+        for _ in range(20):  # Change this number to add more/less smoke
+            map.add_particle(TeleportParticle(x, y))
+
+    def is_in_radius(self, center, point):
+        dx = center[0] - point[0]
+        dy = center[1] - point[1]
+        distance = (dx**2 + dy**2) ** 0.5
+        return distance <= self.teleport_radius
+
+    def is_collision(self, rect, tiles):
+        return rect.collidelist(tiles) != -1

@@ -33,6 +33,7 @@ class Player:
             "Legs": None,
             "Feet": None,
             "Weapon": None,
+            "Artefact": None,
         }
 
         self.inventory_open = False

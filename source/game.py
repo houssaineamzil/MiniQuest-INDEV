@@ -11,6 +11,7 @@ from equipment import (
     LeatherPants,
     BlackBoots,
     Chainmail,
+    TeleportScroll,
 )
 from spritesheet import Spritesheet
 
@@ -110,9 +111,22 @@ class Game:
     def handle_mouse_button_down_event(self, event):
         if event.button == 1 and not self.player.dead:
             self.handle_player_shoot(event)
+        if event.button == 3 and not self.player.dead:
+            self.handle_artefact_activation(event)
         self.handle_inventory_click(event)
         self.handle_equipment_click(event)
         self.handle_chest_click(event)
+
+    def handle_artefact_activation(self, event):
+        if (
+            self.player.worn_equipment["Artefact"] is not None
+            and self.player.inventory_open == False
+            and self.player.current_chest == None
+        ):
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            self.player.worn_equipment["Artefact"].activate_effect(
+                self.player, mouse_x, mouse_y, self.map.collision_tiles, self.map
+            )
 
     def handle_player_shoot(self, event):
         current_time = pygame.time.get_ticks()
@@ -142,10 +156,9 @@ class Game:
                     self.player.inventory.remove_item(item)
                     self.player.current_chest.add_item(item)
                 else:
-                    if isinstance(item, (Weapon, Armour)):
-                        if self.player.worn_equipment[item.equipment_slot] is None:
-                            self.player.equip_item(item)
-                            self.player.inventory.remove_item(item)
+                    if self.player.worn_equipment[item.equipment_slot] is None:
+                        self.player.equip_item(item)
+                        self.player.inventory.remove_item(item)
 
     def handle_equipment_click(self, event):
         click_pos = event.pos
