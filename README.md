@@ -8,7 +8,19 @@ Welcome to MiniQuest, a  top-down adventure game where  the journey is full of u
 
 Discord: https://discord.gg/2jxRmm8j3Q
 
+## Table of Contents
+1. [About MiniQuest](#about-miniquest)
+2. [Gameplay](#gameplay)
+3. [Story and Characters](#story-and-characters)
+4. [Art and Sound](#art-and-sound)
+5. [Technical](#technical)
+6. [Timeline and Milestones](#timeline-and-milestones)
+7. [Progress Over Time](#progress-over-time)
+8. [Proposed Class Diagram](#proposed-class-diagram)
+9. [Todo](#todo)
+
 ## Gameplay
+<Gameplay description>
 ### Mechanics
 The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.
 
