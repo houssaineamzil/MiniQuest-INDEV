@@ -98,9 +98,7 @@ class Map:
                 player.rect.centery,
             )
 
-            if enemy.shoot(
-                player.rect.centerx, player.rect.centery, self.collision_tiles
-            ):
+            if enemy.shoot(player, self.collision_tiles):
                 self.add_projectile(enemy.projectile)
 
             enemy.draw(game_screen)
@@ -124,11 +122,10 @@ class Map:
     def update_projectiles(self, game_screen, player):
         for projectile in self.projectiles:
             if (
-                player.rect.colliderect(projectile.collision_rect)
+                player.teleporting == False
+                and player.rect.colliderect(projectile.collision_rect)
                 and projectile.owner is not player
             ):
-                for enemy in self.enemies:
-                    enemy.canshoot = False
                 self.remove_projectile(projectile)
                 player.hit_by_projectile()
 

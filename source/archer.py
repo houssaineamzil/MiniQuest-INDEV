@@ -7,7 +7,7 @@ from character import Character
 
 class Archer(Character):
     PROJECTILE_LIFE = 25
-    PROJECTILE_SPEED = 10
+    PROJECTILE_SPEED = 15
 
     def __init__(self, x, y, hp):
         super().__init__(hp)
@@ -27,16 +27,19 @@ class Archer(Character):
     ):
         return pygame.time.get_ticks() + random.randint(1500, 3000)
 
-    def shoot(self, target_x, target_y, collision_tiles):
+    def shoot(self, player, collision_tiles):
         current_time = pygame.time.get_ticks()
         if (
             current_time >= self.next_shot_time
+            and player.targetable
             and self.canshoot
-            and self.has_line_of_sight(target_x, target_y, collision_tiles)
+            and self.has_line_of_sight(
+                player.rect.centerx, player.rect.centery, collision_tiles
+            )
         ):
             self.projectile = Arrow(
-                target_x,
-                target_y,
+                player.rect.centerx,
+                player.rect.centery,
                 self.PROJECTILE_LIFE,
                 self.PROJECTILE_SPEED,
                 self,

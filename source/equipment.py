@@ -124,6 +124,7 @@ class Chainmail(Armour):
 
 class TeleportScroll(Artefact):
     COOLDOWN = 1000
+    TELEPORT_DELAY = 500
 
     def __init__(self):
         super().__init__(Spritesheet("source/img/chainmail.png"))
@@ -154,9 +155,13 @@ class TeleportScroll(Artefact):
 
         player.teleport(mouse_x, mouse_y)
 
-        destination_rect = pygame.Rect(player.rect)
-        destination_rect.midbottom = (mouse_x, mouse_y)
-        self.add_smoke_effect(destination_rect, map)
+        player.invisible = True
+        player.targetable = False
+        player.teleporting = True
+        player.canmove = False
+        player.canshoot = False
+
+        pygame.time.set_timer(pygame.USEREVENT + 1, self.TELEPORT_DELAY)
         return True
 
     def add_smoke_effect(self, rect, map):

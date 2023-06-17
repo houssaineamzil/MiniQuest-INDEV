@@ -27,6 +27,7 @@ class Game:
     def run(self, player_x, player_y):
         self.init_game_loop(player_x, player_y)
         while self.game_running():
+            self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
             self.perform_game_operations()
             self.handle_game_events()
             self.update_game_screen()
@@ -101,6 +102,20 @@ class Game:
                 self.handle_mouse_button_down_event(event)
             elif event.type == pygame.KEYDOWN:
                 self.handle_keydown_event(event)
+            if event.type == self.PLAYER_TELEPORT_ARTEFACT:
+                self.handle_teleport_artefact()
+
+    def handle_teleport_artefact(self):
+        if self.player.teleporting:
+            self.player.canshoot = True
+            self.player.canmove = True
+            self.player.teleporting = False
+            self.player.invisible = False
+            self.player.targetable = True
+            # Access teleport_scroll from player instance and add smoke effect
+            self.player.worn_equipment["Artefact"].add_smoke_effect(
+                self.player.rect, self.map
+            )
 
     def handle_quit_event(self):
         for file in os.listdir("source/tile"):
@@ -135,6 +150,7 @@ class Game:
             and self.player.worn_equipment["Weapon"] is not None
             and self.player.inventory_open == False
             and self.player.current_chest == None
+            and self.player.canshoot
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             self.map.add_projectile(

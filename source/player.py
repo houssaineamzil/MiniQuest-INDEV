@@ -41,7 +41,12 @@ class Player:
         self.chest_open = False
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 3
+        self.canmove = True
+        self.invisible = False
+        self.targetable = True
+        self.teleporting = False
         self.dead = False
+        self.canshoot = True
         self.collision_rect = pygame.FRect(
             self.rect.x, self.rect.y, self.rect.width - 3, self.rect.height * 0.4
         )
@@ -52,6 +57,7 @@ class Player:
 
     def hit_by_projectile(self):
         self.dead = True
+        self.targetable = False
 
     def teleport(self, x, y):
         self.rect.midbottom = (x, y)
@@ -75,19 +81,20 @@ class Player:
         self.current_chest = None
 
     def draw(self, screen):
-        self.current_animation.draw(
-            screen, self.rect.x, self.rect.y, self.size_x, self.size_y
-        )
-        for item in self.worn_equipment.values():
-            if item is not None:
-                item.draw(
-                    screen,
-                    self.rect.x,
-                    self.rect.y,
-                    self.size_x,
-                    self.size_y,
-                    self.moved,
-                )
+        if not self.invisible:
+            self.current_animation.draw(
+                screen, self.rect.x, self.rect.y, self.size_x, self.size_y
+            )
+            for item in self.worn_equipment.values():
+                if item is not None:
+                    item.draw(
+                        screen,
+                        self.rect.x,
+                        self.rect.y,
+                        self.size_x,
+                        self.size_y,
+                        self.moved,
+                    )
 
     def equip_item(self, equipment):
         slot = equipment.equipment_slot
@@ -118,7 +125,7 @@ class Player:
             return None
 
     def movement(self, tiles, screen_width, screen_height):
-        if not self.dead:
+        if not self.dead and self.canmove:
             self.moved = False
             key = pygame.key.get_pressed()
             dx, dy = 0, 0
