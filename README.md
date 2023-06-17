@@ -168,9 +168,11 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97
     - [ ] Quests
 7. Map:
     - [x] Multiple maps
-    - [x] Travel through multiple maps
-    - [x] Collision
-    - [x] Objects
+    - [x] Portal objects
+    - [x] Collision objects
+    - [x] Enemy objects
+    - [x] Chest objects
+    - [ ] Tree objects?
     - [ ] Trigger objects
 
 ## Proposed Class Diagram
