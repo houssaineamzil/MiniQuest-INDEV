@@ -16,11 +16,10 @@ Discord: https://discord.gg/2jxRmm8j3Q
 5. [Technical](#technical)
 6. [Timeline and Milestones](#timeline-and-milestones)
 7. [Progress Over Time](#progress-over-time)
-8. [Proposed Class Diagram](#proposed-class-diagram)
-9. [Todo](#todo)
+8. [Todo](#todo)
+9. [Proposed Class Diagram](#proposed-class-diagram)
 
 ## Gameplay
-<Gameplay description>
 ### Mechanics
 The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.
 
@@ -136,6 +135,14 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/c2860954-feff-458f-98
 
 https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97ed-2e469900539f
 
+## Todo
+1. Projectiles:
+    - [x] Arrows
+    - [x] Fireball
+2. Weapons:
+    - [x] Bows
+    - [x] Staffs
+    - [ ] Swords
 
 ## Proposed Class Diagram
 <p align="center">
