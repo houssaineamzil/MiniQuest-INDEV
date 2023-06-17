@@ -62,7 +62,7 @@ class TeleportParticle(Particle):
         super().__init__(start_x, start_y, velocity_x, velocity_y, color, size)
 
     def update(self):
-        self.velocity_y -= 0.03
+        self.velocity_y -= 0.02
 
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y

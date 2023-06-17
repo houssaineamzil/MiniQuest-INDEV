@@ -123,14 +123,14 @@ class Chainmail(Armour):
 
 
 class TeleportScroll(Artefact):
-    COOLDOWN = 500
+    COOLDOWN = 1000
 
     def __init__(self):
         super().__init__(Spritesheet("source/img/chainmail.png"))
         self.class_name = self.__class__.__name__
         self.name = "Teleport Scroll"
         self.equipment_slot = "Artefact"
-        self.teleport_radius = 1000
+        self.teleport_radius = 600
         self.last_activation = 0
 
     def activate_effect(self, player, mouse_x, mouse_y, tiles, map):
@@ -161,9 +161,9 @@ class TeleportScroll(Artefact):
 
     def add_smoke_effect(self, rect, map):
         for _ in range(50):
-            x = random.randint(int((rect.left * 0.99)), int((rect.right) * 1.01))
-            y = random.randint(int((rect.top * 0.99)), int((rect.bottom) * 1.01))
-            map.add_particle(TeleportParticle(x, y))
+            x = random.uniform(rect.left, rect.right)
+            y = random.uniform(rect.top, rect.bottom)
+            map.add_particle(TeleportParticle(int(x), int(y)))
 
     def is_in_radius(self, center, point):
         dx = center[0] - point[0]
