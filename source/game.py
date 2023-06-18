@@ -15,6 +15,7 @@ from equipment import (
 )
 from spritesheet import Spritesheet
 
+
 class Game:
     def __init__(self, screen_width, screen_height, map_file):
         self.screen_width = screen_width
@@ -61,21 +62,23 @@ class Game:
     def perform_game_operations(self):
         self.clock_object.tick(60)
 
-        self.map.draw_floor_layer(self.game_screen)
-        self.map.draw_ground_layer(self.game_screen)
+        self.map.draw_layer(self.game_screen, "floor")
+        self.map.draw_layer(self.game_screen, "ground")
 
         self.map.update(self.game_screen, self.player)
 
         if self.player.movement(
             self.map.collision_tiles, self.screen_width, self.screen_height
         ):
-            pass  # self.map.walk_particles(self.player)
+            self.map.walk_particles(self.player)
+            self.map.update_particles(self.game_screen, self.map.below_particles)
 
         self.player.update()
         self.player.draw(self.game_screen)
         # self.map.draw_rects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
-        self.map.update_particles(self.game_screen)
-        self.map.draw_above_ground_layer(self.game_screen)
+
+        self.map.update_particles(self.game_screen, self.map.particles)
+        self.map.draw_layer(self.game_screen, "above_ground")
         self.update_ui()
 
     def update_ui(self):

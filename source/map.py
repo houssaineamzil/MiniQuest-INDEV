@@ -22,6 +22,7 @@ class Map:
         self.enemies = []
         self.projectiles = []
         self.portals = []
+        self.below_particles = []
         self.particles = []
         self.explosions = []
         self.collision_tiles = []
@@ -53,6 +54,9 @@ class Map:
     def add_particle(self, particle):
         self.particles.append(particle)
 
+    def add_below_particle(self, particle):
+        self.below_particles.append(particle)
+
     def add_projectile(self, projectile):
         self.projectiles.append(projectile)
 
@@ -70,6 +74,10 @@ class Map:
     def remove_particle(self, particle):
         if particle in self.particles:
             self.particles.remove(particle)
+
+    def remove_below_particle(self, particle):
+        if particle in self.below_particles:
+            self.below_particles.remove(particle)
 
     def remove_explosion(self, explosion):
         if explosion in self.particles:
@@ -142,8 +150,8 @@ class Map:
                 game_screen.blit(projectile.image, projectile.rect)
             # self.draw_rects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
 
-    def update_particles(self, game_screen):
-        for particle in list(self.particles):
+    def update_particles(self, game_screen, list):
+        for particle in list:
             if particle.update():
                 self.remove_particle(particle)
             else:
@@ -169,7 +177,6 @@ class Map:
         self.enemies.clear()
         self.chests.clear()
 
-        self.load_state(new_map_file + ".pkl")
         if (
             not os.path.exists(new_map_file + ".pkl")
             or os.path.getsize(new_map_file + ".pkl") == 0
@@ -209,30 +216,10 @@ class Map:
                     collision_rect = pygame.Rect(x, y, width, height)
                     self.collision_tiles.append(collision_rect)
 
-    def draw_ground_layer(self, game_screen):
-        ground_layer = self.map_data.get_layer_by_name("ground")
+    def draw_layer(self, game_screen, layer):
+        layer = self.map_data.get_layer_by_name(layer)
 
-        for x, y, gid in ground_layer:
-            tile = self.map_data.get_tile_image_by_gid(gid)
-            if tile:
-                game_screen.blit(
-                    tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
-                )
-
-    def draw_floor_layer(self, game_screen):
-        ground_layer = self.map_data.get_layer_by_name("floor")
-
-        for x, y, gid in ground_layer:
-            tile = self.map_data.get_tile_image_by_gid(gid)
-            if tile:
-                game_screen.blit(
-                    tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
-                )
-
-    def draw_above_ground_layer(self, game_screen):
-        above_ground_layer = self.map_data.get_layer_by_name("above_ground")
-
-        for x, y, gid in above_ground_layer:
+        for x, y, gid in layer:
             tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
                 game_screen.blit(
@@ -255,7 +242,7 @@ class Map:
             particle = Particle(
                 x, y, velocity_x, velocity_y, color, random.randint(2, 4)
             )
-            self.add_particle(particle)
+            self.add_below_particle(particle)
 
     def draw_rects(self, gameScreen, entity):
         pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)
