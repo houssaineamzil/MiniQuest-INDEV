@@ -2,6 +2,17 @@
   <img src="mq.png" alt="miniquest"/>
 </p>
 
+## Table of Contents
+1. [About MiniQuest](#about-miniquest)
+2. [Gameplay](#gameplay)
+3. [Story and Characters](#story-and-characters)
+4. [Art and Sound](#art-and-sound)
+5. [Technical](#technical)
+6. [Timeline and Milestones](#timeline-and-milestones)
+7. [Progress Over Time](#progress-over-time)
+8. [Todo](#todo)
+9. [Proposed Class Diagram](#proposed-class-diagram)
+
 ## About MiniQuest
 
 Welcome to MiniQuest, a  top-down adventure game where  the journey is full of unexpected twists and turns. Play as a village farmer thrown into a heroic journey after a dragon attack devastates your peaceful life. Brace yourself for an epic quest around the world to seek justice, explore the world, complete quests, collect items, discover secrets and make new allies.
@@ -10,21 +21,23 @@ Discord: https://discord.gg/2jxRmm8j3Q
 
 ## Gameplay
 ### Mechanics
-The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.
+The player can interact with the world in various ways. MiniQuest features multiple maps, which the player can traverse and explore. Each map has its own quests, enemies, loot, puzzles and much more. Players will be able to interact with objects around the world. For example, a player may be able to access chests, reads signs, talk to NPCS, cast spells, complete quests and slay monsters.The player will be able to obtain different weaponry, which will have its own projectile, damage and speed. The player can also obtain artefacts that grant unique ways to play the game through magical abilites.
 
 ### Controls
 The player can move their character using the WASD keys. W moves the character forward, A moves them left, S moves them backward, and D moves them to the right. 
 
 The player can attack enemies by left-clicking the screen. The type of attack performed depends on the weapon the character is currently holding. For example, a sword might trigger a slashing motion, while a bow would release an arrow towards the cursor.
 
-The E key is used for interactions. This includes opening chests, entering doors, reading signs, and initiating conversations with NPCs.
+The player can activate arefacts by right-clicking the screen. Some artefacts will be click position dependant (such as a teleport artefact) and others will not rely on click position (such as an invisibility artefact).
+
+The E key is used for interactions. This includes opening chests, unlocking doors, reading signs, initiating conversations with NPCs and activating hidden passageways and secrets.
  
 The player can access their inventory and game menus by pressing the TAB and Esc keys, respectively. In the inventory, players can equip new items, use consumables, and view their character's stats and abilities. The game menu provides access to options such as saving and loading the game, adjusting settings, and exiting to the desktop.
 
 ### Level Design
 MiniQuest employs a sprawling world map that consists of multiple, distinct smaller maps, each featuring its own unique environment, challenges, and storylines. The player's journey will lead them through a variety of landscapes - from verdant forests and treacherous mountains, to bustling towns and eerie dungeons.
 
-The world map is vast and interconnected, fostering a sense of a continuous, cohesive world. Some areas are easily accessible from the beginning, inviting early exploration, while others are gated by story progress, character abilities, or challenging enemies, rewarding players for growth and progression. Some maps may be secret and hidden, not explicitly being told to the player. 
+The world map is vast and interconnected, fostering a sense of a continuous, cohesive world. Some areas are easily accessible from the beginning, inviting early exploration, while others are gated by story progress, artefact abilities, or challenging enemies, rewarding players for growth and progression. Some maps may be secret and hidden, not explicitly being told to the player. 
 
 Each map is designed with its own unique layout, aesthetic, and theme. Areas may include a variety of terrains and points of interest, such as natural landmarks, NPC hubs, enemy encampments, secret paths, and treasure caches. This variety encourages thorough exploration and offers diverse gameplay experiences.
 
@@ -37,7 +50,7 @@ The world will feature a day/night cycle and a weather system.
 ### Character Progression
 At the start of the game, the player begins as a humble farmer, starting at level one with only basic tools and no combat abilities.
 
-The world of MiniQuest is filled with hidden treasures, special items, and powerful equipment. As the player explores, they will find weapons to increase their combat abilities, armor to protect them from damage and artifacts with special effectss. Some items will be straightforward to find, while others will require solving challenging puzzles, defeating powerful enemies, or completing complex quests.
+The world of MiniQuest is filled with hidden treasures, special items, and powerful equipment. As the player explores, they will find weapons to increase their combat abilities, armor to protect them from damage and artifacts with special effects. Some items will be straightforward to find, while others will require solving challenging puzzles, defeating powerful enemies, or completing complex quests.
 
 Over the course of their journey, the player will encounter a variety of non-player characters (NPCs). Interacting with these characters can lead to new quests, access to special items, or even companionship. Building relationships with NPCs can allow the player to gain them as followers, or unlock new story line narratives and quests.
 
@@ -124,8 +137,54 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/c2860954-feff-458f-98
 
 https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97ed-2e469900539f
 
+## Todo
+(NOT COMPLETE LIST!)
+1. Projectiles:
+    - [x] Arrows
+    - [x] Fireball
+2. Weapons:
+    - [x] Bows
+    - [x] Staffs
+    - [ ] Swords
+3. NPCS:
+    - [x] Enemies
+    - [ ] Quest givers
+    - [ ] Merchants
+    - [ ] Generic townsfolk
+4. UI:
+    - [x] Chests
+    - [x] Inventory
+    - [x] Equipment
+    - [ ] Pause menu
+    - [ ] Start menu
+    - [ ] Game over
+    - [ ] Settings
+    - [ ] Resizable client
+    - [ ] Camera that follows player
+5. Equipment:
+    - [x] Head
+    - [x] Torso
+    - [x] Legs
+    - [x] Feet
+    - [x] Artefact
+    - [x] Weapon
+6. Story:
+    - [ ] Quests
+    - [ ] Random events and encounters
+7. Map:
+    - [x] Multiple maps
+    - [x] Portal objects
+    - [x] Collision objects
+    - [x] Enemy objects
+    - [x] Chest objects
+    - [ ] Tree objects?
+    - [ ] Trigger objects
+    - [ ] Day/night cycle
+    - [ ] Weather
 
 ## Proposed Class Diagram
 <p align="center">
   <img src="class_diagram.JPG" alt="class_diagram"/>
 </p>
+
+
