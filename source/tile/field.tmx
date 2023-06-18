@@ -98,11 +98,6 @@
     <property name="hp" type="int" value="3"/>
    </properties>
   </object>
-  <object id="8" name="Archer" x="56.6667" y="395.333" width="18.6667" height="18.6667">
-   <properties>
-    <property name="hp" type="int" value="3"/>
-   </properties>
-  </object>
   <object id="9" name="Archer" x="49.8333" y="688.833" width="18.6667" height="18.6667">
    <properties>
     <property name="hp" type="int" value="3"/>

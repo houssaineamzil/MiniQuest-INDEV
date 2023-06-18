@@ -140,11 +140,6 @@
     <property name="hp" type="int" value="3"/>
    </properties>
   </object>
-  <object id="63" name="Archer" x="607" y="333" width="42" height="38">
-   <properties>
-    <property name="hp" type="int" value="2"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup id="9" name="chests"/>
 </map>
