@@ -13,7 +13,7 @@ class Archer(Character):
         super().__init__(hp)
         self.size_x = 30
         self.size_y = 42
-        self.speed = 1.2
+        self.speed = 1.3
         self.original_image = pygame.image.load("source/img/archer.png")
         self.image = pygame.transform.scale(
             self.original_image, (self.size_x, self.size_y)
@@ -25,7 +25,7 @@ class Archer(Character):
     def get_next_shot_time(
         self,
     ):
-        return pygame.time.get_ticks() + random.randint(1500, 3000)
+        return pygame.time.get_ticks() + random.randint(500, 3000)
 
     def shoot(self, player, collision_tiles):
         current_time = pygame.time.get_ticks()
@@ -61,7 +61,7 @@ class Archer(Character):
             elif self.direction == 3:
                 self.move(-speed, 0, collision_tiles, screen_width, screen_height)
         else:
-            self.move_counter = 50
+            self.move_counter = random.randint(20, 70)
             self.direction = self.get_direction(target_x, target_y, collision_tiles)
 
     def get_direction(self, target_x, target_y, collision_tiles):

@@ -123,15 +123,15 @@ class Chainmail(Armour):
 
 
 class TeleportScroll(Artefact):
-    COOLDOWN = 1000
-    TELEPORT_DELAY = 500
+    COOLDOWN = 1500
+    TELEPORT_DELAY = 200
 
     def __init__(self):
         super().__init__(Spritesheet("source/img/chainmail.png"))
         self.class_name = self.__class__.__name__
         self.name = "Teleport Scroll"
         self.equipment_slot = "Artefact"
-        self.teleport_radius = 600
+        self.teleport_radius = 300
         self.last_activation = 0
 
     def activate_effect(self, player, mouse_x, mouse_y, tiles, map):
@@ -139,7 +139,6 @@ class TeleportScroll(Artefact):
         if current_time - self.last_activation < self.COOLDOWN:
             return False
 
-        self.last_activation = current_time
         if not self.is_in_radius(player.rect.center, (mouse_x, mouse_y)):
             return False
 
@@ -147,6 +146,9 @@ class TeleportScroll(Artefact):
             0, 0, player.collision_rect.width, player.collision_rect.height
         )
         potential_rect.midbottom = (mouse_x, mouse_y)
+
+        if potential_rect.top < 0:
+            return False
 
         if self.is_collision(potential_rect, tiles):
             return False
@@ -160,6 +162,7 @@ class TeleportScroll(Artefact):
         player.teleporting = True
         player.canmove = False
         player.canshoot = False
+        self.last_activation = current_time
 
         pygame.time.set_timer(pygame.USEREVENT + 1, self.TELEPORT_DELAY)
         return True

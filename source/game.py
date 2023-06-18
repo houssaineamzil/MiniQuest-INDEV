@@ -15,7 +15,6 @@ from equipment import (
 )
 from spritesheet import Spritesheet
 
-
 class Game:
     def __init__(self, screen_width, screen_height, map_file):
         self.screen_width = screen_width
@@ -51,7 +50,7 @@ class Game:
 
         pygame.mixer.music.load("source/sound/music.wav")
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0)
 
         pygame.mouse.set_visible(False)
         self.cursor_img = pygame.image.load("source/img/cursor.png")

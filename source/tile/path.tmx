@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="59">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="64">
  <properties>
   <property name="hp" type="int" value="1"/>
  </properties>
@@ -112,8 +112,8 @@
   <object id="29" x="587.821" y="202.151" width="8.35796" height="6.06251"/>
   <object id="30" x="519.787" y="39.1506" width="16.6875" height="10.4375"/>
   <object id="32" x="514.636" y="96" width="58.4886" height="30.75"/>
-  <object id="33" x="449" y="32" width="30.125" height="22.0568"/>
-  <object id="34" x="323.125" y="31.875" width="57.75" height="15.625"/>
+  <object id="33" x="449" y="32" width="30.125" height="29.7235"/>
+  <object id="34" x="323.125" y="31.875" width="57.75" height="32.125"/>
   <object id="35" x="299.764" y="105.889" width="8.2216" height="6.4716"/>
   <object id="36" x="523.273" y="709.091" width="9.45455" height="90.7273"/>
   <object id="37" x="619.273" y="709.182" width="9.45455" height="90.7273"/>
@@ -132,9 +132,15 @@
  <objectgroup id="6" name="portal">
   <object id="1" name="village,575,30" x="533.167" y="794.989" width="85.625" height="4.84469"/>
   <object id="3" name="secretforest,20,530" x="795.653" y="511.018" width="4.17045" height="32.7841"/>
+  <object id="59" name="field,780,370" x="0" y="352" width="3.03409" height="31.6477"/>
  </objectgroup>
  <objectgroup id="8" name="enemies">
-  <object id="58" name="Dragon" x="164" y="51.5" width="40.5" height="33.5">
+  <object id="62" name="Dragon" x="52" y="29" width="41" height="36">
+   <properties>
+    <property name="hp" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="63" name="Archer" x="607" y="333" width="42" height="38">
    <properties>
     <property name="hp" type="int" value="2"/>
    </properties>

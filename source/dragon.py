@@ -14,7 +14,7 @@ class Dragon(Character):
     def __init__(self, x, y, hp):
         super().__init__(hp)
         self.size = 50
-        self.speed = 1
+        self.speed = 1.2
         self.original_image = pygame.image.load("source/img/dragon.png")
         self.image = pygame.transform.scale(self.original_image, (self.size, self.size))
         self.rect = self.image.get_rect()
@@ -33,7 +33,7 @@ class Dragon(Character):
             elif self.direction == 3:
                 self.move(-speed, 0, collision_tiles, screen_width, screen_height)
         else:
-            self.move_counter = 60
+            self.move_counter = 50
             self.direction = random.randint(0, 3)
 
     def shoot(self, player, collision_tiles):

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="5">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="10">
  <tileset firstgid="1" source="village.tsx"/>
  <layer id="1" name="floor" width="25" height="25">
   <data encoding="csv">
@@ -89,7 +89,25 @@
 </data>
  </layer>
  <objectgroup id="4" name="collision"/>
- <objectgroup id="5" name="portal"/>
- <objectgroup id="6" name="enemies"/>
+ <objectgroup id="5" name="portal">
+  <object id="5" name="path,20,370" x="796.182" y="352" width="3.81818" height="32"/>
+ </objectgroup>
+ <objectgroup id="6" name="enemies">
+  <object id="6" name="Archer" x="59.3333" y="69.3333" width="27.3333" height="21.3333">
+   <properties>
+    <property name="hp" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="8" name="Archer" x="56.6667" y="395.333" width="18.6667" height="18.6667">
+   <properties>
+    <property name="hp" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="9" name="Archer" x="49.8333" y="688.833" width="18.6667" height="18.6667">
+   <properties>
+    <property name="hp" type="int" value="3"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="7" name="chests"/>
 </map>
