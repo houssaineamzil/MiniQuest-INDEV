@@ -48,7 +48,7 @@ class Player:
         self.dead = False
         self.canshoot = True
         self.collision_rect = pygame.FRect(
-            self.rect.x, self.rect.y, self.rect.width - 3, self.rect.height * 0.4
+            self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
         )
         self.collision_rect.midbottom = self.rect.midbottom
 

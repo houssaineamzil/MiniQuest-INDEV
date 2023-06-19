@@ -3,6 +3,7 @@ import os
 from map import Map
 from player import Player
 from projectile import Arrow, FireBall
+from particle import walkParticle
 from equipment import (
     Equipment,
     Armour,
@@ -14,6 +15,7 @@ from equipment import (
     TeleportScroll,
 )
 from spritesheet import Spritesheet
+import random
 
 
 class Game:
@@ -23,15 +25,15 @@ class Game:
         self.map_file = map_file
         self.last_shot = 0
         self.game_over = False
+        self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
 
     def run(self, player_x, player_y):
         self.init_game_loop(player_x, player_y)
         while self.game_running():
-            self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
             self.perform_game_operations()
             self.handle_game_events()
-            self.update_game_screen()
             self.update_ui()
+            self.update_game_screen()
 
     def init_game_loop(self, player_x, player_y):
         pygame.init()
@@ -67,14 +69,23 @@ class Game:
 
         self.map.update(self.game_screen, self.player)
 
-        if self.player.movement(
-            self.map.collision_tiles, self.screen_width, self.screen_height
-        ):
-            self.map.walk_particles(self.player)
-            self.map.update_particles(self.game_screen, self.map.below_particles)
+        entities_to_sort = self.map.enemies + [self.player]
+        sorted_entities = sorted(entities_to_sort, key=lambda entity: entity.rect.y)
+        for entity in sorted_entities:
+            if isinstance(entity, Player):
+                if entity.movement(
+                    self.map.collision_tiles, self.screen_width, self.screen_height
+                ):
+                    if random.random() < 0.3:
+                        walk_particle = walkParticle(entity)
+                        self.map.add_ground_particle(walk_particle)
+                entity.update()
+                entity.draw(self.game_screen)
+            else:
+                self.map.update_enemy(self.player, entity)
+                entity.draw(self.game_screen)
 
-        self.player.update()
-        self.player.draw(self.game_screen)
+        # self.map.draw_rects(game_screen, enemy) # ENEMY COLLISION DEBUG
         # self.map.draw_rects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
 
         self.map.update_particles(self.game_screen, self.map.particles)
@@ -114,7 +125,6 @@ class Game:
             self.player.teleporting = False
             self.player.invisible = False
             self.player.targetable = True
-            # Access teleport_scroll from player instance and add smoke effect
             self.player.worn_equipment["Artefact"].add_smoke_effect(
                 self.player.rect, self.map
             )
@@ -221,9 +231,9 @@ class Game:
                     self.player.close_chest()
 
     def update_game_screen(self):
+        self.handle_dead_player()
         mx, my = pygame.mouse.get_pos()
         self.game_screen.blit(self.cursor_img, (mx, my))
-        self.handle_dead_player()
         pygame.display.flip()
 
     def handle_dead_player(self):

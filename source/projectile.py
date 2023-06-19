@@ -4,7 +4,7 @@ import pytmx
 import math
 
 from particle import FireBallParticle, ArrowParticle
-from explosion import FireBallExplosion, ArrowExplosion
+from particleEffect import FireBallExplosion, ArrowExplosion
 
 
 class Projectile:

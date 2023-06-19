@@ -3,9 +3,12 @@ import pygame
 import pytmx
 import math
 
+from spritesheet import Spritesheet
+from animation import Animation
+
 
 class Character:
-    def __init__(self, hp):
+    def __init__(self, hp, spritesheet):
         self.hp = hp
 
         self.hit = False
@@ -14,6 +17,21 @@ class Character:
         self.direction = 0
         self.last_shot = 0
         self.canshoot = True
+        self.tint = (255, 255, 255)
+
+        self.spritesheet = Spritesheet(spritesheet)
+
+        self.animation_north = Animation(self.spritesheet, 8, 65, 513, 64, 64)
+        self.animation_east = Animation(self.spritesheet, 8, 65, 705, 64, 64)
+        self.animation_south = Animation(self.spritesheet, 8, 65, 641, 64, 64)
+        self.animation_west = Animation(self.spritesheet, 8, 65, 577, 64, 64)
+
+        self.standing_animation_north = Animation(self.spritesheet, 1, 0, 513, 64, 64)
+        self.standing_animation_east = Animation(self.spritesheet, 1, 0, 705, 64, 64)
+        self.standing_animation_south = Animation(self.spritesheet, 1, 0, 641, 64, 64)
+        self.standing_animation_west = Animation(self.spritesheet, 1, 0, 577, 64, 64)
+
+        self.current_animation = self.animation_south
 
     def move(self, dx, dy, collision_tiles, screen_width, screen_height):
         temp_rect = self.rect.copy()
@@ -22,8 +40,32 @@ class Character:
         if not self.is_collision(temp_rect, collision_tiles) and self.is_in_screen(
             temp_rect, screen_width, screen_height
         ):
+            if dx > 0:
+                self.current_animation = self.animation_east
+            elif dx < 0:
+                self.current_animation = self.animation_west
+            elif dy > 0:
+                self.current_animation = self.animation_south
+            elif dy < 0:
+                self.current_animation = self.animation_north
+
             self.rect.x += dx * self.speed
             self.rect.y += dy * self.speed
+
+            self.collision_rect.x += dx * self.speed
+            self.collision_rect.y += dy * self.speed
+
+            return True
+        else:
+            if self.current_animation == self.animation_east:
+                self.current_animation = self.standing_animation_east
+            elif self.current_animation == self.animation_west:
+                self.current_animation = self.standing_animation_west
+            elif self.current_animation == self.animation_south:
+                self.current_animation = self.standing_animation_south
+            elif self.current_animation == self.animation_north:
+                self.current_animation = self.standing_animation_north
+            return False
 
     def is_collision(self, rect, collision_tiles):
         return rect.collidelist(collision_tiles) != -1
@@ -38,27 +80,29 @@ class Character:
         self.hp -= 1
         self.hit = True
         self.hit_counter = 10
+        self.tint = (255, 0, 0)
 
     def draw(self, game_screen):
-        if self.hit_counter > 0:
-            red_image = pygame.Surface(self.image.get_size()).convert_alpha()
-            red_image.fill((255, 128, 128))
-            self.image.blit(red_image, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
+        if self.hit and self.hit_counter > 0:
             self.hit_counter -= 1
-
-        game_screen.blit(self.image, self.rect)
-
-        if self.hit_counter <= 0:
-            self.image = pygame.transform.scale(
-                self.original_image, (self.rect.width, self.rect.height)
-            )
+        else:
             self.hit = False
+            self.tint = (255, 255, 255)
+        image = self.current_animation.get_current_image()
+        image.fill(self.tint, special_flags=pygame.BLEND_RGBA_MULT)
+        game_screen.blit(image, (self.rect.x, self.rect.y))
 
     def has_line_of_sight(self, target_x, target_y, collision_tiles):
         x0, y0 = self.rect.center
         x1, y1 = target_x, target_y
-
-        for rect in collision_tiles:
-            if rect.clipline(x0, y0, x1, y1):
-                return False
+        dx, dy = x1 - x0, y1 - y0
+        distance = math.hypot(dx, dy)
+        dx, dy = dx / distance, dy / distance  # normalize
+        arrow_rect = pygame.Rect(0, 0, 10, 10)  # adjust to the size of your arrow
+        for i in range(int(distance)):
+            x, y = x0 + i * dx, y0 + i * dy
+            arrow_rect.center = (x, y)
+            for rect in collision_tiles:
+                if rect.colliderect(arrow_rect):
+                    return False
         return True

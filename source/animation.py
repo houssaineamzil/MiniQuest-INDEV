@@ -26,3 +26,6 @@ class Animation:
 
     def reset(self):
         self.current_frame = 0
+
+    def get_current_image(self):
+        return self.frames[self.current_frame].copy()

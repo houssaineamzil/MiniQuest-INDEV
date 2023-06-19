@@ -5,11 +5,11 @@ import pytmx
 import math
 import pickle
 from player import Player
-from particle import Particle
+from particle import Particle, walkParticle
 from archer import Archer
 from dragon import Dragon
 from projectile import Arrow, FireBall
-from explosion import FireBallExplosion, ArrowExplosion, Explosion
+from particleEffect import FireBallExplosion, ArrowExplosion
 from chest import Chest
 
 
@@ -22,7 +22,7 @@ class Map:
         self.enemies = []
         self.projectiles = []
         self.portals = []
-        self.below_particles = []
+        self.ground_particles = []
         self.particles = []
         self.explosions = []
         self.collision_tiles = []
@@ -35,9 +35,7 @@ class Map:
         for obj in self.enemy_objects:
             try:
                 enemy_class = globals()[obj.name]
-                enemy = enemy_class(
-                    obj.x + obj.width / 2, obj.y + obj.height / 2, obj.hp
-                )
+                enemy = enemy_class(obj.x, obj.y, obj.hp)
                 self.add_enemy(enemy)
             except KeyError:
                 print(f"Warning: Unknown enemy type {obj.name}")
@@ -54,8 +52,8 @@ class Map:
     def add_particle(self, particle):
         self.particles.append(particle)
 
-    def add_below_particle(self, particle):
-        self.below_particles.append(particle)
+    def add_ground_particle(self, particle):
+        self.ground_particles.append(particle)
 
     def add_projectile(self, projectile):
         self.projectiles.append(projectile)
@@ -84,8 +82,8 @@ class Map:
             self.explosions.remove(explosion)
 
     def update(self, game_screen, player):
+        self.update_particles(game_screen, self.ground_particles)
         self.update_portals(player)
-        self.update_enemies(game_screen, player)
         self.update_projectiles(game_screen, player)
         self.update_explosions(game_screen)
 
@@ -96,36 +94,38 @@ class Map:
                 player.teleport(portal.destination[0], portal.destination[1])
                 break
 
-    def update_enemies(self, game_screen, player):
-        for enemy in self.enemies:
-            enemy.ai_move(
-                self.collision_tiles,
-                self.screen_width,
-                self.screen_height,
-                player.rect.centerx,
-                player.rect.centery,
-            )
+    def update_enemy(self, player, enemy):
+        if enemy.ai_move(
+            self.collision_tiles,
+            self.screen_width,
+            self.screen_height,
+            player.rect.centerx,
+            player.rect.centery,
+        ):
+            walk_particle = walkParticle(enemy)
+            if random.random() < 0.3:
+                walk_particle = walkParticle(enemy)
+                self.add_ground_particle(walk_particle)
 
-            if enemy.shoot(player, self.collision_tiles):
-                self.add_projectile(enemy.projectile)
+        if enemy.shoot(player, self.collision_tiles):
+            self.add_projectile(enemy.projectile)
 
-            enemy.draw(game_screen)
+        for projectile in self.projectiles:
+            if enemy.rect.colliderect(projectile.collision_rect) and isinstance(
+                projectile.owner, Player
+            ):
+                enemy.take_damage()
 
-            for projectile in self.projectiles:
-                if enemy.rect.colliderect(projectile.collision_rect) and isinstance(
-                    projectile.owner, Player
-                ):
-                    enemy.take_damage()
-                    explosion = projectile.explosion(
-                        projectile.collision_rect.centerx,
-                        projectile.collision_rect.centery,
-                    )
-                    self.add_explosion(explosion)
+                explosion = projectile.explosion(
+                    projectile.collision_rect.centerx,
+                    projectile.collision_rect.centery,
+                )
+                self.add_explosion(explosion)
 
-                    self.remove_projectile(projectile)
-                    if enemy.hp <= 0:
-                        self.remove_enemy(enemy)
-                        break
+                self.remove_projectile(projectile)
+                if enemy.hp <= 0:
+                    self.remove_enemy(enemy)
+                    break
 
     def update_projectiles(self, game_screen, player):
         for projectile in self.projectiles:
@@ -225,24 +225,6 @@ class Map:
                 game_screen.blit(
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
-
-    def walk_particles(self, entity):
-        if random.random() < 0.3:
-            x = entity.rect.x + entity.size_x // 2
-            y = entity.rect.y + entity.size_y
-
-            velocity_x = random.uniform(-0.3, 0.3)
-            velocity_y = random.uniform(-0.3, -0.3)
-            color = (
-                random.randint(100, 165),
-                random.randint(50, 115),
-                random.randint(10, 45),
-            )
-
-            particle = Particle(
-                x, y, velocity_x, velocity_y, color, random.randint(2, 4)
-            )
-            self.add_below_particle(particle)
 
     def draw_rects(self, gameScreen, entity):
         pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)

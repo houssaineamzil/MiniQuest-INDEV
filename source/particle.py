@@ -27,6 +27,21 @@ class Particle:
         return False
 
 
+class walkParticle(Particle):
+    def __init__(self, entity):
+        x = entity.rect.x + entity.size_x // 2
+        y = entity.rect.y + entity.size_y
+
+        velocity_x = random.uniform(-0.3, 0.3)
+        velocity_y = random.uniform(-0.3, -0.3)
+        color = (
+            random.randint(100, 165),
+            random.randint(50, 115),
+            random.randint(10, 45),
+        )
+        super().__init__(x, y, velocity_x, velocity_y, color, random.randint(2, 4))
+
+
 class FireBallParticle(Particle):
     def __init__(self, start_x, start_y, velocity_x, velocity_y):
         color = (255, random.randint(0, 100), 0)

@@ -6,20 +6,20 @@ from character import Character
 
 
 class Archer(Character):
+    size_x = 32
+    size_y = 50
     PROJECTILE_LIFE = 25
     PROJECTILE_SPEED = 15
 
     def __init__(self, x, y, hp):
-        super().__init__(hp)
-        self.size_x = 30
-        self.size_y = 42
+        spritesheet = "source/img/archer.png"
+        super().__init__(hp, spritesheet)
         self.speed = 1.3
-        self.original_image = pygame.image.load("source/img/archer.png")
-        self.image = pygame.transform.scale(
-            self.original_image, (self.size_x, self.size_y)
-        )
-        self.rect = self.image.get_rect()
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
+        self.collision_rect = pygame.FRect(
+            self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
+        )
+        self.collision_rect.midbottom = self.rect.midbottom
         self.next_shot_time = self.get_next_shot_time()
 
     def get_next_shot_time(
@@ -49,20 +49,31 @@ class Archer(Character):
         return False
 
     def ai_move(self, collision_tiles, screen_width, screen_height, target_x, target_y):
+        self.current_animation.update()
         if self.move_counter > 0:
             self.move_counter -= 1
             speed = 2
             if self.direction == 0:
-                self.move(0, -speed, collision_tiles, screen_width, screen_height)
+                moved = self.move(
+                    0, -speed, collision_tiles, screen_width, screen_height
+                )
             elif self.direction == 1:
-                self.move(speed, 0, collision_tiles, screen_width, screen_height)
+                moved = self.move(
+                    speed, 0, collision_tiles, screen_width, screen_height
+                )
             elif self.direction == 2:
-                self.move(0, speed, collision_tiles, screen_width, screen_height)
+                moved = self.move(
+                    0, speed, collision_tiles, screen_width, screen_height
+                )
             elif self.direction == 3:
-                self.move(-speed, 0, collision_tiles, screen_width, screen_height)
+                moved = self.move(
+                    -speed, 0, collision_tiles, screen_width, screen_height
+                )
+            return moved
         else:
-            self.move_counter = random.randint(20, 70)
+            self.move_counter = 50
             self.direction = self.get_direction(target_x, target_y, collision_tiles)
+            return False
 
     def get_direction(self, target_x, target_y, collision_tiles):
         directions = [0, 1, 2, 3]

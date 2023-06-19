@@ -6,16 +6,16 @@ import math
 from particle import Particle
 
 
-class Explosion:
+class particleEffect:
     def update(self):
-        for explosion_particle in list(self.particles):
-            if explosion_particle.update():
-                self.particles.remove(explosion_particle)
+        for particle in list(self.particles):
+            if particle.update():
+                self.particles.remove(particle)
 
         return len(self.particles) == 0
 
 
-class ArrowExplosion(Explosion):
+class ArrowExplosion(particleEffect):
     def __init__(self, x, y):
         self.particles = [
             Particle(
@@ -34,7 +34,7 @@ class ArrowExplosion(Explosion):
         ]
 
 
-class FireBallExplosion(Explosion):
+class FireBallExplosion(particleEffect):
     def __init__(self, x, y):
         self.particles = [
             Particle(
