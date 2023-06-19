@@ -88,9 +88,9 @@ class Character:
         else:
             self.hit = False
             self.tint = (255, 255, 255)
-        image = self.current_animation.get_current_image()
-        image.fill(self.tint, special_flags=pygame.BLEND_RGBA_MULT)
-        game_screen.blit(image, (self.rect.x, self.rect.y))
+        self.current_animation.draw(
+            game_screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
+        )
 
     def has_line_of_sight(self, target_x, target_y, collision_tiles):
         x0, y0 = self.rect.center

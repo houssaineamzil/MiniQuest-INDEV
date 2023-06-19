@@ -12,6 +12,9 @@ class Player:
     def __init__(self, x, y):
         self.size_x = 32
         self.size_y = 50
+        self.hp = 5
+        self.hit_counter = 0
+        self.tint = (255, 255, 255)
         self.spritesheet = Spritesheet("source/img/player.png")
 
         self.animation_north = Animation(self.spritesheet, 8, 65, 513, 64, 64)
@@ -56,14 +59,22 @@ class Player:
         return rect.collidelist(tiles) != -1
 
     def hit_by_projectile(self):
-        self.dead = True
-        self.targetable = False
+        self.hit_counter = 10
+        self.tint = (255, 0, 0)
+        self.hp -= 1
+        if self.hp == 0:
+            self.dead = True
+            self.targetable = False
 
     def teleport(self, x, y):
         self.rect.midbottom = (x, y)
         self.collision_rect.midbottom = (x, y)
 
     def update(self):
+        if self.hit_counter > 0:
+            self.hit_counter -= 1
+        else:
+            self.tint = (255, 255, 255)
         self.current_animation.update()
         for item in self.worn_equipment.values():
             if item is not None:
@@ -83,7 +94,7 @@ class Player:
     def draw(self, screen):
         if not self.invisible:
             self.current_animation.draw(
-                screen, self.rect.x, self.rect.y, self.size_x, self.size_y
+                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
             )
             for item in self.worn_equipment.values():
                 if item is not None:
