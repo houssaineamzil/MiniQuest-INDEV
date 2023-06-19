@@ -96,17 +96,17 @@ class Player:
             self.current_animation.draw(
                 screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
             )
-        for item in self.worn_equipment.values():
-            if item is not None:
-                item.draw(
-                    screen,
-                    self.rect.x,
-                    self.rect.y,
-                    self.size_x,
-                    self.size_y,
-                    self.moved,
-                    self.tint,
-                )
+            for item in self.worn_equipment.values():
+                if item is not None:
+                    item.draw(
+                        screen,
+                        self.rect.x,
+                        self.rect.y,
+                        self.size_x,
+                        self.size_y,
+                        self.moved,
+                        self.tint,
+                    )
 
     def equip_item(self, equipment):
         slot = equipment.equipment_slot
