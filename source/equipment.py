@@ -37,14 +37,14 @@ class Equipment:
                 else:
                     standing_animation.update()
 
-    def draw(self, screen, x, y, size_x, size_y, is_moving):
-        if is_moving:
+    def draw(self, screen, x, y, size_x, size_y, moved, tint):
+        if moved:
             self.directions[self.current_direction][0].draw(
-                screen, x, y, size_x, size_y
+                screen, x, y, size_x, size_y, tint
             )
         else:
             self.directions[self.current_direction][1].draw(
-                screen, x, y, size_x, size_y
+                screen, x, y, size_x, size_y, tint
             )
 
 

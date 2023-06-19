@@ -71,7 +71,7 @@ class Archer(Character):
                 )
             return moved
         else:
-            self.move_counter = 50
+            self.move_counter = 200
             self.direction = self.get_direction(target_x, target_y, collision_tiles)
             return False
 

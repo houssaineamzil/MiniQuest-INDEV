@@ -71,11 +71,6 @@ class Player:
         self.collision_rect.midbottom = (x, y)
 
     def update(self):
-        if self.hit_counter > 0:
-            self.hit_counter -= 1
-        else:
-            self.tint = (255, 255, 255)
-        self.current_animation.update()
         for item in self.worn_equipment.values():
             if item is not None:
                 item.update(self.current_animation.direction, self.moved)
@@ -92,20 +87,26 @@ class Player:
         self.current_chest = None
 
     def draw(self, screen):
+        if self.hit_counter > 0:
+            self.hit_counter -= 1
+        else:
+            self.tint = (255, 255, 255)
+        self.current_animation.update()
         if not self.invisible:
             self.current_animation.draw(
                 screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
             )
-            for item in self.worn_equipment.values():
-                if item is not None:
-                    item.draw(
-                        screen,
-                        self.rect.x,
-                        self.rect.y,
-                        self.size_x,
-                        self.size_y,
-                        self.moved,
-                    )
+        for item in self.worn_equipment.values():
+            if item is not None:
+                item.draw(
+                    screen,
+                    self.rect.x,
+                    self.rect.y,
+                    self.size_x,
+                    self.size_y,
+                    self.moved,
+                    self.tint,
+                )
 
     def equip_item(self, equipment):
         slot = equipment.equipment_slot
