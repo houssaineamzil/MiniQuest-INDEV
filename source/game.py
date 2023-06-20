@@ -136,13 +136,18 @@ class Game:
         self.game_over = True
 
     def handle_mouse_button_down_event(self, event):
-        if event.button == 1 and not self.player.dead:
-            self.handle_player_shoot(event)
-        if event.button == 3 and not self.player.dead:
-            self.handle_artefact_activation(event)
-        self.handle_inventory_click(event)
-        self.handle_equipment_click(event)
-        self.handle_chest_click(event)
+        if event.button not in [1, 3]:
+            pass
+        else:
+            if not self.player.dead:
+                if event.button == 1:
+                    self.handle_player_shoot(event)
+                elif event.button == 3:
+                    self.handle_artefact_activation(event)
+
+            self.handle_inventory_click(event)
+            self.handle_equipment_click(event)
+            self.handle_chest_click(event)
 
     def handle_artefact_activation(self, event):
         if (
