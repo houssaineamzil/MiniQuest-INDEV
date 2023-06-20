@@ -97,8 +97,8 @@ class Character:
         x1, y1 = target_x, target_y
         dx, dy = x1 - x0, y1 - y0
         distance = math.hypot(dx, dy)
-        dx, dy = dx / distance, dy / distance  # normalize
-        arrow_rect = pygame.Rect(0, 0, 10, 10)  # adjust to the size of your arrow
+        dx, dy = dx / distance, dy / distance
+        arrow_rect = pygame.Rect(0, 0, 10, 10)
         for i in range(int(distance)):
             x, y = x0 + i * dx, y0 + i * dy
             arrow_rect.center = (x, y)

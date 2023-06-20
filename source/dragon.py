@@ -9,8 +9,8 @@ from animation import Animation
 
 
 class Dragon(Character):
-    size_x = 40
-    size_y = 40
+    size_x = 50
+    size_y = 50
     PROJECTILE_LIFE = 30
     PROJECTILE_SPEED = 25
 

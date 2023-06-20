@@ -230,6 +230,9 @@ class Map:
         pygame.draw.rect(gameScreen, (255, 0, 0), entity.rect, 2)
         pygame.draw.rect(gameScreen, (0, 255, 0), entity.collision_rect, 2)
 
+    def draw_rect(self, gameScreen, rect):
+        pygame.draw.rect(gameScreen, (0, 255, 0), rect, 2)
+
     def save_state(self, state_filename):
         state = {
             "chests": [

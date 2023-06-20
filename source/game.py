@@ -85,11 +85,16 @@ class Game:
                 self.map.update_enemy(self.player, entity)
                 entity.draw(self.game_screen)
 
-        # self.map.draw_rects(game_screen, enemy) # ENEMY COLLISION DEBUG
-        # self.map.draw_rects(self.game_screen, self.player)  # PLAYER COLLISION DEBUG
+            # self.map.draw_rects(
+            # self.game_screen, entity
+            # )  # PLAYER AND ENEMY COLLISION DEBUG
 
         self.map.update_particles(self.game_screen, self.map.particles)
         self.map.draw_layer(self.game_screen, "above_ground")
+
+        # for rect in self.map.collision_tiles:  # COLLISION RECT DEBUG
+        # self.map.draw_rect(self.game_screen, rect)
+
         self.update_ui()
 
     def update_ui(self):
