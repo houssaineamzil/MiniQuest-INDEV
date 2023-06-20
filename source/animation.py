@@ -19,7 +19,7 @@ class Animation:
             self.current_frame = (self.current_frame + 1) % len(self.frames)
 
     def draw(self, screen, x, y, size_x, size_y, color=(255, 255, 255)):
-        image = self.frames[self.current_frame].copy()  # Make a copy of the sprite
+        image = self.frames[self.current_frame].copy()
         image.fill(color, special_flags=pygame.BLEND_MULT)
         image_rect = image.get_rect()
         image_rect.midbottom = (x + size_x // 2, y + size_y)

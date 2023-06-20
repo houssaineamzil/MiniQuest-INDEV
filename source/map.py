@@ -6,8 +6,8 @@ import math
 import pickle
 from player import Player
 from particle import Particle, walkParticle
-from archer import Archer
-from dragon import Dragon
+from enemy import Archer
+from enemy import Dragon
 from projectile import Arrow, FireBall
 from particleEffect import FireBallExplosion, ArrowExplosion
 from chest import Chest
