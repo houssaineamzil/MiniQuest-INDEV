@@ -132,7 +132,7 @@
  <objectgroup id="18" name="enemies">
   <object id="109" name="Archer" x="563.833" y="40.5" width="23.5" height="23">
    <properties>
-    <property name="hp" type="int" value="2"/>
+    <property name="hp" type="int" value="3"/>
    </properties>
   </object>
  </objectgroup>

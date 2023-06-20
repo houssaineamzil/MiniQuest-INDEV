@@ -139,7 +139,7 @@
  <objectgroup id="8" name="enemies">
   <object id="103" name="Dragon" x="26.8333" y="30.1667" width="39.5" height="37">
    <properties>
-    <property name="hp" type="int" value="3"/>
+    <property name="hp" type="int" value="4"/>
    </properties>
   </object>
  </objectgroup>

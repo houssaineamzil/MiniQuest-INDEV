@@ -109,12 +109,12 @@
  <objectgroup id="18" name="chests">
   <object id="35" x="510.833" y="447.833" width="32" height="32">
    <properties>
-    <property name="items" value="Chainmail,BlackBoots,TeleportScroll"/>
+    <property name="items" value="Chainmail,BlackBoots"/>
    </properties>
   </object>
   <object id="59" x="450.833" y="447.5" width="32" height="32">
    <properties>
-    <property name="items" value="Shortbow,FireStaff"/>
+    <property name="items" value="Shortbow"/>
    </properties>
   </object>
  </objectgroup>
