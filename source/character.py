@@ -16,7 +16,7 @@ class Character:
         self.move_counter = 0
         self.direction = 0
         self.last_shot = 0
-        self.canshoot = True
+        self.canattack = True
         self.tint = (255, 255, 255)
 
         self.spritesheet = Spritesheet(spritesheet)

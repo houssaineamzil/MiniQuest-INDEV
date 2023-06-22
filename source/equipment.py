@@ -8,21 +8,21 @@ from particle import TeleportParticle
 
 class Equipment:
     def __init__(self, spritesheet):
-        self.animation_north = Animation(spritesheet, 8, 65, 513, 64, 64)
-        self.animation_east = Animation(spritesheet, 8, 65, 705, 64, 64)
-        self.animation_south = Animation(spritesheet, 8, 65, 641, 64, 64)
-        self.animation_west = Animation(spritesheet, 8, 65, 577, 64, 64)
+        self.walk_animation_north = Animation(spritesheet, 8, 65, 513, 64, 64)
+        self.walk_animation_east = Animation(spritesheet, 8, 65, 705, 64, 64)
+        self.walk_animation_south = Animation(spritesheet, 8, 65, 641, 64, 64)
+        self.walk_animation_west = Animation(spritesheet, 8, 65, 577, 64, 64)
 
-        self.standing_animation_north = Animation(spritesheet, 1, 0, 513, 64, 64)
-        self.standing_animation_east = Animation(spritesheet, 1, 0, 705, 64, 64)
-        self.standing_animation_south = Animation(spritesheet, 1, 0, 641, 64, 64)
-        self.standing_animation_west = Animation(spritesheet, 1, 0, 577, 64, 64)
+        self.stand_animation_north = Animation(spritesheet, 1, 0, 513, 64, 64)
+        self.stand_animation_east = Animation(spritesheet, 1, 0, 705, 64, 64)
+        self.stand_animation_south = Animation(spritesheet, 1, 0, 641, 64, 64)
+        self.stand_animation_west = Animation(spritesheet, 1, 0, 577, 64, 64)
 
         self.directions = {
-            "north": (self.animation_north, self.standing_animation_north),
-            "south": (self.animation_south, self.standing_animation_south),
-            "west": (self.animation_west, self.standing_animation_west),
-            "east": (self.animation_east, self.standing_animation_east),
+            "north": (self.walk_animation_north, self.stand_animation_north),
+            "south": (self.walk_animation_south, self.stand_animation_south),
+            "west": (self.walk_animation_west, self.stand_animation_west),
+            "east": (self.walk_animation_east, self.stand_animation_east),
         }
 
         self.current_direction = "south"
@@ -49,14 +49,15 @@ class Equipment:
 
 
 class Weapon(Equipment):
-    def __init__(self, spritesheet, projectile_type, life, speed):
+    def __init__(self, spritesheet, projectile_type, life, speed, cooldown):
         super().__init__(spritesheet)
         self.name = "Undefined Weapon"
         self.life = life
         self.speed = speed
         self.projectile_type = projectile_type
+        self.cooldown = cooldown
 
-    def shoot(self, player, mouse_x, mouse_y):
+    def attack(self, player, mouse_x, mouse_y):
         projectile = self.projectile_type(
             mouse_x, mouse_y, self.life, self.speed, player
         )
@@ -84,7 +85,7 @@ class Artefact(Equipment):
 
 class Shortbow(Weapon):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 20, 15)
+        super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 18, 15, 1500)
         self.class_name = self.__class__.__name__
         self.name = "Shortbow"
         self.equipment_slot = "Weapon"
@@ -92,7 +93,7 @@ class Shortbow(Weapon):
 
 class FireStaff(Weapon):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/firestaff.png"), FireBall, 20, 15)
+        super().__init__(Spritesheet("source/img/firestaff.png"), FireBall, 22, 10, 800)
         self.class_name = self.__class__.__name__
         self.name = "Fire Staff"
         self.equipment_slot = "Weapon"
@@ -161,7 +162,7 @@ class TeleportScroll(Artefact):
         player.targetable = False
         player.teleporting = True
         player.canmove = False
-        player.canshoot = False
+        player.canattack = False
         self.last_activation = current_time
 
         pygame.time.set_timer(pygame.USEREVENT + 1, self.TELEPORT_DELAY)

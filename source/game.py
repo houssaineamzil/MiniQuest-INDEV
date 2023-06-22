@@ -116,16 +116,16 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.handle_quit_event()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.handle_mouse_button_down_event(event)
             elif event.type == pygame.KEYDOWN:
                 self.handle_keydown_event(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.handle_mouse_button_down_event(event)
             if event.type == self.PLAYER_TELEPORT_ARTEFACT:
                 self.handle_teleport_artefact()
 
     def handle_teleport_artefact(self):
         if self.player.teleporting:
-            self.player.canshoot = True
+            self.player.canattack = True
             self.player.canmove = True
             self.player.teleporting = False
             self.player.invisible = False
@@ -146,7 +146,7 @@ class Game:
         else:
             if not self.player.dead:
                 if event.button == 1:
-                    self.handle_player_shoot(event)
+                    self.handle_player_attack(event)
                 elif event.button == 3:
                     self.handle_artefact_activation(event)
 
@@ -165,18 +165,19 @@ class Game:
                 self.player, mouse_x, mouse_y, self.map.collision_tiles, self.map
             )
 
-    def handle_player_shoot(self, event):
+    def handle_player_attack(self, event):
         current_time = pygame.time.get_ticks()
         if (
-            current_time - self.last_shot >= 1000
-            and self.player.worn_equipment["Weapon"] is not None
+            self.player.worn_equipment["Weapon"] is not None
+            and current_time - self.last_shot
+            >= self.player.worn_equipment["Weapon"].cooldown
             and self.player.inventory_open == False
             and self.player.current_chest == None
-            and self.player.canshoot
+            and self.player.canattack
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             self.map.add_projectile(
-                self.player.worn_equipment["Weapon"].shoot(
+                self.player.worn_equipment["Weapon"].attack(
                     self.player, mouse_x, mouse_y
                 )
             )

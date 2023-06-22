@@ -12,7 +12,7 @@ class Enemy(Character):
     def __init__(self, hp, spritesheet):
         super().__init__(hp, spritesheet)
 
-    def shoot(self, player):
+    def attack(self, player):
         raise NotImplementedError("Subclasses must implement attack method")
 
     def ai_move(self, collision_tiles, screen_width, screen_height, *args):
@@ -62,9 +62,9 @@ class Dragon(Enemy):
             self.move_counter = 50
             self.direction = random.randint(0, 3)
 
-    def shoot(self, player, collision_tiles):
+    def attack(self, player, collision_tiles):
         if (
-            self.canshoot
+            self.canattack
             and player.targetable
             and self.has_line_of_sight(
                 player.rect.centerx, player.rect.centery, collision_tiles
@@ -106,12 +106,12 @@ class Archer(Enemy):
     ):
         return pygame.time.get_ticks() + random.randint(500, 3000)
 
-    def shoot(self, player, collision_tiles):
+    def attack(self, player, collision_tiles):
         current_time = pygame.time.get_ticks()
         if (
             current_time >= self.next_shot_time
             and player.targetable
-            and self.canshoot
+            and self.canattack
             and self.has_line_of_sight(
                 player.rect.centerx, player.rect.centery, collision_tiles
             )

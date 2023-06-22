@@ -54,11 +54,11 @@ class FireBall(Projectile):
         self.collision_rect = self.image.get_rect(center=self.orig_rect.center)
         self.rect = self.image.get_rect(center=self.orig_rect.center)
 
-        self.shoot_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
+        self.attack_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
         self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
-        self.shoot_sound.set_volume(0.4)
+        self.attack_sound.set_volume(0.4)
         self.hit_sound.set_volume(0.4)
-        self.shoot_sound.play()
+        self.attack_sound.play()
 
     def update(self, tiles, screenWidth, screenHeight):
         center_x = self.rect.x + self.orig_image.get_width() // 2
@@ -115,11 +115,11 @@ class Arrow(Projectile):
         self.image = pygame.transform.rotate(self.orig_image, -math.degrees(self.angle))
         self.rect = self.image.get_rect(center=self.orig_rect.center)
 
-        self.shoot_sound = pygame.mixer.Sound("source/sound/arrowrelease.mp3")
+        self.attack_sound = pygame.mixer.Sound("source/sound/arrowrelease.mp3")
         self.hit_sound = pygame.mixer.Sound("source/sound/arrowimpact.mp3")
-        self.shoot_sound.set_volume(4)
+        self.attack_sound.set_volume(4)
         self.hit_sound.set_volume(0.4)
-        self.shoot_sound.play()
+        self.attack_sound.play()
 
     def update(self, tiles, screenWidth, screenHeight):
         center_x = self.orig_rect.x + self.orig_image.get_width() // 2

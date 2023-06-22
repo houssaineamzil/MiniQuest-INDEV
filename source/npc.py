@@ -10,3 +10,6 @@ class NPC(Character):
 
     def ai_move(self, collision_tiles, screen_width, screen_height, *args):
         raise NotImplementedError("Subclasses must implement ai_move method")
+
+    def talk():
+        raise NotImplementedError("Subclasses must implement talk method")

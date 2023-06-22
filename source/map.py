@@ -44,7 +44,10 @@ class Map:
         chest_objects = self.map_data.get_layer_by_name("chests")
         for obj in chest_objects:
             chest = Chest(obj.x, obj.y, obj.width, obj.height, obj.items)
-            self.chests.append(chest)
+            self.add_chest(chest)
+
+    def add_chest(self, chest):
+        self.chests.append(chest)
 
     def add_enemy(self, enemy):
         self.enemies.append(enemy)
@@ -107,7 +110,7 @@ class Map:
                 walk_particle = walkParticle(enemy)
                 self.add_ground_particle(walk_particle)
 
-        if enemy.shoot(player, self.collision_tiles):
+        if enemy.attack(player, self.collision_tiles):
             self.add_projectile(enemy.projectile)
 
         for projectile in self.projectiles:

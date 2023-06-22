@@ -17,17 +17,17 @@ class Player:
         self.tint = (255, 255, 255)
         self.spritesheet = Spritesheet("source/img/player.png")
 
-        self.animation_north = Animation(self.spritesheet, 8, 65, 513, 64, 64)
-        self.animation_east = Animation(self.spritesheet, 8, 65, 705, 64, 64)
-        self.animation_south = Animation(self.spritesheet, 8, 65, 641, 64, 64)
-        self.animation_west = Animation(self.spritesheet, 8, 65, 577, 64, 64)
+        self.walk_animation_north = Animation(self.spritesheet, 8, 65, 513, 64, 64)
+        self.walk_animation_east = Animation(self.spritesheet, 8, 65, 705, 64, 64)
+        self.walk_animation_south = Animation(self.spritesheet, 8, 65, 641, 64, 64)
+        self.walk_animation_west = Animation(self.spritesheet, 8, 65, 577, 64, 64)
 
-        self.standing_animation_north = Animation(self.spritesheet, 1, 0, 513, 64, 64)
-        self.standing_animation_east = Animation(self.spritesheet, 1, 0, 705, 64, 64)
-        self.standing_animation_south = Animation(self.spritesheet, 1, 0, 641, 64, 64)
-        self.standing_animation_west = Animation(self.spritesheet, 1, 0, 577, 64, 64)
+        self.stand_animation_north = Animation(self.spritesheet, 1, 0, 513, 64, 64)
+        self.stand_animation_east = Animation(self.spritesheet, 1, 0, 705, 64, 64)
+        self.stand_animation_south = Animation(self.spritesheet, 1, 0, 641, 64, 64)
+        self.stand_animation_west = Animation(self.spritesheet, 1, 0, 577, 64, 64)
 
-        self.current_animation = self.animation_south
+        self.current_animation = self.stand_animation_south
         self.inventory = Inventory()
 
         self.worn_equipment = {
@@ -49,7 +49,7 @@ class Player:
         self.targetable = True
         self.teleporting = False
         self.dead = False
-        self.canshoot = True
+        self.canattack = True
         self.collision_rect = pygame.FRect(
             self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
         )
@@ -117,24 +117,50 @@ class Player:
 
     def sync_animation(self, equipment):
         for direction, (animation, _) in equipment.directions.items():
-            player_animation = self.get_player_animation(direction)
+            player_animation = self.get_walk_animation(direction)
             animation.current_frame = player_animation.current_frame
             animation.last_update = player_animation.last_update
 
     def unequip_item(self, slot):
         self.worn_equipment[slot] = None
 
-    def get_player_animation(self, direction):
+    def get_walk_animation(self, direction):
         if direction == "north":
-            return self.animation_north
+            return self.walk_animation_north
         elif direction == "east":
-            return self.animation_east
+            return self.walk_animation_east
         elif direction == "south":
-            return self.animation_south
+            return self.walk_animation_south
         elif direction == "west":
-            return self.animation_west
-        else:
-            return None
+            return self.walk_animation_west
+
+    def set_walk_animation(self, direction):
+        if direction == "north":
+            self.current_animation = self.walk_animation_north
+            self.current_animation.direction = "north"
+        elif direction == "south":
+            self.current_animation = self.walk_animation_south
+            self.current_animation.direction = "south"
+        elif direction == "west":
+            self.current_animation = self.walk_animation_west
+            self.current_animation.direction = "west"
+        elif direction == "east":
+            self.current_animation = self.walk_animation_east
+            self.current_animation.direction = "east"
+
+    def set_stand_animation(self):
+        if self.current_animation.direction == "north":
+            self.current_animation = self.stand_animation_north
+            self.current_animation.direction = "north"
+        elif self.current_animation.direction == "east":
+            self.current_animation = self.stand_animation_east
+            self.current_animation.direction = "east"
+        elif self.current_animation.direction == "south":
+            self.current_animation = self.stand_animation_south
+            self.current_animation.direction = "south"
+        elif self.current_animation.direction == "west":
+            self.current_animation = self.stand_animation_west
+            self.current_animation.direction = "west"
 
     def movement(self, tiles, screen_width, screen_height):
         if not self.dead and self.canmove:
@@ -143,33 +169,18 @@ class Player:
             dx, dy = 0, 0
             if key[pygame.K_w]:
                 dy -= 1
-                self.current_animation = self.animation_north
-                self.current_animation.direction = "north"
+                self.set_walk_animation("north")
             if key[pygame.K_s]:
                 dy += 1
-                self.current_animation = self.animation_south
-                self.current_animation.direction = "south"
+                self.set_walk_animation("south")
             if key[pygame.K_a]:
                 dx -= 1
-                self.current_animation = self.animation_west
-                self.current_animation.direction = "west"
+                self.set_walk_animation("west")
             if key[pygame.K_d]:
                 dx += 1
-                self.current_animation = self.animation_east
-                self.current_animation.direction = "east"
+                self.set_walk_animation("east")
             if dx == 0 and dy == 0:
-                if self.current_animation.direction == "north":
-                    self.current_animation = self.standing_animation_north
-                    self.current_animation.direction = "north"
-                elif self.current_animation.direction == "east":
-                    self.current_animation = self.standing_animation_east
-                    self.current_animation.direction = "east"
-                elif self.current_animation.direction == "south":
-                    self.current_animation = self.standing_animation_south
-                    self.current_animation.direction = "south"
-                elif self.current_animation.direction == "west":
-                    self.current_animation = self.standing_animation_west
-                    self.current_animation.direction = "west"
+                self.set_stand_animation()
 
             if dx != 0 or dy != 0:
                 dist = math.hypot(dx, dy)
@@ -201,16 +212,5 @@ class Player:
                         self.collision_rect.y += dy
                         self.moved = True
                 if not self.moved:
-                    if self.current_animation.direction == "north":
-                        self.current_animation = self.standing_animation_north
-                        self.current_animation.direction = "north"
-                    elif self.current_animation.direction == "east":
-                        self.current_animation = self.standing_animation_east
-                        self.current_animation.direction = "east"
-                    elif self.current_animation.direction == "south":
-                        self.current_animation = self.standing_animation_south
-                        self.current_animation.direction = "south"
-                    elif self.current_animation.direction == "west":
-                        self.current_animation = self.standing_animation_west
-                        self.current_animation.direction = "west"
+                    self.set_stand_animation()
             return self.moved
