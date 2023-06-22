@@ -2,6 +2,7 @@ import pygame
 import os
 from map import Map
 from player import Player
+from enemy import Enemy
 from projectile import Arrow, FireBall
 from particle import walkParticle
 from equipment import (
@@ -30,10 +31,14 @@ class Game:
     def run(self, player_x, player_y):
         self.init_game_loop(player_x, player_y)
         while self.game_running():
-            self.perform_game_operations()
-            self.handle_game_events()
-            self.update_ui()
-            self.update_game_screen()
+            if not self.player.dead:
+                self.perform_game_operations()
+                self.handle_game_events()
+                self.update_ui()
+                self.update_game_screen()
+            if self.player.dead:
+                self.delete_save_files()
+                self.handle_dead_player()
 
     def init_game_loop(self, player_x, player_y):
         pygame.init()
@@ -81,7 +86,7 @@ class Game:
                         self.map.add_ground_particle(walk_particle)
                 entity.update()
                 entity.draw(self.game_screen)
-            else:
+            elif isinstance(entity, Enemy):
                 self.map.update_enemy(self.player, entity)
                 entity.draw(self.game_screen)
 
@@ -115,7 +120,9 @@ class Game:
     def handle_game_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.handle_quit_event()
+                self.delete_save_files()
+                pygame.quit()
+                quit()
             elif event.type == pygame.KEYDOWN:
                 self.handle_keydown_event(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -134,11 +141,10 @@ class Game:
                 self.player.rect, self.map
             )
 
-    def handle_quit_event(self):
+    def delete_save_files(self):
         for file in os.listdir("source/tile"):
             if file.endswith(".pkl"):
                 os.remove(os.path.join("source/tile", file))
-        self.game_over = True
 
     def handle_mouse_button_down_event(self, event):
         if event.button not in [1, 3]:
@@ -242,22 +248,12 @@ class Game:
                     self.player.close_chest()
 
     def update_game_screen(self):
-        self.handle_dead_player()
-        mx, my = pygame.mouse.get_pos()
-        self.game_screen.blit(self.cursor_img, (mx, my))
+        self.update_mouse()
         pygame.display.flip()
 
-    def handle_dead_player(self):
-        if self.player.dead:
-            game_over_font = pygame.font.Font(None, 50)
-            game_over_text = game_over_font.render("You Died.", True, (150, 0, 0))
-            text_surface = pygame.Surface(game_over_text.get_size(), pygame.SRCALPHA)
-            text_rect = text_surface.get_rect(
-                center=(self.screen_width / 2, self.screen_height / 2)
-            )
-            self.game_screen.fill((0, 0, 0))
-            text_surface.blit(game_over_text, (0, 0))
-            self.game_screen.blit(text_surface, text_rect)
-            self.game_over = True
+    def update_mouse(self):
+        mx, my = pygame.mouse.get_pos()
+        self.game_screen.blit(self.cursor_img, (mx, my))
 
-            self.handle_quit_event()
+    def handle_dead_player(self):
+        self.game_over = True

@@ -1,5 +1,5 @@
-from game import Game
+from screenManager import ScreenManager
 
 if __name__ == "__main__":
-    game = Game(800, 800, "source/tile/inn.tmx")
-    game.run(375, 420)
+    manager = ScreenManager(800, 800, "source/tile/inn.tmx")
+    manager.run()

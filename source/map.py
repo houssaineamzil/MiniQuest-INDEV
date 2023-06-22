@@ -117,13 +117,8 @@ class Map:
             if enemy.rect.colliderect(projectile.collision_rect) and isinstance(
                 projectile.owner, Player
             ):
-                enemy.take_damage()
-
-                explosion = projectile.explosion(
-                    projectile.collision_rect.centerx,
-                    projectile.collision_rect.centery,
-                )
-                self.add_explosion(explosion)
+                if enemy.hit_counter == 0:
+                    enemy.take_damage()
 
                 self.remove_projectile(projectile)
                 if enemy.hp <= 0:
@@ -137,8 +132,11 @@ class Map:
                 and player.rect.colliderect(projectile.collision_rect)
                 and projectile.owner is not player
             ):
+                if player.hit_counter == 0:
+                    player.hit_by_projectile()
+                    print(player.hp)
+
                 self.remove_projectile(projectile)
-                player.hit_by_projectile()
 
             if projectile.update(
                 self.collision_tiles, self.screen_width, self.screen_height
