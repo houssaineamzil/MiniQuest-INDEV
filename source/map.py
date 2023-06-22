@@ -105,7 +105,6 @@ class Map:
             player.rect.centerx,
             player.rect.centery,
         ):
-            walk_particle = walkParticle(enemy)
             if random.random() < 0.3:
                 walk_particle = walkParticle(enemy)
                 self.add_ground_particle(walk_particle)
@@ -117,7 +116,7 @@ class Map:
             if enemy.rect.colliderect(projectile.collision_rect) and isinstance(
                 projectile.owner, Player
             ):
-                if enemy.hit_counter == 0:
+                if not enemy.invincible:
                     enemy.take_damage()
 
                 self.remove_projectile(projectile)
@@ -128,11 +127,11 @@ class Map:
     def update_projectiles(self, game_screen, player):
         for projectile in self.projectiles:
             if (
-                player.teleporting == False
+                player.teleporting is False
                 and player.rect.colliderect(projectile.collision_rect)
                 and projectile.owner is not player
             ):
-                if player.hit_counter == 0:
+                if not player.invincible:
                     player.hit_by_projectile()
                     print(player.hp)
 

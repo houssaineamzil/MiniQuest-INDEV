@@ -17,6 +17,7 @@ class Character:
         self.direction = 0
         self.last_shot = 0
         self.canattack = True
+        self.invincible = False
         self.tint = (255, 255, 255)
 
         self.spritesheet = Spritesheet(spritesheet)
@@ -78,19 +79,22 @@ class Character:
 
     def take_damage(self):
         self.hp -= 1
-        self.hit = True
+        self.invincible = True
         self.hit_counter = 10
         self.tint = (255, 0, 0)
 
     def draw(self, game_screen):
-        if self.hit and self.hit_counter > 0:
-            self.hit_counter -= 1
-        else:
-            self.hit = False
-            self.tint = (255, 255, 255)
+        self.update_hit_counter()
         self.current_animation.draw(
             game_screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
         )
+
+    def update_hit_counter(self):
+        if self.hit_counter > 0:
+            self.hit_counter -= 1
+        else:
+            self.invincible = False
+            self.tint = (255, 255, 255)
 
     def has_line_of_sight(self, target_x, target_y, collision_tiles):
         x0, y0 = self.rect.center

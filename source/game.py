@@ -135,7 +135,6 @@ class Game:
             self.player.canattack = True
             self.player.canmove = True
             self.player.teleporting = False
-            self.player.invisible = False
             self.player.targetable = True
             self.player.worn_equipment["Artefact"].add_smoke_effect(
                 self.player.rect, self.map

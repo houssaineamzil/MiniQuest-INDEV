@@ -150,7 +150,7 @@ class Archer(Enemy):
                 )
             return moved
         else:
-            self.move_counter = 200
+            self.move_counter = random.randint(100, 300)
             self.direction = self.get_direction(target_x, target_y, collision_tiles)
             return False
 

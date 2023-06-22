@@ -85,7 +85,7 @@ class Artefact(Equipment):
 
 class Shortbow(Weapon):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 18, 15, 1500)
+        super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 18, 15, 1400)
         self.class_name = self.__class__.__name__
         self.name = "Shortbow"
         self.equipment_slot = "Weapon"
@@ -158,7 +158,6 @@ class TeleportScroll(Artefact):
 
         player.teleport(mouse_x, mouse_y)
 
-        player.invisible = True
         player.targetable = False
         player.teleporting = True
         player.canmove = False

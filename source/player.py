@@ -45,11 +45,11 @@ class Player:
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 3
         self.canmove = True
-        self.invisible = False
         self.targetable = True
         self.teleporting = False
         self.dead = False
         self.canattack = True
+        self.invincible = False
         self.collision_rect = pygame.FRect(
             self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
         )
@@ -59,9 +59,16 @@ class Player:
         return rect.collidelist(tiles) != -1
 
     def hit_by_projectile(self):
+        self.take_damage()
+        self.check_dead()
+
+    def take_damage(self):
         self.hit_counter = 10
+        self.invincible = True
         self.tint = (255, 0, 0)
         self.hp -= 1
+
+    def check_dead(self):
         if self.hp == 0:
             self.dead = True
             self.targetable = False
@@ -70,10 +77,19 @@ class Player:
         self.rect.midbottom = (x, y)
         self.collision_rect.midbottom = (x, y)
 
+    def update_hit_counter(self):
+        if self.hit_counter > 0:
+            self.hit_counter -= 1
+        else:
+            self.tint = (255, 255, 255)
+            self.invincible = False
+
     def update(self):
+        self.update_hit_counter()
         for item in self.worn_equipment.values():
             if item is not None:
                 item.update(self.current_animation.direction, self.moved)
+        self.current_animation.update()
 
     def toggle_inventory(self):
         self.inventory_open = not self.inventory_open
@@ -87,12 +103,7 @@ class Player:
         self.current_chest = None
 
     def draw(self, screen):
-        if self.hit_counter > 0:
-            self.hit_counter -= 1
-        else:
-            self.tint = (255, 255, 255)
-        self.current_animation.update()
-        if not self.invisible:
+        if not self.teleporting:
             self.current_animation.draw(
                 screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
             )
