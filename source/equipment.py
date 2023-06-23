@@ -3,7 +3,7 @@ import random
 from animation import Animation
 from projectile import Arrow, FireBall
 from spritesheet import Spritesheet
-from particle import TeleportParticle
+from particle import TeleportParticle, HealingParticle
 
 
 class Equipment:
@@ -119,7 +119,7 @@ class LeatherPants(Armour):
 
 class BlackBoots(Armour):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/blackboots.png"), speed_buff=0.2)
+        super().__init__(Spritesheet("source/img/blackboots.png"), speed_buff=0.8)
         self.class_name = self.__class__.__name__
         self.name = "Black Boots"
         self.equipment_slot = "Feet"
@@ -194,7 +194,7 @@ class TeleportScroll(Artefact):
 
 
 class HealingNecklace(Artefact):
-    COOLDOWN = 5000
+    COOLDOWN = 20000
 
     def __init__(self):
         super().__init__(Spritesheet("source/img/chainmail.png"))
@@ -209,5 +209,11 @@ class HealingNecklace(Artefact):
             return False
 
         player.hp = player.max_hp
+        self.add_healing_particles(player.rect, map)
+
         self.last_activation = current_time
         return True
+
+    def add_healing_particles(self, rect, map):
+        for _ in range(50):
+            map.add_particle(HealingParticle(rect))

@@ -44,7 +44,7 @@ class Player:
         self.current_chest = None
         self.chest_open = False
         self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
-        self.speed = 3
+        self.speed = 2
         self.canmove = True
         self.targetable = True
         self.teleporting = False

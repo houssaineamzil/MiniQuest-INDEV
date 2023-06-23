@@ -90,7 +90,7 @@ class Game:
             # self.game_screen, entity
             # )  # PLAYER AND ENEMY COLLISION DEBUG
 
-        self.map.update_particles(self.game_screen, self.map.particles)
+        self.map.update_particles(self.game_screen, self.map.particles, self.player)
         self.map.draw_layer(self.game_screen, "above_ground")
 
         # for rect in self.map.collision_tiles:  # COLLISION RECT DEBUG

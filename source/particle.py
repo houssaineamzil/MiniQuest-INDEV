@@ -14,7 +14,7 @@ class Particle:
         self.velocity_y = velocity_y
         self.lifetime = 0
 
-    def update(self):
+    def update(self, *args):
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
 
@@ -67,16 +67,14 @@ class TeleportParticle(Particle):
         velocity_x = speed * math.cos(angle)
         velocity_y = speed * math.sin(angle)
 
-        color = (
-            random.randint(50, 100),
-            random.randint(50, 100),
-            random.randint(50, 100),
-        )
+        intensity = random.randint(50, 200)
+        color = (intensity, intensity, intensity)
+
         size = random.randint(2, 5)
 
         super().__init__(start_x, start_y, velocity_x, velocity_y, color, size)
 
-    def update(self):
+    def update(self, *args):
         self.velocity_y -= 0.02
 
         self.rect.x += self.velocity_x
@@ -88,4 +86,61 @@ class TeleportParticle(Particle):
 
         if alpha <= 0:
             return True
+        return False
+
+        return False
+
+
+class HealingParticle(Particle):
+    def __init__(self, player_rect):
+        self.color = (
+            random.randint(150, 200),
+            random.randint(0, 25),
+            random.randint(0, 25),
+        )
+        self.speed = random.randint(2, 4)
+        self.relative_target_pos = pygame.Vector2(
+            random.randint(0, player_rect.width), random.randint(0, player_rect.height)
+        )
+        self.target_pos = pygame.Vector2(player_rect.topleft) + self.relative_target_pos
+
+        self.radius = random.randint(20, 100)
+        self.angle = random.uniform(0, 2 * math.pi)
+        self.position = self.target_pos + pygame.Vector2(
+            self.radius * math.cos(self.angle), self.radius * math.sin(self.angle)
+        )
+        self.size = random.randint(3, 5)
+        self.image = pygame.Surface((self.size, self.size))
+        self.image.fill(self.color)
+        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
+
+        self.swirl_angle = random.uniform(0, 2 * math.pi)
+        self.swirl_speed = random.choice([-0.1, 0.1])
+
+    def update(self, player_rect):
+        self.target_pos = pygame.Vector2(player_rect.topleft) + self.relative_target_pos
+
+        direction_vector = self.target_pos - self.position
+        if direction_vector.length() != 0:
+            direction_vector = direction_vector.normalize()
+
+        self.swirl_angle += self.swirl_speed
+        swirl_vector = pygame.Vector2(
+            math.cos(self.swirl_angle), math.sin(self.swirl_angle)
+        )
+        swirl_vector = pygame.Vector2(-swirl_vector.y, swirl_vector.x)
+
+        direction_vector += 0.9 * swirl_vector
+        direction_vector = direction_vector.normalize()
+
+        self.position += direction_vector * self.speed
+        self.rect.topleft = self.position
+
+        distance = self.target_pos.distance_to(self.position)
+        if distance <= self.speed:
+            self.size = 0
+            return True
+        else:
+            self.speed += 0.1
+
         return False

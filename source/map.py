@@ -85,7 +85,7 @@ class Map:
             self.explosions.remove(explosion)
 
     def update(self, game_screen, player):
-        self.update_particles(game_screen, self.ground_particles)
+        self.update_particles(game_screen, self.ground_particles, player)
         self.update_portals(player)
         self.update_projectiles(game_screen, player)
         self.update_explosions(game_screen)
@@ -149,9 +149,9 @@ class Map:
                 game_screen.blit(projectile.image, projectile.rect)
             # self.draw_rects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
 
-    def update_particles(self, game_screen, list):
+    def update_particles(self, game_screen, list, player):
         for particle in list:
-            if particle.update():
+            if particle.update(player.rect):
                 self.remove_particle(particle)
             else:
                 game_screen.blit(particle.image, particle.rect)
