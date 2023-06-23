@@ -8,6 +8,7 @@ from player import Player
 from particle import Particle, walkParticle
 from enemy import Archer
 from enemy import Dragon
+from npc import Townsfolk
 from projectile import Arrow, FireBall
 from particleEffect import FireBallExplosion, ArrowExplosion
 from chest import Chest
@@ -20,15 +21,30 @@ class Map:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.enemies = []
+        self.npcs = []
         self.projectiles = []
         self.portals = []
         self.ground_particles = []
         self.particles = []
         self.explosions = []
-        self.collision_tiles = []
+        self.collision_rects = []
+        self.entity_collision_rects = []
         self.chests = []
+        self.object_setup()
         self.spawn_chests()
         self.spawn_enemies()
+        self.spawn_npcs()
+
+    def spawn_npcs(self):
+        npc_objects = self.map_data.get_layer_by_name("npcs")
+        for obj in npc_objects:
+            try:
+                npc_class = globals()[obj.name]
+                npc = npc_class(obj.x, obj.y, obj.hp)
+                self.entity_collision_rects.append(npc.collision_rect)
+                self.add_npc(npc)
+            except KeyError:
+                print(f"Warning: Unknown npc type {obj.name}")
 
     def spawn_enemies(self):
         self.enemy_objects = self.map_data.get_layer_by_name("enemies")
@@ -37,6 +53,7 @@ class Map:
                 enemy_class = globals()[obj.name]
                 enemy = enemy_class(obj.x, obj.y, obj.hp)
                 self.add_enemy(enemy)
+                self.entity_collision_rects.append(enemy.collision_rect)
             except KeyError:
                 print(f"Warning: Unknown enemy type {obj.name}")
 
@@ -63,6 +80,13 @@ class Map:
 
     def add_explosion(self, explosion):
         self.explosions.append(explosion)
+
+    def add_npc(self, npc):
+        self.npcs.append(npc)
+
+    def remove_npc(self, npc):
+        if npc in self.npcs:
+            self.npcs.remove(npc)
 
     def remove_enemy(self, enemy):
         if enemy in self.enemies:
@@ -93,13 +117,28 @@ class Map:
     def update_portals(self, player):
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
-                self.change_map("source/tile/" + portal.map_file + ".tmx")
+                self.change_map("source/tile/" + portal.map_file + ".tmx", player)
                 player.teleport(portal.destination[0], portal.destination[1])
                 break
 
+    def update_npc(self, player, npc):
+        if npc.ai_move(
+            self.collision_rects,
+            self.entity_collision_rects,
+            self.screen_width,
+            self.screen_height,
+        ):
+            if random.random() < 0.3:
+                walk_particle = walkParticle(npc)
+                self.add_ground_particle(walk_particle)
+
+        # if npc.interact(player):
+        #    npc.talk()
+
     def update_enemy(self, player, enemy):
         if enemy.ai_move(
-            self.collision_tiles,
+            self.collision_rects,
+            self.entity_collision_rects,
             self.screen_width,
             self.screen_height,
             player.rect.centerx,
@@ -109,7 +148,7 @@ class Map:
                 walk_particle = walkParticle(enemy)
                 self.add_ground_particle(walk_particle)
 
-        if enemy.attack(player, self.collision_tiles):
+        if enemy.attack(player, self.collision_rects):
             self.add_projectile(enemy.projectile)
 
         for projectile in self.projectiles:
@@ -137,7 +176,7 @@ class Map:
                 self.remove_projectile(projectile)
 
             if projectile.update(
-                self.collision_tiles, self.screen_width, self.screen_height
+                self.collision_rects, self.screen_width, self.screen_height
             ):
                 explosion = projectile.explosion(
                     projectile.collision_rect.centerx, projectile.collision_rect.centery
@@ -164,7 +203,7 @@ class Map:
                 for particle in explosion.particles:
                     game_screen.blit(particle.image, particle.rect)
 
-    def change_map(self, new_map_file):
+    def change_map(self, new_map_file, player):
         self.save_state(self.map_file + ".pkl")
 
         self.map_file = new_map_file
@@ -175,6 +214,9 @@ class Map:
         self.explosions.clear()
         self.enemies.clear()
         self.chests.clear()
+        self.npcs.clear()
+        self.entity_collision_rects.clear()
+        self.entity_collision_rects.append(player.collision_rect)
 
         if (
             not os.path.exists(new_map_file + ".pkl")
@@ -182,11 +224,13 @@ class Map:
         ):
             self.spawn_enemies()
             self.spawn_chests()
+            self.spawn_npcs()
         else:
             self.load_state(new_map_file + ".pkl")
 
     def object_setup(self):
-        self.collision_tiles = []
+        print("object_setup")
+        self.collision_rects = []
         self.portals = []
         for layer in self.map_data.visible_layers:
             if isinstance(layer, pytmx.TiledObjectGroup):
@@ -205,7 +249,7 @@ class Map:
             if layer.name == "collision":
                 for obj in layer:
                     collision_rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                    self.collision_tiles.append(collision_rect)
+                    self.collision_rects.append(collision_rect)
             if layer.name == "chests":
                 for obj in layer:
                     x = obj.x + (obj.width // 4)
@@ -213,7 +257,7 @@ class Map:
                     width = obj.width // 2
                     height = obj.height // 2
                     collision_rect = pygame.Rect(x, y, width, height)
-                    self.collision_tiles.append(collision_rect)
+                    self.collision_rects.append(collision_rect)
 
     def draw_layer(self, game_screen, layer):
         layer = self.map_data.get_layer_by_name(layer)
@@ -248,6 +292,10 @@ class Map:
                 (type(enemy).__name__, enemy.rect.x, enemy.rect.y, enemy.hp)
                 for enemy in self.enemies
             ],
+            "npcs": [
+                (type(npc).__name__, npc.rect.x, npc.rect.y, npc.hp)
+                for npc in self.npcs
+            ],
         }
         with open(state_filename, "wb") as f:
             pickle.dump(state, f)
@@ -263,13 +311,25 @@ class Map:
 
         self.load_enemies_state(state)
         self.load_chests_state(state)
+        self.load_npcs_state(state)
 
     def load_enemies_state(self, state):
         self.enemies = []
         for enemy_info in state["enemies"]:
             class_name, x, y, hp = enemy_info
             enemy_class = globals()[class_name]
-            self.enemies.append(enemy_class(x, y, hp))
+            enemy = enemy_class(x, y, hp)
+            self.entity_collision_rects.append(enemy.collision_rect)
+            self.enemies.append(enemy)
+
+    def load_npcs_state(self, state):
+        self.npcs = []
+        for npc_info in state["npcs"]:
+            class_name, x, y, hp = npc_info
+            npc_class = globals()[class_name]
+            npc = npc_class(x, y, hp)
+            self.entity_collision_rects.append(npc.collision_rect)
+            self.npcs.append(npc)
 
     def load_chests_state(self, state):
         self.chests = []

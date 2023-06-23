@@ -47,10 +47,10 @@ class Projectile:
 class FireBall(Projectile):
     explosion = FireBallExplosion
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, target_x, target_y, life, speed, damage, owner=None):
         self.orig_image = pygame.image.load("source/img/fireball.png")
         self.orig_image = pygame.transform.scale(self.orig_image, (20, 20))
-        super().__init__(*args, **kwargs)
+        super().__init__(target_x, target_y, life, speed, damage, owner)
 
         self.image = self.orig_image
         self.collision_rect = self.image.get_rect(center=self.orig_rect.center)
@@ -97,10 +97,10 @@ class FireBall(Projectile):
 class Arrow(Projectile):
     explosion = ArrowExplosion
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, target_x, target_y, life, speed, damage, owner=None):
         self.orig_image = pygame.image.load("source/img/arrow.png")
         self.orig_image = pygame.transform.scale(self.orig_image, (30, 30))
-        super().__init__(*args, **kwargs)
+        super().__init__(target_x, target_y, life, speed, damage, owner)
 
         self.collision_radius = 10
         self.collision_rect = pygame.FRect(

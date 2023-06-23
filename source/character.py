@@ -34,11 +34,12 @@ class Character:
 
         self.current_animation = self.animation_south
 
-    def move(self, dx, dy, collision_tiles, screen_width, screen_height):
-        temp_rect = self.rect.copy()
+    def move(self, dx, dy, collision_rects, screen_width, screen_height):
+        temp_rect = self.collision_rect.copy()
         temp_rect.x += dx * self.speed
         temp_rect.y += dy * self.speed
-        if not self.is_collision(temp_rect, collision_tiles) and self.is_in_screen(
+
+        if not self.is_collision(temp_rect, collision_rects) and self.is_in_screen(
             temp_rect, screen_width, screen_height
         ):
             if dx > 0:
@@ -68,8 +69,8 @@ class Character:
                 self.current_animation = self.standing_animation_north
             return False
 
-    def is_collision(self, rect, collision_tiles):
-        return rect.collidelist(collision_tiles) != -1
+    def is_collision(self, rect, collision_rects):
+        return rect.collidelist(collision_rects) != -1
 
     def is_in_screen(self, rect, screen_width, screen_height):
         return (
@@ -96,7 +97,7 @@ class Character:
             self.invincible = False
             self.tint = (255, 255, 255)
 
-    def has_line_of_sight(self, target_x, target_y, collision_tiles):
+    def has_line_of_sight(self, target_x, target_y, collision_rects):
         x0, y0 = self.rect.center
         x1, y1 = target_x, target_y
         dx, dy = x1 - x0, y1 - y0
@@ -106,7 +107,7 @@ class Character:
         for i in range(int(distance)):
             x, y = x0 + i * dx, y0 + i * dy
             arrow_rect.center = (x, y)
-            for rect in collision_tiles:
+            for rect in collision_rects:
                 if rect.colliderect(arrow_rect):
                     return False
         return True

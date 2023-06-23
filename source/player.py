@@ -12,8 +12,8 @@ class Player:
     def __init__(self, x, y):
         self.size_x = 32
         self.size_y = 50
-        self.hp = 6
-        self.max_hp = 6
+        self.hp = 4
+        self.max_hp = 4
         self.hit_counter = 0
         self.tint = (255, 255, 255)
         self.spritesheet = Spritesheet("source/img/player.png")
@@ -183,7 +183,13 @@ class Player:
             self.current_animation = self.stand_animation_west
             self.current_animation.direction = "west"
 
-    def movement(self, tiles, screen_width, screen_height):
+    def movement(
+        self, collision_rects, entity_collision_rects, screen_width, screen_height
+    ):
+        all_collision_rects = collision_rects + entity_collision_rects
+        all_collision_rects = [
+            rect for rect in all_collision_rects if rect != self.collision_rect
+        ]
         if not self.dead and self.canmove:
             self.moved = False
             key = pygame.key.get_pressed()
@@ -215,7 +221,7 @@ class Player:
                     if (
                         temp_rect.right <= screen_width
                         and temp_rect.left >= 0
-                        and not self.is_collision(temp_rect, tiles)
+                        and not self.is_collision(temp_rect, all_collision_rects)
                     ):
                         self.rect.x += dx
                         self.collision_rect.x += dx
@@ -227,7 +233,7 @@ class Player:
                     if (
                         temp_rect.bottom <= screen_height
                         and temp_rect.top >= 0
-                        and not self.is_collision(temp_rect, tiles)
+                        and not self.is_collision(temp_rect, all_collision_rects)
                     ):
                         self.rect.y += dy
                         self.collision_rect.y += dy

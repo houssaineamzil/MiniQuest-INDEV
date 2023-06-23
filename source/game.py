@@ -3,6 +3,7 @@ import os
 from map import Map
 from player import Player
 from enemy import Enemy
+from npc import NPC
 from projectile import Arrow, FireBall
 from particle import walkParticle
 from equipment import (
@@ -51,8 +52,7 @@ class Game:
         self.health_bar = HealthBar(self.player, 5, 5)
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
-        self.map.object_setup()
-
+        self.map.entity_collision_rects.append(self.player.collision_rect)
         pygame.mixer.music.load("source/sound/music.wav")
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
@@ -74,16 +74,19 @@ class Game:
         self.map.update_particles(self.game_screen, self.map.particles, self.player)
         self.map.draw_layer(self.game_screen, "above_ground")
 
-        # for rect in self.map.collision_tiles:  # COLLISION RECT DEBUG
+        # for rect in self.map.collision_rects:  # COLLISION RECT DEBUG
         # self.map.draw_rect(self.game_screen, rect)
 
     def update_dynamic_objects(self):
-        entities_to_sort = self.map.enemies + [self.player]
+        entities_to_sort = self.map.enemies + self.map.npcs + [self.player]
         sorted_entities = sorted(entities_to_sort, key=lambda entity: entity.rect.y)
         for entity in sorted_entities:
             if isinstance(entity, Player):
                 if entity.movement(
-                    self.map.collision_tiles, self.screen_width, self.screen_height
+                    self.map.collision_rects,
+                    self.map.entity_collision_rects,
+                    self.screen_width,
+                    self.screen_height,
                 ):
                     if random.random() < 0.3:
                         walk_particle = walkParticle(entity)
@@ -92,6 +95,9 @@ class Game:
                 entity.draw(self.game_screen)
             elif isinstance(entity, Enemy):
                 self.map.update_enemy(self.player, entity)
+                entity.draw(self.game_screen)
+            elif isinstance(entity, NPC):
+                self.map.update_npc(self.player, entity)
                 entity.draw(self.game_screen)
 
             # self.map.draw_rects(
@@ -165,7 +171,7 @@ class Game:
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             self.player.worn_equipment["Artefact"].activate_effect(
-                self.player, mouse_x, mouse_y, self.map.collision_tiles, self.map
+                self.player, mouse_x, mouse_y, self.map.collision_rects, self.map
             )
 
     def handle_player_attack(self, event):
