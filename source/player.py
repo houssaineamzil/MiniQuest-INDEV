@@ -62,15 +62,15 @@ class Player:
     def is_collision(self, rect, tiles):
         return rect.collidelist(tiles) != -1
 
-    def hit_by_projectile(self):
-        self.take_damage()
+    def hit_by_projectile(self, damage):
+        self.take_damage(damage)
         self.check_dead()
 
-    def take_damage(self):
+    def take_damage(self, damage):
         self.hit_counter = 10
         self.invincible = True
         self.tint = (255, 0, 0)
-        self.hp -= 1
+        self.hp -= damage
 
     def check_dead(self):
         if self.hp == 0:

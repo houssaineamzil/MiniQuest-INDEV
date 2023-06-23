@@ -50,17 +50,18 @@ class Equipment:
 
 
 class Weapon(Equipment):
-    def __init__(self, spritesheet, projectile_type, life, speed, cooldown):
+    def __init__(self, spritesheet, projectile_type, life, speed, cooldown, damage):
         super().__init__(spritesheet)
         self.name = "Undefined Weapon"
         self.life = life
         self.speed = speed
         self.projectile_type = projectile_type
         self.cooldown = cooldown
+        self.damage = damage
 
     def attack(self, player, mouse_x, mouse_y):
         projectile = self.projectile_type(
-            mouse_x, mouse_y, self.life, self.speed, player
+            mouse_x, mouse_y, self.life, self.speed, self.damage, player
         )
         return projectile
 
@@ -94,16 +95,42 @@ class Artefact(Equipment):
 
 
 class Shortbow(Weapon):
+    PROJECTILE = Arrow
+    LIFE = 18
+    SPEED = 15
+    COOLDOWN = 1400
+    DAMAGE = 1
+
     def __init__(self):
-        super().__init__(Spritesheet("source/img/shortbow.png"), Arrow, 18, 15, 1400)
+        super().__init__(
+            Spritesheet("source/img/shortbow.png"),
+            self.PROJECTILE,
+            self.LIFE,
+            self.SPEED,
+            self.COOLDOWN,
+            self.DAMAGE,
+        )
         self.class_name = self.__class__.__name__
         self.name = "Shortbow"
         self.equipment_slot = "Weapon"
 
 
 class FireStaff(Weapon):
+    PROJECTILE = FireBall
+    LIFE = 22
+    SPEED = 10
+    COOLDOWN = 800
+    DAMAGE = 2
+
     def __init__(self):
-        super().__init__(Spritesheet("source/img/firestaff.png"), FireBall, 22, 10, 800)
+        super().__init__(
+            Spritesheet("source/img/firestaff.png"),
+            self.PROJECTILE,
+            self.LIFE,
+            self.SPEED,
+            self.COOLDOWN,
+            self.DAMAGE,
+        )
         self.class_name = self.__class__.__name__
         self.name = "Fire Staff"
         self.equipment_slot = "Weapon"

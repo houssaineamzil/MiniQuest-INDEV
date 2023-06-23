@@ -24,6 +24,7 @@ class Dragon(Enemy):
     size_y = 50
     PROJECTILE_LIFE = 30
     PROJECTILE_SPEED = 25
+    DAMAGE = 3
 
     def __init__(self, x, y, hp):
         spritesheet = "source/img/dragon.png"
@@ -78,6 +79,7 @@ class Dragon(Enemy):
                     player.rect.centery,
                     self.PROJECTILE_LIFE,
                     self.PROJECTILE_SPEED,
+                    self.DAMAGE,
                     self,
                 )
                 return True
@@ -89,6 +91,7 @@ class Archer(Enemy):
     size_y = 50
     PROJECTILE_LIFE = 25
     PROJECTILE_SPEED = 15
+    DAMAGE = 2
 
     def __init__(self, x, y, hp):
         spritesheet = "source/img/archer.png"
@@ -124,6 +127,7 @@ class Archer(Enemy):
                 player.rect.centery,
                 self.PROJECTILE_LIFE,
                 self.PROJECTILE_SPEED,
+                self.DAMAGE,
                 self,
             )
             self.next_shot_time = self.get_next_shot_time()

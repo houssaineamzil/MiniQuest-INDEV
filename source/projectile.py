@@ -14,9 +14,11 @@ class Projectile:
         target_y,
         life,
         speed,
+        damage,
         owner=None,
     ):
         self.owner = owner
+        self.damage = damage
 
         start_x, start_y = self.owner.rect.center
 

@@ -132,7 +132,7 @@ class Map:
                 and projectile.owner is not player
             ):
                 if not player.invincible:
-                    player.hit_by_projectile()
+                    player.hit_by_projectile(projectile.damage)
 
                 self.remove_projectile(projectile)
 
