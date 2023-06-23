@@ -43,7 +43,6 @@ class Player:
         self.inventory_open = False
         self.current_chest = None
         self.chest_open = False
-        self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
         self.speed = 2
         self.canmove = True
         self.targetable = True
@@ -51,6 +50,10 @@ class Player:
         self.dead = False
         self.canattack = True
         self.invincible = False
+        adjustment = 3
+        self.rect = pygame.FRect(
+            x, y - adjustment, self.size_x, self.size_y - adjustment
+        )
         self.collision_rect = pygame.FRect(
             self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
         )

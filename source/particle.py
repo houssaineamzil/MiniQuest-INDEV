@@ -29,8 +29,7 @@ class Particle:
 
 class walkParticle(Particle):
     def __init__(self, entity):
-        x = entity.rect.x + entity.size_x // 2
-        y = entity.rect.y + entity.size_y
+        x, y = entity.collision_rect.midbottom
 
         velocity_x = random.uniform(-0.3, 0.3)
         velocity_y = random.uniform(-0.3, -0.3)
@@ -104,7 +103,7 @@ class HealingParticle(Particle):
         )
         self.target_pos = pygame.Vector2(player_rect.topleft) + self.relative_target_pos
 
-        self.radius = random.randint(20, 100)
+        self.radius = random.randint(20, 60)
         self.angle = random.uniform(0, 2 * math.pi)
         self.position = self.target_pos + pygame.Vector2(
             self.radius * math.cos(self.angle), self.radius * math.sin(self.angle)
@@ -122,7 +121,7 @@ class HealingParticle(Particle):
 
         direction_vector = self.target_pos - self.position
         if direction_vector.length() != 0:
-            direction_vector = direction_vector.normalize()
+            direction_vector = direction_vector.normalize() * 2
 
         self.swirl_angle += self.swirl_speed
         swirl_vector = pygame.Vector2(
@@ -130,7 +129,7 @@ class HealingParticle(Particle):
         )
         swirl_vector = pygame.Vector2(-swirl_vector.y, swirl_vector.x)
 
-        direction_vector += 0.9 * swirl_vector
+        direction_vector += swirl_vector
         direction_vector = direction_vector.normalize()
 
         self.position += direction_vector * self.speed
@@ -141,6 +140,6 @@ class HealingParticle(Particle):
             self.size = 0
             return True
         else:
-            self.speed += 0.1
+            self.speed += 0.05
 
         return False

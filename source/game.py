@@ -69,7 +69,15 @@ class Game:
         self.map.draw_layer(self.game_screen, "ground")
 
         self.map.update(self.game_screen, self.player)
+        self.update_dynamic_objects()
 
+        self.map.update_particles(self.game_screen, self.map.particles, self.player)
+        self.map.draw_layer(self.game_screen, "above_ground")
+
+        # for rect in self.map.collision_tiles:  # COLLISION RECT DEBUG
+        # self.map.draw_rect(self.game_screen, rect)
+
+    def update_dynamic_objects(self):
         entities_to_sort = self.map.enemies + [self.player]
         sorted_entities = sorted(entities_to_sort, key=lambda entity: entity.rect.y)
         for entity in sorted_entities:
@@ -87,14 +95,8 @@ class Game:
                 entity.draw(self.game_screen)
 
             # self.map.draw_rects(
-            # self.game_screen, entity
-            # )  # PLAYER AND ENEMY COLLISION DEBUG
-
-        self.map.update_particles(self.game_screen, self.map.particles, self.player)
-        self.map.draw_layer(self.game_screen, "above_ground")
-
-        # for rect in self.map.collision_tiles:  # COLLISION RECT DEBUG
-        # self.map.draw_rect(self.game_screen, rect)
+            #    self.game_screen, entity
+            # )  # DYNAMIC OBJECT COLLISION DEBUG (PLAYER, NPCS)
 
     def update_ui(self):
         if self.player.inventory_open:

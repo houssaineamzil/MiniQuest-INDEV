@@ -94,7 +94,10 @@ class Archer(Enemy):
         spritesheet = "source/img/archer.png"
         super().__init__(hp, spritesheet)
         self.speed = 1.3
-        self.rect = pygame.FRect(x, y, self.size_x, self.size_y)
+        adjustment = 3
+        self.rect = pygame.FRect(
+            x, y - adjustment, self.size_x, self.size_y - adjustment
+        )
         self.collision_rect = pygame.FRect(
             self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
         )

@@ -194,7 +194,7 @@ class TeleportScroll(Artefact):
 
 
 class HealingNecklace(Artefact):
-    COOLDOWN = 20000
+    COOLDOWN = 15000
 
     def __init__(self):
         super().__init__(Spritesheet("source/img/chainmail.png"))
