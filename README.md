@@ -137,6 +137,12 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/c2860954-feff-458f-98
 
 https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97ed-2e469900539f
 
+
+
+https://github.com/harrybridgen/MiniQuest/assets/105605342/b0ddce76-3793-470b-87f4-3a6157d4f915
+
+
+
 ## Todo
 (NOT COMPLETE LIST!)
 1. Projectiles:
@@ -156,8 +162,8 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/d66dbd86-7858-4f91-97
     - [x] Inventory
     - [x] Equipment
     - [ ] Pause menu
-    - [ ] Start menu
-    - [ ] Game over
+    - [x] Start menu
+    - [x] Game over
     - [ ] Settings
     - [ ] Resizable client
     - [ ] Camera that follows player
