@@ -191,8 +191,6 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/b0ddce76-3793-470b-87
 ## Proposed Class Diagram
 <p align="center">
   <img src="class_diagram.JPG" alt="class_diagram"/>
-  <img src=" ![class](https://github.com/harrybridgen/MiniQuest/assets/105605342/ed59f8c3-edd0-45c6-8aa8-ec3e125fceed)
-" alt="class_diagram2"/>
 </p>
 
 
