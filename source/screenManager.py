@@ -9,20 +9,27 @@ class ScreenManager:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.map_file = map_file
-
+        pygame.init()
+        pygame.mixer.init()
+        pygame.display.set_caption("MiniQuest")
+        pygame.font.init()
+        pygame.mouse.set_visible(False)
         self.game_screen = pygame.display.set_mode(
             (self.screen_width, self.screen_height)
         )
 
         self.game = None
-        self.screen = "game"
+        self.screen = "main_menu"
 
     def run(self):
         while True:
             if self.screen == "game":
                 if not self.game:
                     self.game = Game(
-                        self.screen_width, self.screen_height, self.map_file
+                        self.screen_width,
+                        self.screen_height,
+                        self.map_file,
+                        self.game_screen,
                     )
                     self.game.run(375, 420)
                 else:
@@ -35,8 +42,66 @@ class ScreenManager:
                 self.death_screen()
 
     def main_menu(self):
-        # Add main menu. When "start" is clicked, set self.screen to "game"
-        pass
+        running = True
+        clock = pygame.time.Clock()
+
+        button_width = 200
+        button_height = 50
+        button_start_x = self.screen_width / 2 - button_width / 2
+        button_gap = 20
+
+        buttons = [
+            pygame.Rect(
+                button_start_x,
+                self.screen_height / 2 - 1.5 * button_height - button_gap,
+                button_width,
+                button_height,
+            ),
+            pygame.Rect(
+                button_start_x,
+                self.screen_height / 2 - 0.5 * button_height,
+                button_width,
+                button_height,
+            ),
+            pygame.Rect(
+                button_start_x,
+                self.screen_height / 2 + 0.5 * button_height + button_gap,
+                button_width,
+                button_height,
+            ),
+        ]
+        button_texts = ["Start Game", "Credits", "Exit"]
+
+        while running:
+            self.game_screen.fill((0, 0, 0))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
+                    for i, button in enumerate(buttons):
+                        if button.collidepoint(mouse_pos):
+                            if button_texts[i] == "Start Game":
+                                self.screen = "game"
+                                running = False
+                            elif button_texts[i] == "Credits":
+                                # TODO: Show the credits screen
+                                pass
+                            elif button_texts[i] == "Exit":
+                                pygame.quit()
+                                quit()
+
+            for i, button in enumerate(buttons):
+                pygame.draw.rect(self.game_screen, (255, 255, 255), button)
+                button_font = pygame.font.Font(None, 30)
+                button_text = button_font.render(button_texts[i], True, (0, 0, 0))
+                button_text_rect = button_text.get_rect(center=button.center)
+                self.game_screen.blit(button_text, button_text_rect)
+
+            self.update_screen()
+            clock.tick(60)
 
     def death_screen(self):
         game_over_font = pygame.font.Font(None, 50)
@@ -50,7 +115,7 @@ class ScreenManager:
         self.game_screen.blit(text_surface, text_rect)
 
         respawn_font = pygame.font.Font(None, 30)
-        respawn_text = respawn_font.render("Respawn", True, (150, 0, 0))
+        respawn_text = respawn_font.render("Main Menu", True, (150, 0, 0))
         respawn_surface = pygame.Surface(respawn_text.get_size(), pygame.SRCALPHA)
         respawn_rect = respawn_surface.get_rect(
             center=(self.screen_width / 2, self.screen_height / 2 + 100)
@@ -64,7 +129,7 @@ class ScreenManager:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
                 if respawn_rect.collidepoint((mx, my)):
-                    self.screen = "game"
+                    self.screen = "main_menu"
 
         self.update_screen()
 

@@ -13,6 +13,7 @@ class Player:
         self.size_x = 32
         self.size_y = 50
         self.hp = 6
+        self.max_hp = 6
         self.hit_counter = 0
         self.tint = (255, 255, 255)
         self.spritesheet = Spritesheet("source/img/player.png")

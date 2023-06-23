@@ -17,13 +17,15 @@ from equipment import (
 )
 from spritesheet import Spritesheet
 import random
+from healthBar import HealthBar
 
 
 class Game:
-    def __init__(self, screen_width, screen_height, map_file):
+    def __init__(self, screen_width, screen_height, map_file, game_screen):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.map_file = map_file
+        self.game_screen = game_screen
         self.last_shot = 0
         self.game_over = False
         self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
@@ -41,17 +43,11 @@ class Game:
                 self.handle_dead_player()
 
     def init_game_loop(self, player_x, player_y):
-        pygame.init()
-        pygame.mixer.init()
-
-        self.game_screen = pygame.display.set_mode(
-            (self.screen_width, self.screen_height)
-        )
-        pygame.display.set_caption("MiniQuest")
         self.clock_object = pygame.time.Clock()
 
         self.player = Player(player_x, player_y)
         self.player.equip_item(LeatherPants())
+        self.health_bar = HealthBar(self.player, 5, 5)
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
         self.map.object_setup()
@@ -60,7 +56,6 @@ class Game:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
 
-        pygame.mouse.set_visible(False)
         self.cursor_img = pygame.image.load("source/img/cursor.png")
 
     def game_running(self):
@@ -100,12 +95,12 @@ class Game:
         # for rect in self.map.collision_tiles:  # COLLISION RECT DEBUG
         # self.map.draw_rect(self.game_screen, rect)
 
-        self.update_ui()
-
     def update_ui(self):
         if self.player.inventory_open:
             self.player.inventory.draw_inventory(self.game_screen)
             self.player.inventory.draw_equipment(self.game_screen, self.player)
+        else:
+            self.health_bar.draw(self.game_screen)
 
         for chest in self.map.chests:
             if (
