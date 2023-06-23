@@ -19,11 +19,17 @@ class HealthBar:
         )
 
     def draw(self, screen):
-        for i in range(self.player.hp // 2):
+        full_hearts = self.player.hp // 2
+        half_heart = self.player.hp % 2
+        empty_hearts = ((self.player.max_hp + 1) // 2) - full_hearts - half_heart
+
+        for i in range(full_hearts):
             screen.blit(self.heart_full, (self.x + i * 40, self.y))
-        if self.player.hp % 2:
-            screen.blit(self.heart_half, (self.x + (self.player.hp // 2) * 40, self.y))
-        for i in range(
-            self.player.hp // 2 + self.player.hp % 2, self.player.max_hp // 2
-        ):
-            screen.blit(self.heart_empty, (self.x + i * 40, self.y))
+
+        if half_heart:
+            screen.blit(self.heart_half, (self.x + full_hearts * 40, self.y))
+
+        for i in range(empty_hearts):
+            screen.blit(
+                self.heart_empty, (self.x + (full_hearts + half_heart + i) * 40, self.y)
+            )

@@ -27,6 +27,7 @@ class Equipment:
 
         self.current_direction = "south"
         self.name = "Undefined"
+        self.has_buff = False
 
     def update(self, direction, is_moving):
         self.current_direction = direction
@@ -65,13 +66,22 @@ class Weapon(Equipment):
 
 
 class Armour(Equipment):
-    def __init__(self, spritesheet, hp_buff):
+    def __init__(self, spritesheet, hp_buff=0, speed_buff=0):
         super().__init__(spritesheet)
-        self.name = "Undefined Armour"
         self.hp_buff = hp_buff
+        self.speed_buff = speed_buff
+        self.name = "Undefined Armour"
+        self.has_buff = True
 
-    def apply_buff(self, character):
-        pass  # replace with actual implementation
+    def apply_buff(self, player):
+        player.max_hp += self.hp_buff
+        player.speed += self.speed_buff
+
+    def remove_buff(self, player):
+        player.max_hp -= self.hp_buff
+        if player.hp > player.max_hp:
+            player.hp = player.max_hp
+        player.speed -= self.speed_buff
 
 
 class Artefact(Equipment):
@@ -101,7 +111,7 @@ class FireStaff(Weapon):
 
 class LeatherPants(Armour):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/leatherpants.png"), 1)
+        super().__init__(Spritesheet("source/img/leatherpants.png"), hp_buff=1)
         self.class_name = self.__class__.__name__
         self.name = "Leather Pants"
         self.equipment_slot = "Legs"
@@ -109,7 +119,7 @@ class LeatherPants(Armour):
 
 class BlackBoots(Armour):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/blackboots.png"), 1)
+        super().__init__(Spritesheet("source/img/blackboots.png"), speed_buff=0.2)
         self.class_name = self.__class__.__name__
         self.name = "Black Boots"
         self.equipment_slot = "Feet"
@@ -117,7 +127,7 @@ class BlackBoots(Armour):
 
 class Chainmail(Armour):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/chainmail.png"), 1)
+        super().__init__(Spritesheet("source/img/chainmail.png"), hp_buff=3)
         self.class_name = self.__class__.__name__
         self.name = "Chainmail"
         self.equipment_slot = "Torso"
@@ -181,3 +191,23 @@ class TeleportScroll(Artefact):
 
     def is_collision(self, rect, tiles):
         return rect.collidelist(tiles) != -1
+
+
+class HealingNecklace(Artefact):
+    COOLDOWN = 5000
+
+    def __init__(self):
+        super().__init__(Spritesheet("source/img/chainmail.png"))
+        self.class_name = self.__class__.__name__
+        self.name = "Healing Necklace"
+        self.equipment_slot = "Artefact"
+        self.last_activation = 0
+
+    def activate_effect(self, player, mouse_x, mouse_y, tiles, map):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_activation < self.COOLDOWN:
+            return False
+
+        player.hp = player.max_hp
+        self.last_activation = current_time
+        return True

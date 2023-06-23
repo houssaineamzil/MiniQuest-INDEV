@@ -114,7 +114,7 @@
   </object>
   <object id="59" x="450.833" y="447.5" width="32" height="32">
    <properties>
-    <property name="items" value="Shortbow"/>
+    <property name="items" value="Shortbow,HealingNecklace"/>
    </properties>
   </object>
  </objectgroup>

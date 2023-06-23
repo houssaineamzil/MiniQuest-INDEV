@@ -8,6 +8,7 @@ from equipment import (
     Chainmail,
     FireStaff,
     TeleportScroll,
+    HealingNecklace,
 )
 
 

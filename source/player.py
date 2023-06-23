@@ -123,18 +123,24 @@ class Player:
     def equip_item(self, equipment):
         slot = equipment.equipment_slot
         if self.worn_equipment[slot]:
+            if self.worn_equipment[slot].has_buff:
+                self.worn_equipment[slot].remove_buff(self)
             self.inventory.add_item(self.worn_equipment[slot])
         self.worn_equipment[slot] = equipment
         self.sync_animation(self.worn_equipment[slot])
+        if equipment.has_buff:
+            equipment.apply_buff(self)
+
+    def unequip_item(self, slot):
+        if self.worn_equipment[slot] and self.worn_equipment[slot].has_buff:
+            self.worn_equipment[slot].remove_buff(self)
+        self.worn_equipment[slot] = None
 
     def sync_animation(self, equipment):
         for direction, (animation, _) in equipment.directions.items():
             player_animation = self.get_walk_animation(direction)
             animation.current_frame = player_animation.current_frame
             animation.last_update = player_animation.last_update
-
-    def unequip_item(self, slot):
-        self.worn_equipment[slot] = None
 
     def get_walk_animation(self, direction):
         if direction == "north":

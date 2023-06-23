@@ -14,6 +14,7 @@ from equipment import (
     BlackBoots,
     Chainmail,
     TeleportScroll,
+    HealingNecklace,
 )
 from spritesheet import Spritesheet
 import random
@@ -48,6 +49,7 @@ class Game:
         self.player = Player(player_x, player_y)
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
+        print(self.player.hp)
 
         self.map = Map(self.map_file, self.screen_width, self.screen_height)
         self.map.object_setup()
