@@ -133,7 +133,6 @@ class Map:
             ):
                 if not player.invincible:
                     player.hit_by_projectile()
-                    print(player.hp)
 
                 self.remove_projectile(projectile)
 
