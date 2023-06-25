@@ -41,6 +41,7 @@ class Player:
         }
 
         self.inventory_open = False
+        self.in_dialogue = False
         self.current_chest = None
         self.chest_open = False
         self.speed = 2
@@ -73,7 +74,7 @@ class Player:
         self.hp -= damage
 
     def check_dead(self):
-        if self.hp == 0:
+        if self.hp <= 0:
             self.dead = True
             self.targetable = False
 

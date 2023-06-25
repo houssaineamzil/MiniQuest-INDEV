@@ -121,6 +121,16 @@ class Game:
                 if self.player.current_chest == chest:
                     self.player.current_chest = None
 
+        for npc in self.map.npcs:
+            if (
+                npc.speech_box and npc.speech_box.active
+            ):  # If a SpeechBox exists for this NPC and is active
+                if not self.player.rect.colliderect(npc.rect):  # If player moved away
+                    npc.speech_box.stop()  # Close the dialogue
+                    self.player.in_dialogue = False  # Exit the dialogue state
+                else:
+                    npc.speech_box.draw(self.game_screen)
+
     def handle_game_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -158,6 +168,9 @@ class Game:
                     self.handle_player_attack(event)
                 elif event.button == 3:
                     self.handle_artefact_activation(event)
+            for npc in self.map.npcs:
+                if npc.speech_box and npc.speech_box.active:
+                    npc.speech_box.handle_click(event.pos)
 
             self.handle_inventory_click(event)
             self.handle_equipment_click(event)
@@ -170,8 +183,16 @@ class Game:
             and self.player.current_chest == None
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            all_collision_rects = (
+                self.map.collision_rects + self.map.entity_collision_rects
+            )
+            all_collision_rects = [
+                rect
+                for rect in all_collision_rects
+                if rect != self.player.collision_rect
+            ]
             self.player.worn_equipment["Artefact"].activate_effect(
-                self.player, mouse_x, mouse_y, self.map.collision_rects, self.map
+                self.player, mouse_x, mouse_y, all_collision_rects, self.map
             )
 
     def handle_player_attack(self, event):
@@ -183,6 +204,7 @@ class Game:
             and self.player.inventory_open == False
             and self.player.current_chest == None
             and self.player.canattack
+            and not self.player.in_dialogue
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             self.map.add_projectile(
@@ -244,11 +266,23 @@ class Game:
 
     def handle_keydown_e(self):
         for chest in self.map.chests:
-            if self.player.collision_rect.colliderect(chest.rect):
+            if self.player.rect.colliderect(chest.rect):
                 if self.player.current_chest is None:
                     self.player.open_chest(chest)
                 else:
                     self.player.close_chest()
+
+        for npc in self.map.npcs:
+            if self.player.rect.colliderect(npc.rect):
+                if npc.speech_box is None:
+                    npc.interact(self.screen_width, self.screen_height)
+                    self.player.in_dialogue = True
+                elif npc.speech_box and not npc.speech_box.active:
+                    npc.interact(self.screen_width, self.screen_height)
+                    self.player.in_dialogue = True
+                elif npc.speech_box and npc.speech_box.active:
+                    npc.speech_box.stop()
+                    self.player.in_dialogue = False
 
     def update_game_screen(self):
         self.update_mouse()

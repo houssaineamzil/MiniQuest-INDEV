@@ -47,7 +47,14 @@ class Dragon(Enemy):
         )
         self.collision_rect.midbottom = self.rect.midbottom
 
-    def ai_move(self, collision_rects, screen_width, screen_height):
+    def ai_move(
+        self,
+        collision_rects,
+        entity_collision_rects,
+        screen_width,
+        screen_height,
+        *args
+    ):
         if self.move_counter > 0:
             self.move_counter -= 1
             speed = 2

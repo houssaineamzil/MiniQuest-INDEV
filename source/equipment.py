@@ -90,7 +90,7 @@ class Artefact(Equipment):
         super().__init__(spritesheet)
         self.name = "Undefined Artefact"
 
-    def activate_effect(self, player, mouse_x, mouse_y, tiles):
+    def activate_effect(self, player, mouse_x, mouse_y, collision_rects):
         pass  # replace with actual implementation
 
 
@@ -172,7 +172,7 @@ class TeleportScroll(Artefact):
         self.teleport_radius = 300
         self.last_activation = 0
 
-    def activate_effect(self, player, mouse_x, mouse_y, tiles, map):
+    def activate_effect(self, player, mouse_x, mouse_y, collision_rects, map):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_activation < self.COOLDOWN:
             return False
@@ -188,7 +188,7 @@ class TeleportScroll(Artefact):
         if potential_rect.top < 0:
             return False
 
-        if self.is_collision(potential_rect, tiles):
+        if self.is_collision(potential_rect, collision_rects):
             return False
 
         self.add_smoke_effect(player.rect, map)
@@ -216,8 +216,8 @@ class TeleportScroll(Artefact):
         distance = (dx**2 + dy**2) ** 0.5
         return distance <= self.teleport_radius
 
-    def is_collision(self, rect, tiles):
-        return rect.collidelist(tiles) != -1
+    def is_collision(self, rect, collision_rects):
+        return rect.collidelist(collision_rects) != -1
 
 
 class HealingNecklace(Artefact):
@@ -230,7 +230,7 @@ class HealingNecklace(Artefact):
         self.equipment_slot = "Artefact"
         self.last_activation = 0
 
-    def activate_effect(self, player, mouse_x, mouse_y, tiles, map):
+    def activate_effect(self, player, mouse_x, mouse_y, collision_rects, map):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_activation < self.COOLDOWN:
             return False

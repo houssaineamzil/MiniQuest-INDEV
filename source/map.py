@@ -132,9 +132,6 @@ class Map:
                 walk_particle = walkParticle(npc)
                 self.add_ground_particle(walk_particle)
 
-        # if npc.interact(player):
-        #    npc.talk()
-
     def update_enemy(self, player, enemy):
         if enemy.ai_move(
             self.collision_rects,
@@ -222,14 +219,13 @@ class Map:
             not os.path.exists(new_map_file + ".pkl")
             or os.path.getsize(new_map_file + ".pkl") == 0
         ):
-            self.spawn_enemies()
             self.spawn_chests()
+            self.spawn_enemies()
             self.spawn_npcs()
         else:
             self.load_state(new_map_file + ".pkl")
 
     def object_setup(self):
-        print("object_setup")
         self.collision_rects = []
         self.portals = []
         for layer in self.map_data.visible_layers:

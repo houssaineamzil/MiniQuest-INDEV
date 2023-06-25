@@ -2,6 +2,7 @@ import random
 import math
 from character import Character
 import pygame
+from speech import SpeechBox, DialogueOption
 
 
 class NPC(Character):
@@ -38,15 +39,84 @@ class Townsfolk(NPC):
         self.dead = False
         self.dead_counter = 0
         self.wait_counter = 0
-        self.direction = 2
-        self.next_direction = 2
+        self.direction = random.randint(0, 3)
+        self.next_direction = random.randint(0, 3)
+        self.initial_dialogue_option = None
+        self.speech_box = None
 
-    def interact(self, player):
-        self.talk()
+    def interact(self, screen_width, screen_height):
+        self.talk(screen_width, screen_height)
+
+    def talk(self, screen_width, screen_height):
+        if self.speech_box is None:
+            rat_quest_option_1 = DialogueOption(
+                "Ok, I'll do it",
+                "Great! I knew I could count on you.",
+                [],
+            )
+
+            rat_quest_option_2 = DialogueOption(
+                "No, I hate rats",
+                "Well, I can't force you. If you change your mind, you know where to find me.",
+                [],
+            )
+
+            whats_in_it_for_me_option = DialogueOption(
+                "What's in it for me?",
+                "I'll let you stay in my inn, free of charge!",
+                [rat_quest_option_1, rat_quest_option_2],
+            )
+
+            rumour_option = DialogueOption(
+                "Do you have any rumours?",
+                "Yes, actually I need someone to go into the basement and clear out some rats.",
+                [whats_in_it_for_me_option],
+            )
+
+            nice_to_meet_you_option = DialogueOption(
+                "Nice to meet you too",
+                "Have a good day!",
+                [rumour_option],
+            )
+
+            initial_options = [
+                DialogueOption(
+                    "Hello, my name is Player",
+                    "Nice to meet you, Player",
+                    [
+                        nice_to_meet_you_option,
+                        DialogueOption("I have to go now", "Goodbye, Player", []),
+                    ],
+                ),
+                DialogueOption(
+                    "Prepare to die",
+                    "Wait, what?! No!",
+                    [
+                        DialogueOption("Just kidding", "That's not funny!", []),
+                        DialogueOption("No, really", "Please, no!", []),
+                    ],
+                ),
+            ]
+
+            initial_text = "Hello, welcome to my inn!"
+            self.initial_dialogue_option = DialogueOption(
+                initial_text, initial_text, initial_options
+            )
+            self.speech_box = SpeechBox(
+                "Bob", self.initial_dialogue_option, screen_width, screen_height
+            )
+
+        if not self.speech_box.active:
+            self.speech_box.dialogue_option = self.initial_dialogue_option
+            self.speech_box.options = self.speech_box.dialogue_option.next_options
+            self.speech_box.start()
 
     def ai_move(
         self, collision_rects, entity_collision_rects, screen_width, screen_height
     ):
+        if self.speech_box and self.speech_box.active:
+            return False
+
         self.current_animation.update()
         moved = False
 
@@ -89,20 +159,8 @@ class Townsfolk(NPC):
         else:
             self.move_counter = random.randint(20, 70)
             self.next_direction = random.randint(0, 3)
-            self.wait_counter = random.randint(50, 500)
+            self.wait_counter = random.randint(20, 500)
         return moved
-
-    def talk(self):
-        # Create a list of potential phrases the NPC could say
-        phrases = [
-            "Hello!",
-            "Nice weather we're having.",
-            "Good day to you.",
-            "I hope you're enjoying your time here.",
-        ]
-        # Pick a random phrase
-        phrase = random.choice(phrases)
-        print(phrase)
 
     def take_damage(self):
         super().take_damage()

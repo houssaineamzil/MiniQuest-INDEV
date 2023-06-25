@@ -87,8 +87,6 @@ class TeleportParticle(Particle):
             return True
         return False
 
-        return False
-
 
 class HealingParticle(Particle):
     def __init__(self, player_rect):
