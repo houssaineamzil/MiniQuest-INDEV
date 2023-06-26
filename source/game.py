@@ -47,7 +47,7 @@ class Game:
     def init_game_loop(self, player_x, player_y):
         self.clock_object = pygame.time.Clock()
 
-        self.player = Player(player_x, player_y)
+        self.player = Player(player_x, player_y, "Adam")
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
 
@@ -82,15 +82,18 @@ class Game:
         sorted_entities = sorted(entities_to_sort, key=lambda entity: entity.rect.y)
         for entity in sorted_entities:
             if isinstance(entity, Player):
-                if entity.movement(
-                    self.map.collision_rects,
-                    self.map.entity_collision_rects,
-                    self.screen_width,
-                    self.screen_height,
-                ):
-                    if random.random() < 0.3:
-                        walk_particle = walkParticle(entity)
-                        self.map.add_ground_particle(walk_particle)
+                if (
+                    not self.player.in_quest_ui
+                ):  # Check if the player is not in the quest UI
+                    if entity.movement(
+                        self.map.collision_rects,
+                        self.map.entity_collision_rects,
+                        self.screen_width,
+                        self.screen_height,
+                    ):
+                        if random.random() < 0.3:
+                            walk_particle = walkParticle(entity)
+                            self.map.add_ground_particle(walk_particle)
                 entity.update()
                 entity.draw(self.game_screen)
             elif isinstance(entity, Enemy):
@@ -122,6 +125,28 @@ class Game:
                     self.player.current_chest = None
 
         for npc in self.map.npcs:
+            if npc.current_quest_offer_ui is not None:
+                npc.current_quest_offer_ui.draw(self.game_screen)
+                self.player.in_quest_ui = True  # Set the new property to True
+
+                if (
+                    npc.speech_box and npc.speech_box.active
+                ):  # If a SpeechBox exists for this NPC and is active
+                    if not self.player.rect.colliderect(
+                        npc.rect
+                    ):  # If player moved away
+                        npc.speech_box.stop()  # Close the dialogue
+                        self.player.in_dialogue = False  # Exit the dialogue state
+                    else:
+                        npc.speech_box.draw(self.game_screen)
+                        if npc.speech_box and npc.speech_box.active:
+                            npc.speech_box.stop()  # Close the dialogue
+                            self.player.in_dialogue = False  # Exit the dialogue state
+            else:
+                self.player.in_quest_ui = (
+                    False  # Set the new property to False if no quest UI is active
+                )
+
             if (
                 npc.speech_box and npc.speech_box.active
             ):  # If a SpeechBox exists for this NPC and is active
@@ -141,8 +166,16 @@ class Game:
                 self.handle_keydown_event(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.handle_mouse_button_down_event(event)
+            elif event.type == pygame.MOUSEMOTION:
+                self.handle_mouse_motion_event()
             if event.type == self.PLAYER_TELEPORT_ARTEFACT:
                 self.handle_teleport_artefact()
+
+    def handle_mouse_motion_event(self):
+        mouse_position = pygame.mouse.get_pos()
+        for npc in self.map.npcs:
+            if npc.speech_box and npc.speech_box.active:
+                npc.speech_box.handle_mouse_movement(mouse_position)
 
     def handle_teleport_artefact(self):
         if self.player.teleporting:
@@ -160,6 +193,23 @@ class Game:
                 os.remove(os.path.join("source/tile", file))
 
     def handle_mouse_button_down_event(self, event):
+        if self.player.in_quest_ui:
+            for npc in self.map.npcs:
+                if npc.current_quest_offer_ui is not None:
+                    action = npc.current_quest_offer_ui.check_button_press(event)
+                    if action == "reject":
+                        npc.current_quest_offer_ui = None
+                        self.player.in_quest_ui = False
+
+                    if action == "accept":
+                        self.player.in_quest_ui = False
+                        self.player.quest_log.add_quest(
+                            npc.current_quest_offer_ui.get_quest()
+                        )
+                        npc.current_quest_offer_ui = None
+                        npc.speech_box = None  # Reset speech_box to None
+
+            return
         if event.button not in [1, 3]:
             pass
         else:
@@ -259,6 +309,8 @@ class Game:
                     self.player.inventory.add_item(item)
 
     def handle_keydown_event(self, event):
+        if self.player.in_quest_ui:
+            return
         if event.key == pygame.K_TAB:
             self.player.toggle_inventory()
         elif event.key == pygame.K_e:
@@ -275,10 +327,10 @@ class Game:
         for npc in self.map.npcs:
             if self.player.rect.colliderect(npc.rect):
                 if npc.speech_box is None:
-                    npc.interact(self.screen_width, self.screen_height)
+                    npc.interact(self.screen_width, self.screen_height, self.player)
                     self.player.in_dialogue = True
                 elif npc.speech_box and not npc.speech_box.active:
-                    npc.interact(self.screen_width, self.screen_height)
+                    npc.interact(self.screen_width, self.screen_height, self.player)
                     self.player.in_dialogue = True
                 elif npc.speech_box and npc.speech_box.active:
                     npc.speech_box.stop()

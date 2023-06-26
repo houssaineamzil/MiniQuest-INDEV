@@ -3,6 +3,7 @@ import math
 from character import Character
 import pygame
 from speech import SpeechBox, DialogueOption
+from quest import QuestOfferUI, Quest
 
 
 class NPC(Character):
@@ -14,9 +15,6 @@ class NPC(Character):
 
     def ai_move(self, collision_rects, screen_width, screen_height):
         raise NotImplementedError("Subclasses must implement ai_move method")
-
-    def talk():
-        raise NotImplementedError("Subclasses must implement talk method")
 
 
 class Townsfolk(NPC):
@@ -43,16 +41,38 @@ class Townsfolk(NPC):
         self.next_direction = random.randint(0, 3)
         self.initial_dialogue_option = None
         self.speech_box = None
+        self.current_quest_offer_ui = None
+        self.quests = {
+            "pest_control": Quest(
+                name="Pest Control",
+                description="Bob, the local innkeeper, is grappling with a rat infestation in his cellar. He seeks a brave soul to eliminate these pests and safeguard his storeroom.",
+                reward="Reward: You will get a free room in the inn",
+                difficulty="Difficulty: Easy",
+                length="Length: Short",
+                offered_by="Offered by: Bob",
+            )
+        }
 
-    def interact(self, screen_width, screen_height):
-        self.talk(screen_width, screen_height)
+    def interact(self, screen_width, screen_height, player):
+        self.talk(screen_width, screen_height, player)
 
-    def talk(self, screen_width, screen_height):
+    def talk(self, screen_width, screen_height, player):
         if self.speech_box is None:
+            continue_option = DialogueOption("Continue...", "", [])
+            continue_option.set_action(
+                lambda: setattr(
+                    self,
+                    "current_quest_offer_ui",
+                    QuestOfferUI(
+                        screen_width, screen_height, self.quests["pest_control"]
+                    ),
+                )
+            )
+
             rat_quest_option_1 = DialogueOption(
                 "Ok, I'll do it",
                 "Great! I knew I could count on you.",
-                [],
+                [continue_option],
             )
 
             rat_quest_option_2 = DialogueOption(
@@ -61,16 +81,26 @@ class Townsfolk(NPC):
                 [],
             )
 
+            has_quest = any(
+                quest.name == "Pest Control" for quest in player.quest_log.quests
+            )
+
+            rumour_text = (
+                "Finish the task I gave you."
+                if has_quest
+                else "Yes, actually I need someone to go into the basement and clear out some rats."
+            )
+
             whats_in_it_for_me_option = DialogueOption(
                 "What's in it for me?",
                 "I'll let you stay in my inn, free of charge!",
-                [rat_quest_option_1, rat_quest_option_2],
+                [rat_quest_option_1, rat_quest_option_2] if not has_quest else [],
             )
 
             rumour_option = DialogueOption(
                 "Do you have any rumours?",
-                "Yes, actually I need someone to go into the basement and clear out some rats.",
-                [whats_in_it_for_me_option],
+                rumour_text,
+                [whats_in_it_for_me_option] if not has_quest else [],
             )
 
             nice_to_meet_you_option = DialogueOption(
@@ -81,8 +111,8 @@ class Townsfolk(NPC):
 
             initial_options = [
                 DialogueOption(
-                    "Hello, my name is Player",
-                    "Nice to meet you, Player",
+                    "Hello, my name is " + player.name,
+                    "Nice to meet you, " + player.name,
                     [
                         nice_to_meet_you_option,
                         DialogueOption("I have to go now", "Goodbye, Player", []),

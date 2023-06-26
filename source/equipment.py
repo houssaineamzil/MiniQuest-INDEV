@@ -96,8 +96,8 @@ class Artefact(Equipment):
 
 class Shortbow(Weapon):
     PROJECTILE = Arrow
-    LIFE = 18
-    SPEED = 15
+    LIFE = 180
+    SPEED = 1
     COOLDOWN = 1400
     DAMAGE = 1
 

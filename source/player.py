@@ -6,10 +6,11 @@ import math
 from spritesheet import Spritesheet
 from animation import Animation
 from inventory import Inventory
+from quest import QuestLog
 
 
 class Player:
-    def __init__(self, x, y):
+    def __init__(self, x, y, name):
         self.size_x = 32
         self.size_y = 50
         self.hp = 4
@@ -17,6 +18,7 @@ class Player:
         self.hit_counter = 0
         self.tint = (255, 255, 255)
         self.spritesheet = Spritesheet("source/img/player.png")
+        self.name = name
 
         self.walk_animation_north = Animation(self.spritesheet, 8, 65, 513, 64, 64)
         self.walk_animation_east = Animation(self.spritesheet, 8, 65, 705, 64, 64)
@@ -59,6 +61,8 @@ class Player:
             self.rect.x, self.rect.y, self.rect.width * 0.9, self.rect.height * 0.4
         )
         self.collision_rect.midbottom = self.rect.midbottom
+        self.quest_log = QuestLog()
+        self.in_quest_ui = False
 
     def is_collision(self, rect, tiles):
         return rect.collidelist(tiles) != -1
