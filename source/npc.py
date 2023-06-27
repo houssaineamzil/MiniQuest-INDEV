@@ -3,7 +3,7 @@ import math
 from character import Character
 import pygame
 from speech import SpeechBox, DialogueOption
-from quest import QuestOfferUI, Quest
+from quest import QuestOfferUI, Quest, Objective
 
 
 class NPC(Character):
@@ -42,6 +42,7 @@ class Townsfolk(NPC):
         self.initial_dialogue_option = None
         self.speech_box = None
         self.current_quest_offer_ui = None
+
         self.quests = {
             "pest_control": Quest(
                 name="Pest Control",
@@ -50,6 +51,7 @@ class Townsfolk(NPC):
                 difficulty="Difficulty: Easy",
                 length="Length: Short",
                 offered_by="Offered by: Bob",
+                objectives=[],
             )
         }
 
@@ -81,51 +83,95 @@ class Townsfolk(NPC):
                 [],
             )
 
-            has_quest = any(
+            has_pest_quest = any(
                 quest.name == "Pest Control" for quest in player.quest_log.quests
-            )
-
-            rumour_text = (
-                "Finish the task I gave you."
-                if has_quest
-                else "Yes, actually I need someone to go into the basement and clear out some rats."
             )
 
             whats_in_it_for_me_option = DialogueOption(
                 "What's in it for me?",
                 "I'll let you stay in my inn, free of charge!",
-                [rat_quest_option_1, rat_quest_option_2] if not has_quest else [],
+                [rat_quest_option_1, rat_quest_option_2] if not has_pest_quest else [],
+            )
+
+            rumour_text = (
+                "No, I don't have any rumours."
+                if has_pest_quest
+                else "Yes, actually I need someone to go into the basement and clear out some rats."
             )
 
             rumour_option = DialogueOption(
                 "Do you have any rumours?",
                 rumour_text,
-                [whats_in_it_for_me_option] if not has_quest else [],
+                [whats_in_it_for_me_option] if not has_pest_quest else [],
             )
 
-            nice_to_meet_you_option = DialogueOption(
-                "Nice to meet you too",
-                "Have a good day!",
-                [rumour_option],
+            cant_afford_option = DialogueOption(
+                "I can't afford that", "Well, I'm sorry to hear that.", []
+            )
+
+            stay_at_in_text = (
+                "Sure, it's 1,000 gold per night."
+                if not has_pest_quest
+                else "Sure, it's 1,000 gold per night. But I'll let you stay for free if you take care of those rats."
+            )
+
+            what_was_i_supposed_to_do_option = DialogueOption(
+                "What was I supposed to do again?",
+                "You were supposed to clear out the rats in my cellar and make sure they dont come back.",
+                [],
+            )
+
+            about_those_rats_option = DialogueOption(
+                "About those rats...",
+                "Yes?",
+                [what_was_i_supposed_to_do_option],
+            )
+
+            stay_at_inn = DialogueOption(
+                "Can I stay at your inn?",
+                stay_at_in_text,
+                [cant_afford_option]
+                if not has_pest_quest
+                else [about_those_rats_option],
+            )
+            cant_afford_option = DialogueOption(
+                "I can't afford that", "Well, I'm sorry to hear that.", []
+            )
+            ask_something = DialogueOption(
+                "I have something to ask you",
+                "What is it?",
+                [rumour_option, stay_at_inn],
+            )
+            just_kidding_option = DialogueOption(
+                "Just kidding", "That's not funny!", []
+            )
+            no_really_option = DialogueOption("No, really", "Please, no!", [])
+
+            prepare_to_die_option = DialogueOption(
+                "Prepare to die!",
+                "Wait, what?!",
+                [
+                    just_kidding_option,
+                    no_really_option,
+                ],
+            )
+
+            have_to_go_option = DialogueOption("I have to go now", "Goodbye", [])
+
+            hello_option = DialogueOption(
+                "Hello",
+                "How can I help you?",
+                [
+                    ask_something,
+                    have_to_go_option,
+                ],
             )
 
             initial_options = [
-                DialogueOption(
-                    "Hello, my name is " + player.name,
-                    "Nice to meet you, " + player.name,
-                    [
-                        nice_to_meet_you_option,
-                        DialogueOption("I have to go now", "Goodbye, Player", []),
-                    ],
-                ),
-                DialogueOption(
-                    "Prepare to die",
-                    "Wait, what?! No!",
-                    [
-                        DialogueOption("Just kidding", "That's not funny!", []),
-                        DialogueOption("No, really", "Please, no!", []),
-                    ],
-                ),
+                hello_option,
+                prepare_to_die_option
+                if not has_pest_quest
+                else about_those_rats_option,
             ]
 
             initial_text = "Hello, welcome to my inn!"

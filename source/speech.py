@@ -52,12 +52,22 @@ class SpeechBox:
         return lines
 
     def update(self):
+        self.fill_speech_surface()
+        self.render_npc_name()
+        self.render_dialogue_lines()
+        self.fill_options_surface()
+        self.render_option_boxes()
+        self.render_option_lines()
+
+    def fill_speech_surface(self):
         self.speech_surface.fill(self.box_color)
 
+    def render_npc_name(self):
         name_surface = self.name_font.render(self.npc_name, True, self.text_color)
         name_rect = name_surface.get_rect(center=(self.box_size[0] // 2, 20))
         self.speech_surface.blit(name_surface, name_rect)
 
+    def render_dialogue_lines(self):
         lines = self.wrap_text(
             self.dialogue_option.response, self.font, self.box_size[0]
         )
@@ -68,12 +78,12 @@ class SpeechBox:
             )
             self.speech_surface.blit(line_surface, line_rect)
 
-        options_height = len(self.options) * 30
-        options_padding = 10
-
+    def fill_options_surface(self):
+        options_height = len(self.options) * 40
         self.options_surface = pygame.Surface((self.box_size[0], options_height))
         self.options_surface.fill(self.box_color)
 
+    def render_option_boxes(self):
         for i, option in enumerate(self.options):
             color = (
                 self.box_hover_color
@@ -81,25 +91,24 @@ class SpeechBox:
                 else self.box_color
             )
 
-            box_rect = pygame.Rect(0, 30 * i + options_padding, self.box_size[0], 30)
+            box_rect = pygame.Rect(0, 40 * i + 10, self.box_size[0], 40)
 
             if i == self.hovered_option_index:
-                box_rect.y -= options_padding
+                box_rect.y -= 10
             self.options_surface.fill(color, box_rect)
 
+    def render_option_lines(self):
+        for i, option in enumerate(self.options):
             lines = self.wrap_text(option.text, self.font, self.box_size[0])
             text_height = len(lines) * self.font.get_height()
-            text_offset = (30 - text_height) // 2
+            text_offset = (40 - text_height) // 2
 
             for j, line in enumerate(lines):
                 line_surface = self.font.render(line, True, self.text_color)
                 line_rect = line_surface.get_rect(
                     center=(
                         self.box_size[0] // 2,
-                        30 * i
-                        + options_padding
-                        + text_offset
-                        + self.font.get_height() * j,
+                        40 * i + 10 + text_offset + self.font.get_height() * j,
                     )
                 )
                 self.options_surface.blit(line_surface, line_rect)
@@ -117,7 +126,7 @@ class SpeechBox:
     def handle_click(self, mouse_position):
         option_index = (
             mouse_position[1] - self.box_position[1] - self.box_size[1] - 10
-        ) // 30
+        ) // 40
         if 0 <= option_index < len(self.options):
             selected_option = self.options[option_index].select()
             self.dialogue_option = selected_option
@@ -134,7 +143,7 @@ class SpeechBox:
     def handle_mouse_movement(self, mouse_position):
         new_option_index = (
             mouse_position[1] - self.box_position[1] - self.box_size[1] - 10
-        ) // 30
+        ) // 40
         if 0 <= new_option_index < len(self.options):
             self.hovered_option_index = new_option_index
         else:

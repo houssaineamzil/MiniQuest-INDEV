@@ -7,21 +7,22 @@ class Objective:
         self.complete = complete
 
     def is_complete(self):
-        # Overwritten by specific objectives
         return self.complete
 
 
 class Quest:
-    def __init__(self, name, description, reward, difficulty, length, offered_by):
+    def __init__(
+        self, name, description, reward, difficulty, length, offered_by, objectives
+    ):
         self.name = name
         self.description = description
         self.reward = reward
         self.difficulty = difficulty
         self.length = length
         self.offered_by = offered_by
+        self.objectives = objectives
 
     def is_complete(self):
-        # Check if all objectives are complete
         return all([obj.is_complete() for obj in self.objectives])
 
     def get_incomplete_objectives(self):
@@ -31,6 +32,7 @@ class Quest:
 class QuestLog:
     def __init__(self):
         self.quests = []
+        self.completed_quests = []
 
     def add_quest(self, quest):
         self.quests.append(quest)
@@ -38,8 +40,9 @@ class QuestLog:
     def remove_quest(self, quest):
         self.quests.remove(quest)
 
-    def get_incomplete_quests(self):
-        return [quest for quest in self.quests if not quest.is_complete()]
+    def complete_quest(self, quest):
+        self.quests.remove(quest)
+        self.completed_quests.append(quest)
 
 
 class QuestOfferUI:
