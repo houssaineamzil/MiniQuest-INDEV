@@ -35,10 +35,10 @@ class Player:
 
         self.worn_equipment = {
             "Artefact": None,
-            "Head": None,
-            "Torso": None,
-            "Legs": None,
             "Feet": None,
+            "Legs": None,
+            "Torso": None,
+            "Head": None,
             "Weapon": None,
         }
 
