@@ -35,10 +35,10 @@ class Player:
 
         self.worn_equipment = {
             "Artefact": None,
-            "Head": None,
-            "Torso": None,
-            "Legs": None,
             "Feet": None,
+            "Legs": None,
+            "Torso": None,
+            "Head": None,
             "Weapon": None,
         }
 
@@ -50,6 +50,7 @@ class Player:
         self.canmove = True
         self.targetable = True
         self.teleporting = False
+        self.invisible = False
         self.dead = False
         self.canattack = True
         self.invincible = False
@@ -112,7 +113,7 @@ class Player:
         self.current_chest = None
 
     def draw(self, screen):
-        if not self.teleporting:
+        if not self.teleporting and not self.invisible:
             self.current_animation.draw(
                 screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
             )
