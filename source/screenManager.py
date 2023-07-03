@@ -35,8 +35,10 @@ class ScreenManager:
                         self.screen_height,
                         self.map_file,
                         self.game_screen,
+                        self.base_resolution,
+                        self.scale_factor,
                     )
-                    self.game.run(375, 420)
+                    self.game.run(800, 860)
                 else:
                     if self.game.game_over:
                         self.screen = "death"

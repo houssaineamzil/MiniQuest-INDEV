@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 import os
 from map import Map
 from player import Player
@@ -20,22 +21,36 @@ from equipment import (
 from spritesheet import Spritesheet
 import random
 from healthBar import HealthBar
+from camera import Camera
 
 
 class Game:
-    def __init__(self, screen_width, screen_height, map_file, game_screen):
+    def __init__(
+        self,
+        screen_width,
+        screen_height,
+        map_file,
+        game_screen,
+        base_resolution,
+        scale_factor,
+    ):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.map_file = map_file
         self.game_screen = game_screen
         self.last_shot = 0
         self.game_over = False
+        self.base_resolution = base_resolution
+        self.scale_factor = scale_factor
         self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
 
     def run(self, player_x, player_y):
         self.init_game_loop(player_x, player_y)
         while self.game_running():
             if not self.player.dead:
+                self.camera.target_pos = Vector2(*self.player.rect.center)
+                self.camera.update()
+
                 self.perform_game_operations()
                 self.handle_game_events()
                 self.update_ui()
@@ -51,8 +66,16 @@ class Game:
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
 
-        self.map = Map(self.map_file, self.screen_width, self.screen_height)
+        self.map = Map(self.map_file)
         self.map.entity_collision_rects.append(self.player.collision_rect)
+
+        self.camera = Camera(
+            Vector2(*self.player.rect.center),
+            *self.base_resolution,
+            self.map.width,
+            self.map.height,
+        )
+
         pygame.mixer.music.load("source/sound/music.wav")
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
@@ -65,14 +88,14 @@ class Game:
     def perform_game_operations(self):
         self.clock_object.tick(60)
 
-        self.map.draw_layer(self.game_screen, "floor")
-        self.map.draw_layer(self.game_screen, "ground")
+        self.map.draw_layer("floor")
+        self.map.draw_layer("ground")
 
-        self.map.update(self.game_screen, self.player)
+        self.map.update(self.player)
         self.update_dynamic_objects()
 
-        self.map.update_particles(self.game_screen, self.map.particles, self.player)
-        self.map.draw_layer(self.game_screen, "above_ground")
+        self.map.update_particles(self.map.particles, self.player)
+        self.map.draw_layer("above_ground")
 
         # for rect in self.map.collision_rects:  # COLLISION RECT DEBUG
         # self.map.draw_rect(self.game_screen, rect)
@@ -82,26 +105,24 @@ class Game:
         sorted_entities = sorted(entities_to_sort, key=lambda entity: entity.rect.y)
         for entity in sorted_entities:
             if isinstance(entity, Player):
-                if (
-                    not self.player.in_quest_ui
-                ):  # Check if the player is not in the quest UI
+                if not self.player.in_quest_ui:
                     if entity.movement(
                         self.map.collision_rects,
                         self.map.entity_collision_rects,
-                        self.screen_width,
-                        self.screen_height,
+                        self.map.width,
+                        self.map.height,
                     ):
                         if random.random() < 0.3:
                             walk_particle = walkParticle(entity)
                             self.map.add_ground_particle(walk_particle)
                 entity.update()
-                entity.draw(self.game_screen)
+                entity.draw(self.map.surface)
             elif isinstance(entity, Enemy):
                 self.map.update_enemy(self.player, entity)
-                entity.draw(self.game_screen)
+                entity.draw(self.map.surface)
             elif isinstance(entity, NPC):
                 self.map.update_npc(self.player, entity)
-                entity.draw(self.game_screen)
+                entity.draw(self.map.surface)
 
             # self.map.draw_rects(
             #    self.game_screen, entity
@@ -337,6 +358,7 @@ class Game:
                     self.player.in_dialogue = False
 
     def update_game_screen(self):
+        self.game_screen.blit(self.map.surface, (0, 0), self.camera.rect)
         self.update_mouse()
         pygame.display.flip()
 
