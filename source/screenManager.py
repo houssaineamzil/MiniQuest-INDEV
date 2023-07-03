@@ -100,7 +100,6 @@ class ScreenManager:
                             elif button_texts[i] == "Options":
                                 self.screen = "options"
                                 running = False
-                                print(self.screen)
                             elif button_texts[i] == "Credits":
                                 # TODO: Show the credits screen
                                 pass
@@ -120,7 +119,6 @@ class ScreenManager:
 
     def options_screen(self):
         running = True
-        print("Options1")
         clock = pygame.time.Clock()
 
         button_width = 200
@@ -129,7 +127,16 @@ class ScreenManager:
         button_gap = 20
 
         # Options
-        options = ["1280x720", "1600x900", "1920x1080"]
+        options = [
+            "640x360",
+            "854x480",
+            "1000x563",
+            "1280x720",
+            "1500x844",
+            "1750x984",
+            "1920x1080",
+        ]
+
         current_option_index = options.index(
             f"{self.screen_width}x{self.screen_height}"
         )
@@ -190,6 +197,20 @@ class ScreenManager:
             pygame.draw.rect(self.game_screen, (255, 255, 255), left_arrow)
             pygame.draw.rect(self.game_screen, (255, 255, 255), right_arrow)
 
+            # Draw button texts
+            button_font = pygame.font.Font(None, 30)
+            apply_text = button_font.render("Apply", True, (0, 0, 0))
+            left_arrow_text = button_font.render("<", True, (0, 0, 0))
+            right_arrow_text = button_font.render(">", True, (0, 0, 0))
+
+            apply_text_rect = apply_text.get_rect(center=apply_button.center)
+            left_arrow_text_rect = left_arrow_text.get_rect(center=left_arrow.center)
+            right_arrow_text_rect = right_arrow_text.get_rect(center=right_arrow.center)
+
+            self.game_screen.blit(apply_text, apply_text_rect)
+            self.game_screen.blit(left_arrow_text, left_arrow_text_rect)
+            self.game_screen.blit(right_arrow_text, right_arrow_text_rect)
+
             # Draw options text
             options_font = pygame.font.Font(None, 30)
             options_text = options_font.render(
@@ -198,7 +219,7 @@ class ScreenManager:
             options_text_rect = options_text.get_rect(
                 center=(
                     self.screen_width / 2,
-                    self.screen_height / 2 - 0.5 * button_height,
+                    left_arrow.centery,
                 )
             )
             self.game_screen.blit(options_text, options_text_rect)
