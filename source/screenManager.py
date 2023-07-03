@@ -38,6 +38,10 @@ class ScreenManager:
                         self.game = None
             elif self.screen == "main_menu":
                 self.main_menu()
+            elif self.screen == "options":
+                self.options_screen()
+            elif self.screen == "credits":
+                self.main_menu()  # TODO: Make a credits screen
             elif self.screen == "death":
                 self.death_screen()
 
@@ -69,11 +73,18 @@ class ScreenManager:
                 button_width,
                 button_height,
             ),
+            pygame.Rect(
+                button_start_x,
+                self.screen_height / 2 + 1.5 * button_height + 2 * button_gap,
+                button_width,
+                button_height,
+            ),
         ]
-        button_texts = ["Start Game", "Credits", "Exit"]
+
+        button_texts = ["Start Game", "Options", "Credits", "Exit"]
 
         while running:
-            self.game_screen.fill((0, 0, 0))
+            self.game_screen.fill((210, 180, 140))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -86,6 +97,10 @@ class ScreenManager:
                             if button_texts[i] == "Start Game":
                                 self.screen = "game"
                                 running = False
+                            elif button_texts[i] == "Options":
+                                self.screen = "options"
+                                running = False
+                                print(self.screen)
                             elif button_texts[i] == "Credits":
                                 # TODO: Show the credits screen
                                 pass
@@ -99,6 +114,94 @@ class ScreenManager:
                 button_text = button_font.render(button_texts[i], True, (0, 0, 0))
                 button_text_rect = button_text.get_rect(center=button.center)
                 self.game_screen.blit(button_text, button_text_rect)
+
+            self.update_screen()
+            clock.tick(60)
+
+    def options_screen(self):
+        running = True
+        print("Options1")
+        clock = pygame.time.Clock()
+
+        button_width = 200
+        button_height = 50
+        button_start_x = self.screen_width / 2 - button_width / 2
+        button_gap = 20
+
+        # Options
+        options = ["1280x720", "1600x900", "1920x1080"]
+        current_option_index = options.index(
+            f"{self.screen_width}x{self.screen_height}"
+        )
+
+        # Buttons
+        apply_button = pygame.Rect(
+            button_start_x,
+            self.screen_height / 2 + 0.5 * button_height + button_gap,
+            button_width,
+            button_height,
+        )
+
+        left_arrow = pygame.Rect(
+            button_start_x - 100,
+            self.screen_height / 2 - 0.5 * button_height,
+            50,
+            50,
+        )
+
+        right_arrow = pygame.Rect(
+            button_start_x + button_width + 50,
+            self.screen_height / 2 - 0.5 * button_height,
+            50,
+            50,
+        )
+
+        while running:
+            self.game_screen.fill((210, 180, 140))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
+
+                    if apply_button.collidepoint(mouse_pos):
+                        # Change the resolution
+                        self.screen_width, self.screen_height = [
+                            int(x) for x in options[current_option_index].split("x")
+                        ]
+                        self.game_screen = pygame.display.set_mode(
+                            (self.screen_width, self.screen_height)
+                        )
+                        self.screen = "main_menu"
+                        running = False
+
+                    if left_arrow.collidepoint(mouse_pos):
+                        # Change the current option
+                        current_option_index = (current_option_index - 1) % len(options)
+
+                    if right_arrow.collidepoint(mouse_pos):
+                        # Change the current option
+                        current_option_index = (current_option_index + 1) % len(options)
+
+            # Draw buttons
+            pygame.draw.rect(self.game_screen, (255, 255, 255), apply_button)
+            pygame.draw.rect(self.game_screen, (255, 255, 255), left_arrow)
+            pygame.draw.rect(self.game_screen, (255, 255, 255), right_arrow)
+
+            # Draw options text
+            options_font = pygame.font.Font(None, 30)
+            options_text = options_font.render(
+                options[current_option_index], True, (0, 0, 0)
+            )
+            options_text_rect = options_text.get_rect(
+                center=(
+                    self.screen_width / 2,
+                    self.screen_height / 2 - 0.5 * button_height,
+                )
+            )
+            self.game_screen.blit(options_text, options_text_rect)
 
             self.update_screen()
             clock.tick(60)
