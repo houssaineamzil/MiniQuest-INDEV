@@ -6,8 +6,13 @@ from game import Game
 class ScreenManager:
     def __init__(self, screen_width, screen_height, map_file):
         self.cursor_img = pygame.image.load("source/img/cursor.png")
+        self.base_resolution = (screen_width, screen_height)
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.scale_factor = (
+            self.screen_width / self.base_resolution[0],
+            self.screen_height / self.base_resolution[1],
+        )
         self.map_file = map_file
         pygame.init()
         pygame.mixer.init()
@@ -49,10 +54,10 @@ class ScreenManager:
         running = True
         clock = pygame.time.Clock()
 
-        button_width = 200
-        button_height = 50
-        button_start_x = self.screen_width / 2 - button_width / 2
-        button_gap = 20
+        button_width = 200 * self.scale_factor[0]
+        button_height = 50 * self.scale_factor[1]
+        button_start_x = (self.screen_width / 2) - (button_width / 2)
+        button_gap = 20 * self.scale_factor[1]
 
         buttons = [
             pygame.Rect(
@@ -109,7 +114,7 @@ class ScreenManager:
 
             for i, button in enumerate(buttons):
                 pygame.draw.rect(self.game_screen, (255, 255, 255), button)
-                button_font = pygame.font.Font(None, 30)
+                button_font = pygame.font.Font(None, int(30 * self.scale_factor[0]))
                 button_text = button_font.render(button_texts[i], True, (0, 0, 0))
                 button_text_rect = button_text.get_rect(center=button.center)
                 self.game_screen.blit(button_text, button_text_rect)
@@ -121,12 +126,11 @@ class ScreenManager:
         running = True
         clock = pygame.time.Clock()
 
-        button_width = 200
-        button_height = 50
-        button_start_x = self.screen_width / 2 - button_width / 2
-        button_gap = 20
+        button_width = 200 * self.scale_factor[0]
+        button_height = 50 * self.scale_factor[1]
+        button_start_x = (self.screen_width / 2) - (button_width / 2)
+        button_gap = 20 * self.scale_factor[1]
 
-        # Options
         options = [
             "640x360",
             "854x480",
@@ -152,15 +156,24 @@ class ScreenManager:
         left_arrow = pygame.Rect(
             button_start_x - 100,
             self.screen_height / 2 - 0.5 * button_height,
-            50,
-            50,
+            50 * self.scale_factor[0],
+            50 * self.scale_factor[1],
         )
 
         right_arrow = pygame.Rect(
             button_start_x + button_width + 50,
             self.screen_height / 2 - 0.5 * button_height,
-            50,
-            50,
+            50 * self.scale_factor[0],
+            50 * self.scale_factor[1],
+        )
+
+        left_arrow.topleft = (
+            self.screen_width * 0.4 - left_arrow.width / 2,
+            self.screen_height / 2 - 0.5 * button_height,
+        )
+        right_arrow.topleft = (
+            self.screen_width * 0.6 - right_arrow.width / 2,
+            self.screen_height / 2 - 0.5 * button_height,
         )
 
         while running:
@@ -174,31 +187,27 @@ class ScreenManager:
                     mouse_pos = event.pos
 
                     if apply_button.collidepoint(mouse_pos):
-                        # Change the resolution
                         self.screen_width, self.screen_height = [
                             int(x) for x in options[current_option_index].split("x")
                         ]
                         self.game_screen = pygame.display.set_mode(
                             (self.screen_width, self.screen_height)
                         )
+                        self.set_resolution(self.screen_width, self.screen_height)
                         self.screen = "main_menu"
                         running = False
 
                     if left_arrow.collidepoint(mouse_pos):
-                        # Change the current option
                         current_option_index = (current_option_index - 1) % len(options)
 
                     if right_arrow.collidepoint(mouse_pos):
-                        # Change the current option
                         current_option_index = (current_option_index + 1) % len(options)
 
-            # Draw buttons
             pygame.draw.rect(self.game_screen, (255, 255, 255), apply_button)
             pygame.draw.rect(self.game_screen, (255, 255, 255), left_arrow)
             pygame.draw.rect(self.game_screen, (255, 255, 255), right_arrow)
 
-            # Draw button texts
-            button_font = pygame.font.Font(None, 30)
+            button_font = pygame.font.Font(None, int(30 * self.scale_factor[0]))
             apply_text = button_font.render("Apply", True, (0, 0, 0))
             left_arrow_text = button_font.render("<", True, (0, 0, 0))
             right_arrow_text = button_font.render(">", True, (0, 0, 0))
@@ -211,8 +220,7 @@ class ScreenManager:
             self.game_screen.blit(left_arrow_text, left_arrow_text_rect)
             self.game_screen.blit(right_arrow_text, right_arrow_text_rect)
 
-            # Draw options text
-            options_font = pygame.font.Font(None, 30)
+            options_font = pygame.font.Font(None, int(30 * self.scale_factor[0]))
             options_text = options_font.render(
                 options[current_option_index], True, (0, 0, 0)
             )
@@ -268,3 +276,14 @@ class ScreenManager:
     def update_mouse(self):
         mx, my = pygame.mouse.get_pos()
         self.game_screen.blit(self.cursor_img, (mx, my))
+
+    def set_resolution(self, width, height):
+        self.screen_width = width
+        self.screen_height = height
+        self.scale_factor = (
+            self.screen_width / self.base_resolution[0],
+            self.screen_height / self.base_resolution[1],
+        )
+        self.game_screen = pygame.display.set_mode(
+            (self.screen_width, self.screen_height)
+        )
