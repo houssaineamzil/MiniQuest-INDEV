@@ -53,6 +53,7 @@ class Game:
 
                 self.perform_game_operations()
                 self.handle_game_events()
+                self.draw_map()
                 self.update_ui()
                 self.update_game_screen()
             if self.player.dead:
@@ -66,11 +67,11 @@ class Game:
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
 
-        self.map = Map(self.map_file)
+        self.map = Map(self.map_file, self.screen_width)
         self.map.entity_collision_rects.append(self.player.collision_rect)
 
         self.camera = Camera(
-            Vector2(*self.player.rect.center),
+            self.player.rect.center,
             *self.base_resolution,
             self.map.width,
             self.map.height,
@@ -91,14 +92,14 @@ class Game:
         self.map.draw_layer("floor")
         self.map.draw_layer("ground")
 
-        self.map.update(self.player)
+        self.map.update(self.player, self.camera)
         self.update_dynamic_objects()
 
         self.map.update_particles(self.map.particles, self.player)
         self.map.draw_layer("above_ground")
 
         # for rect in self.map.collision_rects:  # COLLISION RECT DEBUG
-        # self.map.draw_rect(self.game_screen, rect)
+        #    self.map.draw_rect(self.map.surface, rect)
 
     def update_dynamic_objects(self):
         entities_to_sort = self.map.enemies + self.map.npcs + [self.player]
@@ -125,7 +126,7 @@ class Game:
                 entity.draw(self.map.surface)
 
             # self.map.draw_rects(
-            #    self.game_screen, entity
+            #    self.map.surface, entity
             # )  # DYNAMIC OBJECT COLLISION DEBUG (PLAYER, NPCS)
 
     def update_ui(self):
@@ -254,6 +255,8 @@ class Game:
             and self.player.current_chest == None
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            mouse_x += self.camera.rect.x
+            mouse_y += self.camera.rect.y
             all_collision_rects = (
                 self.map.collision_rects + self.map.entity_collision_rects
             )
@@ -278,6 +281,8 @@ class Game:
             and not self.player.in_dialogue
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            mouse_x += self.camera.rect.x
+            mouse_y += self.camera.rect.y
             self.map.add_projectile(
                 self.player.worn_equipment["Weapon"].attack(
                     self.player, mouse_x, mouse_y
@@ -357,8 +362,10 @@ class Game:
                     npc.speech_box.stop()
                     self.player.in_dialogue = False
 
-    def update_game_screen(self):
+    def draw_map(self):
         self.game_screen.blit(self.map.surface, (0, 0), self.camera.rect)
+
+    def update_game_screen(self):
         self.update_mouse()
         pygame.display.flip()
 

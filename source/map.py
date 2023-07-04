@@ -15,9 +15,10 @@ from chest import Chest
 
 
 class Map:
-    def __init__(self, map_file):
+    def __init__(self, map_file, screen_width):
         self.map_file = map_file
         self.map_data = pytmx.load_pygame(map_file)
+        self.screen_width = screen_width
         self.enemies = []
         self.npcs = []
         self.projectiles = []
@@ -61,7 +62,9 @@ class Map:
     def spawn_chests(self):
         chest_objects = self.map_data.get_layer_by_name("chests")
         for obj in chest_objects:
-            chest = Chest(obj.x, obj.y, obj.width, obj.height, obj.items)
+            chest = Chest(
+                obj.x, obj.y, obj.width, obj.height, obj.items, self.screen_width
+            )
             self.add_chest(chest)
 
     def add_chest(self, chest):
@@ -112,16 +115,18 @@ class Map:
     def get_map_surface(self):
         return self.surface
 
-    def update(self, player):
+    def update(self, player, camera):
         self.update_particles(self.ground_particles, player)
-        self.update_portals(player)
+        self.update_portals(player, camera)
         self.update_projectiles(player)
         self.update_explosions()
 
-    def update_portals(self, player):
+    def update_portals(self, player, camera):
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
-                self.change_map("source/tile/" + portal.map_file + ".tmx", player)
+                self.change_map(
+                    "source/tile/" + portal.map_file + ".tmx", player, camera
+                )
                 player.teleport(portal.destination[0], portal.destination[1])
                 break
 
@@ -202,13 +207,15 @@ class Map:
                 for particle in explosion.particles:
                     self.surface.blit(particle.image, particle.rect)
 
-    def change_map(self, new_map_file, player):
+    def change_map(self, new_map_file, player, camera):
         self.save_state(self.map_file + ".pkl")
 
         self.map_file = new_map_file
         self.map_data = pytmx.load_pygame(new_map_file)
         self.width = self.map_data.width * self.map_data.tilewidth
         self.height = self.map_data.height * self.map_data.tileheight
+        self.surface = pygame.Surface((self.width, self.height))
+        camera.change_map(self.width, self.height)
         self.object_setup()
         self.projectiles.clear()
         self.particles.clear()
@@ -336,7 +343,7 @@ class Map:
         for chest_info in state["chests"]:
             x, y, width, height, items = chest_info
             items_string = ",".join(items)
-            chest = Chest(x, y, width, height, items_string)
+            chest = Chest(x, y, width, height, items_string, self.screen_width)
             self.chests.append(chest)
 
 

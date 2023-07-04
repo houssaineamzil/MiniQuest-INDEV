@@ -38,7 +38,7 @@ class ScreenManager:
                         self.base_resolution,
                         self.scale_factor,
                     )
-                    self.game.run(800, 860)
+                    self.game.run(610, 415)
                 else:
                     if self.game.game_over:
                         self.screen = "death"
