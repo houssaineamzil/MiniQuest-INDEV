@@ -149,32 +149,24 @@ class Game:
         for npc in self.map.npcs:
             if npc.current_quest_offer_ui is not None:
                 npc.current_quest_offer_ui.draw(self.game_screen)
-                self.player.in_quest_ui = True  # Set the new property to True
+                self.player.in_quest_ui = True
 
-                if (
-                    npc.speech_box and npc.speech_box.active
-                ):  # If a SpeechBox exists for this NPC and is active
-                    if not self.player.rect.colliderect(
-                        npc.rect
-                    ):  # If player moved away
-                        npc.speech_box.stop()  # Close the dialogue
-                        self.player.in_dialogue = False  # Exit the dialogue state
+                if npc.speech_box and npc.speech_box.active:
+                    if not self.player.rect.colliderect(npc.rect):
+                        npc.speech_box.stop()
+                        self.player.in_dialogue = False
                     else:
                         npc.speech_box.draw(self.game_screen)
                         if npc.speech_box and npc.speech_box.active:
-                            npc.speech_box.stop()  # Close the dialogue
-                            self.player.in_dialogue = False  # Exit the dialogue state
+                            npc.speech_box.stop()
+                            self.player.in_dialogue = False
             else:
-                self.player.in_quest_ui = (
-                    False  # Set the new property to False if no quest UI is active
-                )
+                self.player.in_quest_ui = False
 
-            if (
-                npc.speech_box and npc.speech_box.active
-            ):  # If a SpeechBox exists for this NPC and is active
-                if not self.player.rect.colliderect(npc.rect):  # If player moved away
-                    npc.speech_box.stop()  # Close the dialogue
-                    self.player.in_dialogue = False  # Exit the dialogue state
+            if npc.speech_box and npc.speech_box.active:
+                if not self.player.rect.colliderect(npc.rect):
+                    npc.speech_box.stop()
+                    self.player.in_dialogue = False
                 else:
                     npc.speech_box.draw(self.game_screen)
 
@@ -229,7 +221,7 @@ class Game:
                             npc.current_quest_offer_ui.get_quest()
                         )
                         npc.current_quest_offer_ui = None
-                        npc.speech_box = None  # Reset speech_box to None
+                        npc.speech_box = None
 
             return
         if event.button not in [1, 3]:

@@ -147,7 +147,6 @@ class ScreenManager:
             f"{self.screen_width}x{self.screen_height}"
         )
 
-        # Buttons
         apply_button = pygame.Rect(
             button_start_x,
             self.screen_height / 2 + 0.5 * button_height + button_gap,
