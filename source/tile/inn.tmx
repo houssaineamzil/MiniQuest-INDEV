@@ -109,11 +109,5 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="19" name="npcs">
-  <object id="75" name="Townsfolk" x="551.333" y="332.333" width="15.3333" height="15.3333">
-   <properties>
-    <property name="hp" type="int" value="3"/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup id="19" name="npcs"/>
 </map>

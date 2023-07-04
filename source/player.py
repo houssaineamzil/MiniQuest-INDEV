@@ -54,7 +54,7 @@ class Player:
         self.dead = False
         self.canattack = True
         self.invincible = False
-        adjustment = 3
+        adjustment = 0
         self.rect = pygame.FRect(
             x, y - adjustment, self.size_x, self.size_y - adjustment
         )
@@ -114,6 +114,7 @@ class Player:
 
     def draw(self, map_surface):
         if not self.teleporting and not self.invisible:
+            print("Current mid bot position: ", self.rect.midbottom)
             self.current_animation.draw(
                 map_surface,
                 self.rect.x,
@@ -222,33 +223,34 @@ class Player:
 
             if dx != 0 or dy != 0:
                 dist = math.hypot(dx, dy)
-                dx, dy = dx / dist, dy / dist
-                dx *= self.speed
-                dy *= self.speed
+                if dist != 0:
+                    dx, dy = dx / dist, dy / dist
+                    dx *= self.speed
+                    dy *= self.speed
 
-                if dx != 0:
-                    temp_rect = self.collision_rect.copy()
-                    temp_rect.x += dx
-                    if (
-                        temp_rect.right <= screen_width
-                        and temp_rect.left >= 0
-                        and not self.is_collision(temp_rect, all_collision_rects)
-                    ):
-                        self.rect.x += dx
-                        self.collision_rect.x += dx
-                        self.moved = True
+                    if dx != 0:
+                        temp_rect = self.collision_rect.copy()
+                        temp_rect.x += dx
+                        if (
+                            temp_rect.right <= screen_width
+                            and temp_rect.left >= 0
+                            and not self.is_collision(temp_rect, all_collision_rects)
+                        ):
+                            self.rect.x += dx
+                            self.collision_rect.x += dx
+                            self.moved = True
 
-                if dy != 0:
-                    temp_rect = self.collision_rect.copy()
-                    temp_rect.y += dy
-                    if (
-                        temp_rect.bottom <= screen_height
-                        and temp_rect.top >= 0
-                        and not self.is_collision(temp_rect, all_collision_rects)
-                    ):
-                        self.rect.y += dy
-                        self.collision_rect.y += dy
-                        self.moved = True
-                if not self.moved:
-                    self.set_stand_animation()
+                    if dy != 0:
+                        temp_rect = self.collision_rect.copy()
+                        temp_rect.y += dy
+                        if (
+                            temp_rect.bottom <= screen_height
+                            and temp_rect.top >= 0
+                            and not self.is_collision(temp_rect, all_collision_rects)
+                        ):
+                            self.rect.y += dy
+                            self.collision_rect.y += dy
+                            self.moved = True
+                    if not self.moved:
+                        self.set_stand_animation()
             return self.moved
