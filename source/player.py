@@ -46,7 +46,7 @@ class Player:
         self.in_dialogue = False
         self.current_chest = None
         self.chest_open = False
-        self.speed = 2
+        self.speed = 1.5
         self.canmove = True
         self.targetable = True
         self.teleporting = False
