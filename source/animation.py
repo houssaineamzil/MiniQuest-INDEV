@@ -18,16 +18,15 @@ class Animation:
             self.last_update = now
             self.current_frame = (self.current_frame + 1) % len(self.frames)
 
-    def draw(self, map_surface, x, y, size_x, size_y, color=(255, 255, 255)):
-        image = self.frames[self.current_frame]
+    def draw(self, screen, x, y, size_x, size_y, color=(255, 255, 255)):
+        image = self.frames[self.current_frame].copy()
         image.fill(color, special_flags=pygame.BLEND_MULT)
         image_rect = image.get_rect()
-        image_rect.midbottom = (x + size_x / 2, y + size_y)
-        print("Drawing mid bot at:", image_rect.midbottom)
-        map_surface.blit(image, image_rect.topleft)
+        image_rect.midbottom = (x + size_x // 2, y + size_y)
+        screen.blit(image, image_rect.topleft)
 
     def reset(self):
         self.current_frame = 0
 
     def get_current_image(self):
-        return self.frames[self.current_frame]
+        return self.frames[self.current_frame].copy()
