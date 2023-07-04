@@ -103,7 +103,7 @@ class Archer(Enemy):
     def __init__(self, x, y, hp):
         spritesheet = "source/img/archer.png"
         super().__init__(hp, spritesheet)
-        self.speed = 1.3
+        self.speed = 1.5
         adjustment = 3
         self.rect = pygame.FRect(
             x, y - adjustment, self.size_x, self.size_y - adjustment
