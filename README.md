@@ -94,11 +94,11 @@ For designing our game's world, we are utilizing Tilemaps. This method allows us
 - Conceptualization and design of game's mechanics, story, characters, and art style.
 - Plan and design the project with class diagrams and specifications.
 
-### Prototype Development (June 2023 - July 2023)
+### Prototype Development (June 2023 - TBD)
 - Develop a basic playable prototype featuring core gameplay mechanics, such as player movement, basic combat, and interaction with the game world.
 - Establish a solid foundation for the game's code, incorporating good software design practices and clean code principles.
 
-### Alpha Development (July 2023 - TBD)
+### Alpha Development (TBD - TBD)
 - Develop the first complete version of the game, also known as the alpha version.
 - This version should include all major game systems and mechanics, basic art assets, and a significant portion of the game's content.
 - Continue playtesting and start to gather broader feedback on the game's design and balance.
@@ -154,9 +154,9 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/b0ddce76-3793-470b-87
     - [ ] Swords
 3. NPCS:
     - [x] Enemies
-    - [ ] Quest givers
+    - [x] Quest givers
     - [ ] Merchants
-    - [ ] Generic townsfolk
+    - [x] Generic townsfolk
 4. UI:
     - [x] Chests
     - [x] Inventory
@@ -164,9 +164,9 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/b0ddce76-3793-470b-87
     - [ ] Pause menu
     - [x] Start menu
     - [x] Game over
-    - [ ] Settings
+    - [x] Settings
     - [ ] Resizable client
-    - [ ] Camera that follows player
+    - [x] Camera that follows player
 5. Equipment:
     - [x] Head
     - [x] Torso
@@ -175,7 +175,7 @@ https://github.com/harrybridgen/MiniQuest/assets/105605342/b0ddce76-3793-470b-87
     - [x] Artefact
     - [x] Weapon
 6. Story:
-    - [ ] Quests
+    - [x] Quests
     - [ ] Random events and encounters
 7. Map:
     - [x] Multiple maps
