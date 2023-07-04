@@ -124,10 +124,10 @@ class Map:
     def update_portals(self, player, camera):
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
+                player.teleport(portal.destination[0], portal.destination[1])
                 self.change_map(
                     "source/tile/" + portal.map_file + ".tmx", player, camera
                 )
-                player.teleport(portal.destination[0], portal.destination[1])
                 break
 
     def update_npc(self, player, npc):
@@ -216,6 +216,7 @@ class Map:
         self.height = self.map_data.height * self.map_data.tileheight
         self.surface = pygame.Surface((self.width, self.height))
         camera.change_map(self.width, self.height)
+        camera.teleport_to_player(player.rect.center)
         self.object_setup()
         self.projectiles.clear()
         self.particles.clear()

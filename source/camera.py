@@ -25,6 +25,10 @@ class Camera:
             self.rect.height // 2, min(self.map_height - self.rect.height // 2, lerp_y)
         )
 
+    def teleport_to_player(self, player_rect_centre):
+        self.target_pos = player_rect_centre
+        self.rect.center = self.target_pos
+
     def change_map(self, map_width, map_height):
         self.map_width = map_width
         self.map_height = map_height
