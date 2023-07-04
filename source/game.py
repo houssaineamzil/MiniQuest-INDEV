@@ -48,7 +48,7 @@ class Game:
         self.init_game_loop(player_x, player_y)
         while self.game_running():
             if not self.player.dead:
-                self.camera.target_pos = Vector2(*self.player.rect.center)
+                self.camera.target_pos = Vector2(self.player.rect.center)
                 self.camera.update()
 
                 self.perform_game_operations()
@@ -355,6 +355,7 @@ class Game:
                     self.player.in_dialogue = False
 
     def draw_map(self):
+        self.game_screen.fill((48, 44, 45, 255))
         self.game_screen.blit(self.map.surface, (0, 0), self.camera.rect)
 
     def update_game_screen(self):

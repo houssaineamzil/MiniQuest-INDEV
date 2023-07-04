@@ -158,7 +158,7 @@
  </objectgroup>
  <objectgroup id="15" name="portal">
   <object id="18" name="path,575,790" x="983.125" y="-0.416667" width="85.6023" height="4.86364"/>
-  <object id="21" name="inn,608,502" x="640.818" y="483.602" width="61.75" height="3.11364"/>
+  <object id="21" name="inn,640,527" x="640.818" y="483.602" width="61.75" height="3.11364"/>
  </objectgroup>
  <objectgroup id="18" name="enemies">
   <object id="165" name="Archer" x="1000.25" y="40.8333" width="17.5" height="16.3333">

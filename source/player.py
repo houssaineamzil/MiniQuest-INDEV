@@ -112,15 +112,20 @@ class Player:
         self.inventory_open = False
         self.current_chest = None
 
-    def draw(self, screen):
+    def draw(self, map_surface):
         if not self.teleporting and not self.invisible:
             self.current_animation.draw(
-                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
+                map_surface,
+                self.rect.x,
+                self.rect.y,
+                self.size_x,
+                self.size_y,
+                self.tint,
             )
             for item in self.worn_equipment.values():
                 if item is not None:
                     item.draw(
-                        screen,
+                        map_surface,
                         self.rect.x,
                         self.rect.y,
                         self.size_x,

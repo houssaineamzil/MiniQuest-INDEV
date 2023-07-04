@@ -146,7 +146,7 @@ class LeatherPants(Armour):
 
 class BlackBoots(Armour):
     def __init__(self):
-        super().__init__(Spritesheet("source/img/blackboots.png"), speed_buff=0.4)
+        super().__init__(Spritesheet("source/img/blackboots.png"), speed_buff=0.6)
         self.class_name = self.__class__.__name__
         self.name = "Black Boots"
         self.equipment_slot = "Feet"
