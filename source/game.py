@@ -32,6 +32,7 @@ class Game:
         map_file,
         game_screen,
         base_resolution,
+        scale_factor_x_y,
         scale_factor,
     ):
         self.screen_width = screen_width
@@ -41,7 +42,9 @@ class Game:
         self.last_shot = 0
         self.game_over = False
         self.base_resolution = base_resolution
+        self.scale_factor_x_y = scale_factor_x_y
         self.scale_factor = scale_factor
+        print(self.scale_factor_x_y, self.scale_factor)
         self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
 
     def run(self, player_x, player_y):

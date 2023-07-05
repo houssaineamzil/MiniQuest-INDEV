@@ -9,10 +9,11 @@ class ScreenManager:
         self.base_resolution = (screen_width, screen_height)
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.scale_factor = (
+        self.scale_factor_x_y = (
             self.screen_width / self.base_resolution[0],
             self.screen_height / self.base_resolution[1],
         )
+        self.scale_factor = (self.scale_factor_x_y[0] + self.scale_factor_x_y[1]) / 2
         self.map_file = map_file
         pygame.init()
         pygame.mixer.init()
@@ -36,6 +37,7 @@ class ScreenManager:
                         self.map_file,
                         self.game_screen,
                         self.base_resolution,
+                        self.scale_factor_x_y,
                         self.scale_factor,
                     )
                     self.game.run(610, 415)
@@ -56,10 +58,10 @@ class ScreenManager:
         running = True
         clock = pygame.time.Clock()
 
-        button_width = 200 * self.scale_factor[0]
-        button_height = 50 * self.scale_factor[1]
+        button_width = 200 * self.scale_factor_x_y[0]
+        button_height = 50 * self.scale_factor_x_y[1]
         button_start_x = (self.screen_width / 2) - (button_width / 2)
-        button_gap = 20 * self.scale_factor[1]
+        button_gap = 20 * self.scale_factor_x_y[1]
 
         buttons = [
             pygame.Rect(
@@ -116,7 +118,7 @@ class ScreenManager:
 
             for i, button in enumerate(buttons):
                 pygame.draw.rect(self.game_screen, (255, 255, 255), button)
-                button_font = pygame.font.Font(None, int(30 * self.scale_factor[0]))
+                button_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
                 button_text = button_font.render(button_texts[i], True, (0, 0, 0))
                 button_text_rect = button_text.get_rect(center=button.center)
                 self.game_screen.blit(button_text, button_text_rect)
@@ -128,10 +130,10 @@ class ScreenManager:
         running = True
         clock = pygame.time.Clock()
 
-        button_width = 200 * self.scale_factor[0]
-        button_height = 50 * self.scale_factor[1]
+        button_width = 200 * self.scale_factor_x_y[0]
+        button_height = 50 * self.scale_factor_x_y[1]
         button_start_x = (self.screen_width / 2) - (button_width / 2)
-        button_gap = 20 * self.scale_factor[1]
+        button_gap = 20 * self.scale_factor_x_y[1]
 
         options = [
             "640x360",
@@ -157,15 +159,15 @@ class ScreenManager:
         left_arrow = pygame.Rect(
             button_start_x - 100,
             self.screen_height / 2 - 0.5 * button_height,
-            50 * self.scale_factor[0],
-            50 * self.scale_factor[1],
+            50 * self.scale_factor_x_y[0],
+            50 * self.scale_factor_x_y[1],
         )
 
         right_arrow = pygame.Rect(
             button_start_x + button_width + 50,
             self.screen_height / 2 - 0.5 * button_height,
-            50 * self.scale_factor[0],
-            50 * self.scale_factor[1],
+            50 * self.scale_factor_x_y[0],
+            50 * self.scale_factor_x_y[1],
         )
 
         left_arrow.topleft = (
@@ -208,7 +210,7 @@ class ScreenManager:
             pygame.draw.rect(self.game_screen, (255, 255, 255), left_arrow)
             pygame.draw.rect(self.game_screen, (255, 255, 255), right_arrow)
 
-            button_font = pygame.font.Font(None, int(30 * self.scale_factor[0]))
+            button_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
             apply_text = button_font.render("Apply", True, (0, 0, 0))
             left_arrow_text = button_font.render("<", True, (0, 0, 0))
             right_arrow_text = button_font.render(">", True, (0, 0, 0))
@@ -221,7 +223,7 @@ class ScreenManager:
             self.game_screen.blit(left_arrow_text, left_arrow_text_rect)
             self.game_screen.blit(right_arrow_text, right_arrow_text_rect)
 
-            options_font = pygame.font.Font(None, int(30 * self.scale_factor[0]))
+            options_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
             options_text = options_font.render(
                 options[current_option_index], True, (0, 0, 0)
             )
@@ -281,10 +283,11 @@ class ScreenManager:
     def set_resolution(self, width, height):
         self.screen_width = width
         self.screen_height = height
-        self.scale_factor = (
+        self.scale_factor_x_y = (
             self.screen_width / self.base_resolution[0],
             self.screen_height / self.base_resolution[1],
         )
+        self.scale_factor = (self.scale_factor_x_y[0] + self.scale_factor_x_y[1]) / 2
         self.game_screen = pygame.display.set_mode(
             (self.screen_width, self.screen_height)
         )
