@@ -139,5 +139,6 @@ class HealingParticle(Particle):
             return True
         else:
             self.speed += 0.05
+            self.swirl_speed += 0.005
 
         return False
