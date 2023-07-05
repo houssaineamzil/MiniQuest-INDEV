@@ -48,7 +48,7 @@ class Game:
         self.init_game_loop(player_x, player_y)
         while self.game_running():
             if not self.player.dead:
-                self.camera.target_pos = Vector2(self.player.rect.center)
+                self.camera.target_pos = Vector2(*self.player.rect.center)
                 self.camera.update()
 
                 self.perform_game_operations()
@@ -71,7 +71,7 @@ class Game:
         self.map.entity_collision_rects.append(self.player.collision_rect)
 
         self.camera = Camera(
-            self.player.rect.center,
+            Vector2(*self.player.rect.center),
             *self.base_resolution,
             self.map.width,
             self.map.height,

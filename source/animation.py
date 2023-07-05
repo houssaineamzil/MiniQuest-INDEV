@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 
 
 class Animation:
@@ -21,9 +22,11 @@ class Animation:
     def draw(self, map_surface, x, y, size_x, size_y, color=(255, 255, 255)):
         image = self.frames[self.current_frame].copy()
         image.fill(color, special_flags=pygame.BLEND_MULT)
-        image_rect = image.get_rect()
-        image_rect.midbottom = (x + size_x // 2, y + size_y)
-        map_surface.blit(image, image_rect.topleft)
+        image_rect = pygame.FRect(image.get_rect())
+        midbot = Vector2(x + size_x / 2, y + size_y)
+        image_rect.midbottom = midbot
+        print("Current mid bot position: ", image_rect.midbottom)
+        map_surface.blit(image, Vector2(image_rect.topleft))
 
     def reset(self):
         self.current_frame = 0
