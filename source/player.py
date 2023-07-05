@@ -114,7 +114,6 @@ class Player:
 
     def draw(self, map_surface):
         if not self.teleporting and not self.invisible:
-            print("Current mid bot position: ", self.rect.midbottom)
             self.current_animation.draw(
                 map_surface,
                 self.rect.x,

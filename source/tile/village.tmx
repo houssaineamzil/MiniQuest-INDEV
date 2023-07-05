@@ -135,8 +135,8 @@
   <object id="44" x="811.788" y="787.667" width="8.33715" height="113.087"/>
   <object id="48" x="1099.69" y="787.5" width="8.5417" height="113.326"/>
   <object id="62" x="567.712" y="378.878" width="207.924" height="104.348"/>
-  <object id="63" x="970.042" y="-1.45833" width="9.375" height="156.25"/>
-  <object id="64" x="1067.55" y="1.33333" width="9.75" height="155.625"/>
+  <object id="63" x="971.315" y="0.178034" width="9.375" height="156.25"/>
+  <object id="64" x="1067" y="0.0606027" width="9.75" height="155.625"/>
   <object id="98" x="811.463" y="565.573" width="73.5739" height="12.1041"/>
   <object id="108" x="811.787" y="900.76" width="296.88" height="23.2422"/>
   <object id="114" x="521.25" y="696.75" width="13" height="38.25"/>
@@ -157,7 +157,7 @@
   <object id="164" x="297.833" y="886.167" width="13.3333" height="39.6667"/>
  </objectgroup>
  <objectgroup id="15" name="portal">
-  <object id="18" name="path,575,790" x="983.125" y="-0.416667" width="85.6023" height="4.86364"/>
+  <object id="18" name="path,1025,1260" x="981.67" y="0.128788" width="85.6023" height="4.86364"/>
   <object id="21" name="inn,640,527" x="640.818" y="483.602" width="61.75" height="3.11364"/>
  </objectgroup>
  <objectgroup id="18" name="enemies">
