@@ -87,8 +87,8 @@
   <object id="47" x="628.75" y="347.038" width="10.875" height="17.1705"/>
   <object id="62" x="2" y="3.33333e-06" width="1278" height="320"/>
   <object id="63" x="0" y="544" width="1280" height="158"/>
-  <object id="64" x="256" y="529" width="352" height="15"/>
-  <object id="65" x="672" y="528" width="384" height="16"/>
+  <object id="64" x="256" y="529" width="350" height="15"/>
+  <object id="65" x="674.333" y="528" width="381.667" height="16"/>
   <object id="66" x="1.33333" y="320" width="510.667" height="224"/>
   <object id="71" x="804" y="320" width="477.333" height="224"/>
   <object id="72" x="704" y="320" width="96" height="96"/>

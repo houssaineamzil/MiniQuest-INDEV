@@ -359,9 +359,7 @@ class Game:
 
     def draw_map(self):
         self.game_screen.fill((48, 44, 45, 255))
-        self.game_screen.blit(
-            self.map.surface, Vector2(-self.camera.rect.x, -self.camera.rect.y)
-        )
+        self.game_screen.blit(self.map.surface, (0, 0), self.camera.rect)
 
     def update_game_screen(self):
         self.update_mouse()

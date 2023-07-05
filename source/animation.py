@@ -23,9 +23,9 @@ class Animation:
         image = self.frames[self.current_frame].copy()
         image.fill(color, special_flags=pygame.BLEND_MULT)
         image_rect = pygame.FRect(image.get_rect())
-        midbot = Vector2(x + size_x / 2, y + size_y)
+        midbot = (x + size_x / 2, y + size_y)
         image_rect.midbottom = midbot
-        map_surface.blit(image, image_rect.topleft)
+        map_surface.blit(image, (image_rect.topleft))
 
     def reset(self):
         self.current_frame = 0
