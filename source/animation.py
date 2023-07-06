@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 
 
 class Animation:
@@ -18,12 +19,13 @@ class Animation:
             self.last_update = now
             self.current_frame = (self.current_frame + 1) % len(self.frames)
 
-    def draw(self, screen, x, y, size_x, size_y, color=(255, 255, 255)):
+    def draw(self, map_surface, x, y, size_x, size_y, color=(255, 255, 255)):
         image = self.frames[self.current_frame].copy()
         image.fill(color, special_flags=pygame.BLEND_MULT)
-        image_rect = image.get_rect()
-        image_rect.midbottom = (x + size_x // 2, y + size_y)
-        screen.blit(image, image_rect.topleft)
+        image_rect = pygame.FRect(image.get_rect())
+        midbot = (x + size_x / 2, y + size_y)
+        image_rect.midbottom = midbot
+        map_surface.blit(image, (image_rect.topleft))
 
     def reset(self):
         self.current_frame = 0

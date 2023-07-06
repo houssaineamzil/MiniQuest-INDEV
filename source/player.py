@@ -46,7 +46,7 @@ class Player:
         self.in_dialogue = False
         self.current_chest = None
         self.chest_open = False
-        self.speed = 2
+        self.speed = 1.7
         self.canmove = True
         self.targetable = True
         self.teleporting = False
@@ -112,15 +112,20 @@ class Player:
         self.inventory_open = False
         self.current_chest = None
 
-    def draw(self, screen):
+    def draw(self, map_surface):
         if not self.teleporting and not self.invisible:
             self.current_animation.draw(
-                screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
+                map_surface,
+                self.rect.x,
+                self.rect.y,
+                self.size_x,
+                self.size_y,
+                self.tint,
             )
             for item in self.worn_equipment.values():
                 if item is not None:
                     item.draw(
-                        screen,
+                        map_surface,
                         self.rect.x,
                         self.rect.y,
                         self.size_x,
@@ -217,33 +222,34 @@ class Player:
 
             if dx != 0 or dy != 0:
                 dist = math.hypot(dx, dy)
-                dx, dy = dx / dist, dy / dist
-                dx *= self.speed
-                dy *= self.speed
+                if dist != 0:
+                    dx, dy = dx / dist, dy / dist
+                    dx *= self.speed
+                    dy *= self.speed
 
-                if dx != 0:
-                    temp_rect = self.collision_rect.copy()
-                    temp_rect.x += dx
-                    if (
-                        temp_rect.right <= screen_width
-                        and temp_rect.left >= 0
-                        and not self.is_collision(temp_rect, all_collision_rects)
-                    ):
-                        self.rect.x += dx
-                        self.collision_rect.x += dx
-                        self.moved = True
+                    if dx != 0:
+                        temp_rect = self.collision_rect.copy()
+                        temp_rect.x += dx
+                        if (
+                            temp_rect.right <= screen_width
+                            and temp_rect.left >= 0
+                            and not self.is_collision(temp_rect, all_collision_rects)
+                        ):
+                            self.rect.x += dx
+                            self.collision_rect.x += dx
+                            self.moved = True
 
-                if dy != 0:
-                    temp_rect = self.collision_rect.copy()
-                    temp_rect.y += dy
-                    if (
-                        temp_rect.bottom <= screen_height
-                        and temp_rect.top >= 0
-                        and not self.is_collision(temp_rect, all_collision_rects)
-                    ):
-                        self.rect.y += dy
-                        self.collision_rect.y += dy
-                        self.moved = True
-                if not self.moved:
-                    self.set_stand_animation()
+                    if dy != 0:
+                        temp_rect = self.collision_rect.copy()
+                        temp_rect.y += dy
+                        if (
+                            temp_rect.bottom <= screen_height
+                            and temp_rect.top >= 0
+                            and not self.is_collision(temp_rect, all_collision_rects)
+                        ):
+                            self.rect.y += dy
+                            self.collision_rect.y += dy
+                            self.moved = True
+                    if not self.moved:
+                        self.set_stand_animation()
             return self.moved

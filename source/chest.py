@@ -13,10 +13,10 @@ from equipment import (
 
 
 class Chest:
-    def __init__(self, x, y, width, height, items_string):
+    def __init__(self, x, y, width, height, items_string, screen_width):
         self.inv_width = 200
         self.inv_height = 400
-        self.inv_pos_x = 595
+        self.inv_pos_x = screen_width - self.inv_width - 5
         self.inv_pos_y = 5
         self.inv_image = pygame.Surface((self.inv_width, self.inv_height))
         self.font = pygame.font.Font(None, 35)

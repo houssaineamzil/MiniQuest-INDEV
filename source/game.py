@@ -1,4 +1,6 @@
 import pygame
+from sys import exit
+from pygame.math import Vector2
 import os
 from map import Map
 from player import Player
@@ -20,24 +22,42 @@ from equipment import (
 from spritesheet import Spritesheet
 import random
 from healthBar import HealthBar
+from camera import Camera
 
 
 class Game:
-    def __init__(self, screen_width, screen_height, map_file, game_screen):
+    def __init__(
+        self,
+        screen_width,
+        screen_height,
+        map_file,
+        game_screen,
+        screen_resolution,
+        scale_factor_x_y,
+        scale_factor,
+    ):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.map_file = map_file
         self.game_screen = game_screen
         self.last_shot = 0
         self.game_over = False
+        self.screen_resolution = screen_resolution
+        self.scale_factor_x_y = scale_factor_x_y
+        self.scale_factor = scale_factor
+        print(self.scale_factor_x_y, self.scale_factor)
         self.PLAYER_TELEPORT_ARTEFACT = pygame.USEREVENT + 1
 
     def run(self, player_x, player_y):
         self.init_game_loop(player_x, player_y)
         while self.game_running():
             if not self.player.dead:
+                self.camera.target_pos = Vector2(*self.player.rect.center)
+                self.camera.update()
+
                 self.perform_game_operations()
                 self.handle_game_events()
+                self.draw_map()
                 self.update_ui()
                 self.update_game_screen()
             if self.player.dead:
@@ -51,8 +71,15 @@ class Game:
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
 
-        self.map = Map(self.map_file, self.screen_width, self.screen_height)
+        self.map = Map(self.map_file, self.screen_width)
         self.map.entity_collision_rects.append(self.player.collision_rect)
+        self.camera = Camera(
+            Vector2(*self.player.rect.center),
+            *self.screen_resolution,
+            self.map.width,
+            self.map.height,
+        )
+
         pygame.mixer.music.load("source/sound/music.wav")
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0)
@@ -65,46 +92,44 @@ class Game:
     def perform_game_operations(self):
         self.clock_object.tick(60)
 
-        self.map.draw_layer(self.game_screen, "floor")
-        self.map.draw_layer(self.game_screen, "ground")
+        self.map.draw_layer("floor")
+        self.map.draw_layer("ground")
 
-        self.map.update(self.game_screen, self.player)
+        self.map.update(self.player, self.camera)
         self.update_dynamic_objects()
 
-        self.map.update_particles(self.game_screen, self.map.particles, self.player)
-        self.map.draw_layer(self.game_screen, "above_ground")
+        self.map.update_particles(self.map.particles, self.player)
+        self.map.draw_layer("above_ground")
 
         # for rect in self.map.collision_rects:  # COLLISION RECT DEBUG
-        # self.map.draw_rect(self.game_screen, rect)
+        #    self.map.draw_rect(self.map.surface, rect)
 
     def update_dynamic_objects(self):
         entities_to_sort = self.map.enemies + self.map.npcs + [self.player]
         sorted_entities = sorted(entities_to_sort, key=lambda entity: entity.rect.y)
         for entity in sorted_entities:
             if isinstance(entity, Player):
-                if (
-                    not self.player.in_quest_ui
-                ):  # Check if the player is not in the quest UI
+                if not self.player.in_quest_ui:
                     if entity.movement(
                         self.map.collision_rects,
                         self.map.entity_collision_rects,
-                        self.screen_width,
-                        self.screen_height,
+                        self.map.width,
+                        self.map.height,
                     ):
                         if random.random() < 0.3:
                             walk_particle = walkParticle(entity)
                             self.map.add_ground_particle(walk_particle)
                 entity.update()
-                entity.draw(self.game_screen)
+                entity.draw(self.map.surface)
             elif isinstance(entity, Enemy):
                 self.map.update_enemy(self.player, entity)
-                entity.draw(self.game_screen)
+                entity.draw(self.map.surface)
             elif isinstance(entity, NPC):
                 self.map.update_npc(self.player, entity)
-                entity.draw(self.game_screen)
+                entity.draw(self.map.surface)
 
             # self.map.draw_rects(
-            #    self.game_screen, entity
+            #    self.map.surface, entity
             # )  # DYNAMIC OBJECT COLLISION DEBUG (PLAYER, NPCS)
 
     def update_ui(self):
@@ -127,32 +152,24 @@ class Game:
         for npc in self.map.npcs:
             if npc.current_quest_offer_ui is not None:
                 npc.current_quest_offer_ui.draw(self.game_screen)
-                self.player.in_quest_ui = True  # Set the new property to True
+                self.player.in_quest_ui = True
 
-                if (
-                    npc.speech_box and npc.speech_box.active
-                ):  # If a SpeechBox exists for this NPC and is active
-                    if not self.player.rect.colliderect(
-                        npc.rect
-                    ):  # If player moved away
-                        npc.speech_box.stop()  # Close the dialogue
-                        self.player.in_dialogue = False  # Exit the dialogue state
+                if npc.speech_box and npc.speech_box.active:
+                    if not self.player.rect.colliderect(npc.rect):
+                        npc.speech_box.stop()
+                        self.player.in_dialogue = False
                     else:
                         npc.speech_box.draw(self.game_screen)
                         if npc.speech_box and npc.speech_box.active:
-                            npc.speech_box.stop()  # Close the dialogue
-                            self.player.in_dialogue = False  # Exit the dialogue state
+                            npc.speech_box.stop()
+                            self.player.in_dialogue = False
             else:
-                self.player.in_quest_ui = (
-                    False  # Set the new property to False if no quest UI is active
-                )
+                self.player.in_quest_ui = False
 
-            if (
-                npc.speech_box and npc.speech_box.active
-            ):  # If a SpeechBox exists for this NPC and is active
-                if not self.player.rect.colliderect(npc.rect):  # If player moved away
-                    npc.speech_box.stop()  # Close the dialogue
-                    self.player.in_dialogue = False  # Exit the dialogue state
+            if npc.speech_box and npc.speech_box.active:
+                if not self.player.rect.colliderect(npc.rect):
+                    npc.speech_box.stop()
+                    self.player.in_dialogue = False
                 else:
                     npc.speech_box.draw(self.game_screen)
 
@@ -161,7 +178,8 @@ class Game:
             if event.type == pygame.QUIT:
                 self.delete_save_files()
                 pygame.quit()
-                quit()
+                exit()
+
             elif event.type == pygame.KEYDOWN:
                 self.handle_keydown_event(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -207,7 +225,7 @@ class Game:
                             npc.current_quest_offer_ui.get_quest()
                         )
                         npc.current_quest_offer_ui = None
-                        npc.speech_box = None  # Reset speech_box to None
+                        npc.speech_box = None
 
             return
         if event.button not in [1, 3]:
@@ -233,6 +251,8 @@ class Game:
             and self.player.current_chest == None
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            mouse_x += self.camera.rect.x
+            mouse_y += self.camera.rect.y
             all_collision_rects = (
                 self.map.collision_rects + self.map.entity_collision_rects
             )
@@ -257,6 +277,8 @@ class Game:
             and not self.player.in_dialogue
         ):
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            mouse_x += self.camera.rect.x
+            mouse_y += self.camera.rect.y
             self.map.add_projectile(
                 self.player.worn_equipment["Weapon"].attack(
                     self.player, mouse_x, mouse_y
@@ -335,6 +357,10 @@ class Game:
                 elif npc.speech_box and npc.speech_box.active:
                     npc.speech_box.stop()
                     self.player.in_dialogue = False
+
+    def draw_map(self):
+        self.game_screen.fill((48, 44, 45, 255))
+        self.game_screen.blit(self.map.surface, (0, 0), self.camera.rect)
 
     def update_game_screen(self):
         self.update_mouse()

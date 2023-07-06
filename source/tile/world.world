@@ -2,45 +2,45 @@
     "maps": [
         {
             "fileName": "village.tmx",
-            "height": 800,
-            "width": 800,
+            "height": 1120,
+            "width": 1632,
             "x": 0,
             "y": 0
         },
         {
             "fileName": "path.tmx",
-            "height": 800,
-            "width": 800,
+            "height": 1280,
+            "width": 1632,
             "x": 0,
-            "y": -800
+            "y": -1280
         },
         {
             "fileName": "secretforest.tmx",
             "height": 800,
             "width": 800,
-            "x": 800,
-            "y": -800
+            "x": 1792,
+            "y": -2848
         },
         {
             "fileName": "inn.tmx",
-            "height": 800,
-            "width": 800,
-            "x": 0,
-            "y": 800
+            "height": 736,
+            "width": 1280,
+            "x": -672,
+            "y": 1600
         },
         {
             "fileName": "field.tmx",
             "height": 800,
             "width": 800,
-            "x": -800,
+            "x": -2368,
             "y": -800
         },
         {
             "fileName": "dungeon.tmx",
             "height": 800,
             "width": 800,
-            "x": -1600,
-            "y": -1152
+            "x": -2208,
+            "y": -2144
         }
     ],
     "onlyShowAdjacentMaps": false,

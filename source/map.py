@@ -15,11 +15,10 @@ from chest import Chest
 
 
 class Map:
-    def __init__(self, map_file, screen_width, screen_height):
+    def __init__(self, map_file, screen_width):
         self.map_file = map_file
         self.map_data = pytmx.load_pygame(map_file)
         self.screen_width = screen_width
-        self.screen_height = screen_height
         self.enemies = []
         self.npcs = []
         self.projectiles = []
@@ -34,6 +33,9 @@ class Map:
         self.spawn_chests()
         self.spawn_enemies()
         self.spawn_npcs()
+        self.width = self.map_data.width * self.map_data.tilewidth
+        self.height = self.map_data.height * self.map_data.tileheight
+        self.surface = pygame.Surface((self.width, self.height))
 
     def spawn_npcs(self):
         npc_objects = self.map_data.get_layer_by_name("npcs")
@@ -60,7 +62,9 @@ class Map:
     def spawn_chests(self):
         chest_objects = self.map_data.get_layer_by_name("chests")
         for obj in chest_objects:
-            chest = Chest(obj.x, obj.y, obj.width, obj.height, obj.items)
+            chest = Chest(
+                obj.x, obj.y, obj.width, obj.height, obj.items, self.screen_width
+            )
             self.add_chest(chest)
 
     def add_chest(self, chest):
@@ -108,25 +112,30 @@ class Map:
         if explosion in self.particles:
             self.explosions.remove(explosion)
 
-    def update(self, game_screen, player):
-        self.update_particles(game_screen, self.ground_particles, player)
-        self.update_portals(player)
-        self.update_projectiles(game_screen, player)
-        self.update_explosions(game_screen)
+    def get_map_surface(self):
+        return self.surface
 
-    def update_portals(self, player):
+    def update(self, player, camera):
+        self.update_particles(self.ground_particles, player)
+        self.update_portals(player, camera)
+        self.update_projectiles(player)
+        self.update_explosions()
+
+    def update_portals(self, player, camera):
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
-                self.change_map("source/tile/" + portal.map_file + ".tmx", player)
                 player.teleport(portal.destination[0], portal.destination[1])
+                self.change_map(
+                    "source/tile/" + portal.map_file + ".tmx", player, camera
+                )
                 break
 
     def update_npc(self, player, npc):
         if npc.ai_move(
             self.collision_rects,
             self.entity_collision_rects,
-            self.screen_width,
-            self.screen_height,
+            self.width,
+            self.height,
         ):
             if random.random() < 0.3:
                 walk_particle = walkParticle(npc)
@@ -136,8 +145,8 @@ class Map:
         if enemy.ai_move(
             self.collision_rects,
             self.entity_collision_rects,
-            self.screen_width,
-            self.screen_height,
+            self.width,
+            self.height,
             player.rect.centerx,
             player.rect.centery,
         ):
@@ -160,7 +169,7 @@ class Map:
                     self.remove_enemy(enemy)
                     break
 
-    def update_projectiles(self, game_screen, player):
+    def update_projectiles(self, player):
         for projectile in self.projectiles:
             if (
                 player.teleporting is False
@@ -172,9 +181,7 @@ class Map:
 
                 self.remove_projectile(projectile)
 
-            if projectile.update(
-                self.collision_rects, self.screen_width, self.screen_height
-            ):
+            if projectile.update(self.collision_rects, self.width, self.height):
                 explosion = projectile.explosion(
                     projectile.collision_rect.centerx, projectile.collision_rect.centery
                 )
@@ -182,29 +189,34 @@ class Map:
                 self.remove_projectile(projectile)
             else:
                 self.add_particle(projectile.particle)
-                game_screen.blit(projectile.image, projectile.rect)
+                self.surface.blit(projectile.image, projectile.rect)
             # self.draw_rects(game_screen, projectile)  # DEBUG PROJECTILE COLLISION BOX
 
-    def update_particles(self, game_screen, list, player):
+    def update_particles(self, list, player):
         for particle in list:
             if particle.update(player.rect):
                 self.remove_particle(particle)
             else:
-                game_screen.blit(particle.image, particle.rect)
+                self.surface.blit(particle.image, particle.rect)
 
-    def update_explosions(self, game_screen):
+    def update_explosions(self):
         for explosion in list(self.explosions):
             if explosion.update():
                 self.remove_explosion(explosion)
             else:
                 for particle in explosion.particles:
-                    game_screen.blit(particle.image, particle.rect)
+                    self.surface.blit(particle.image, particle.rect)
 
-    def change_map(self, new_map_file, player):
+    def change_map(self, new_map_file, player, camera):
         self.save_state(self.map_file + ".pkl")
 
         self.map_file = new_map_file
         self.map_data = pytmx.load_pygame(new_map_file)
+        self.width = self.map_data.width * self.map_data.tilewidth
+        self.height = self.map_data.height * self.map_data.tileheight
+        self.surface = pygame.Surface((self.width, self.height))
+        camera.change_map(self.width, self.height)
+        camera.teleport_to_player(player.rect.center)
         self.object_setup()
         self.projectiles.clear()
         self.particles.clear()
@@ -255,13 +267,13 @@ class Map:
                     collision_rect = pygame.Rect(x, y, width, height)
                     self.collision_rects.append(collision_rect)
 
-    def draw_layer(self, game_screen, layer):
+    def draw_layer(self, layer):
         layer = self.map_data.get_layer_by_name(layer)
 
         for x, y, gid in layer:
             tile = self.map_data.get_tile_image_by_gid(gid)
             if tile:
-                game_screen.blit(
+                self.surface.blit(
                     tile, (x * self.map_data.tilewidth, y * self.map_data.tileheight)
                 )
 
@@ -332,7 +344,7 @@ class Map:
         for chest_info in state["chests"]:
             x, y, width, height, items = chest_info
             items_string = ",".join(items)
-            chest = Chest(x, y, width, height, items_string)
+            chest = Chest(x, y, width, height, items_string, self.screen_width)
             self.chests.append(chest)
 
 

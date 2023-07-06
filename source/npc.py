@@ -24,7 +24,7 @@ class Townsfolk(NPC):
     def __init__(self, x, y, hp):
         spritesheet = "source/img/townsfolk.png"
         super().__init__(hp, spritesheet)
-        self.speed = 1.3
+        self.speed = 1
         adjustment = 3
         self.rect = pygame.FRect(
             x, y - adjustment, self.size_x, self.size_y - adjustment

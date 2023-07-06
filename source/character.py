@@ -84,10 +84,10 @@ class Character:
         self.hit_counter = 10
         self.tint = (255, 0, 0)
 
-    def draw(self, game_screen):
+    def draw(self, map_surface):
         self.update_hit_counter()
         self.current_animation.draw(
-            game_screen, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
+            map_surface, self.rect.x, self.rect.y, self.size_x, self.size_y, self.tint
         )
 
     def update_hit_counter(self):
