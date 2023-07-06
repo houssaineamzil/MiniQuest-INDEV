@@ -54,7 +54,7 @@ class Player:
         self.dead = False
         self.canattack = True
         self.invincible = False
-        adjustment = 0
+        adjustment = 3
         self.rect = pygame.FRect(
             x, y - adjustment, self.size_x, self.size_y - adjustment
         )

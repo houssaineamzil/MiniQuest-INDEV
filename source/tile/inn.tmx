@@ -105,7 +105,7 @@
   </object>
   <object id="59" x="706.833" y="415.5" width="32" height="32">
    <properties>
-    <property name="items" value="Shortbow,HealingNecklace,TeleportScroll"/>
+    <property name="items" value="Shortbow,HealingNecklace,TeleportScroll,FireStaff"/>
    </properties>
   </object>
  </objectgroup>

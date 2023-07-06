@@ -1,17 +1,17 @@
 import pygame
-
+from sys import exit
 from game import Game
 
 
 class ScreenManager:
     def __init__(self, screen_width, screen_height, map_file):
         self.cursor_img = pygame.image.load("source/img/cursor.png")
-        self.base_resolution = (screen_width, screen_height)
+        self.screen_resolution = (screen_width, screen_height)
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.scale_factor_x_y = (
-            self.screen_width / self.base_resolution[0],
-            self.screen_height / self.base_resolution[1],
+            self.screen_width / self.screen_resolution[0],
+            self.screen_height / self.screen_resolution[1],
         )
         self.scale_factor = (self.scale_factor_x_y[0] + self.scale_factor_x_y[1]) / 2
         self.map_file = map_file
@@ -36,7 +36,7 @@ class ScreenManager:
                         self.screen_height,
                         self.map_file,
                         self.game_screen,
-                        self.base_resolution,
+                        self.screen_resolution,
                         self.scale_factor_x_y,
                         self.scale_factor,
                     )
@@ -114,7 +114,7 @@ class ScreenManager:
                                 pass
                             elif button_texts[i] == "Exit":
                                 pygame.quit()
-                                quit()
+                                exit()
 
             for i, button in enumerate(buttons):
                 pygame.draw.rect(self.game_screen, (255, 255, 255), button)
@@ -284,8 +284,8 @@ class ScreenManager:
         self.screen_width = width
         self.screen_height = height
         self.scale_factor_x_y = (
-            self.screen_width / self.base_resolution[0],
-            self.screen_height / self.base_resolution[1],
+            self.screen_width / self.screen_resolution[0],
+            self.screen_height / self.screen_resolution[1],
         )
         self.scale_factor = (self.scale_factor_x_y[0] + self.scale_factor_x_y[1]) / 2
         self.game_screen = pygame.display.set_mode(

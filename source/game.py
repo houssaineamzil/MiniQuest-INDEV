@@ -1,4 +1,5 @@
 import pygame
+from sys import exit
 from pygame.math import Vector2
 import os
 from map import Map
@@ -31,7 +32,7 @@ class Game:
         screen_height,
         map_file,
         game_screen,
-        base_resolution,
+        screen_resolution,
         scale_factor_x_y,
         scale_factor,
     ):
@@ -41,7 +42,7 @@ class Game:
         self.game_screen = game_screen
         self.last_shot = 0
         self.game_over = False
-        self.base_resolution = base_resolution
+        self.screen_resolution = screen_resolution
         self.scale_factor_x_y = scale_factor_x_y
         self.scale_factor = scale_factor
         print(self.scale_factor_x_y, self.scale_factor)
@@ -72,10 +73,9 @@ class Game:
 
         self.map = Map(self.map_file, self.screen_width)
         self.map.entity_collision_rects.append(self.player.collision_rect)
-
         self.camera = Camera(
             Vector2(*self.player.rect.center),
-            *self.base_resolution,
+            *self.screen_resolution,
             self.map.width,
             self.map.height,
         )
@@ -178,7 +178,8 @@ class Game:
             if event.type == pygame.QUIT:
                 self.delete_save_files()
                 pygame.quit()
-                quit()
+                exit()
+
             elif event.type == pygame.KEYDOWN:
                 self.handle_keydown_event(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
