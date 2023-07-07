@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from game import Game
+import time
 
 
 class ScreenManager:
@@ -28,7 +29,7 @@ class ScreenManager:
         self.screen = "main_menu"
 
         pygame.mixer.music.load("source/sound/maintheme.mp3")
-        pygame.mixer.music.play(loops=-1, fade_ms=5000)
+        pygame.mixer.music.play(loops=-1, fade_ms=2500)
         pygame.mixer.music.set_volume(0.4)
 
     def run(self):
@@ -57,6 +58,8 @@ class ScreenManager:
                 self.main_menu()  # TODO: Make a credits screen
             elif self.screen == "death":
                 self.death_screen()
+            elif self.screen == "loading":
+                self.show_loading_screen()
 
     def main_menu(self):
         running = True
@@ -108,10 +111,8 @@ class ScreenManager:
                     for i, button in enumerate(buttons):
                         if button.collidepoint(mouse_pos):
                             if button_texts[i] == "Start Game":
-                                self.screen = "game"
+                                self.screen = "loading"
                                 running = False
-
-                                pygame.mixer.music.fadeout(2000)
 
                             elif button_texts[i] == "Options":
                                 self.screen = "options"
@@ -132,6 +133,23 @@ class ScreenManager:
 
             self.update_screen()
             clock.tick(60)
+
+    def show_loading_screen(self):
+        self.game_screen.fill((210, 180, 140))
+
+        font = pygame.font.Font(None, int(50 * self.scale_factor_x_y[0]))
+        loading_text = font.render("Loading...", True, (0, 0, 0))
+        text_rect = loading_text.get_rect(
+            center=(self.screen_width / 2, self.screen_height / 2)
+        )
+
+        self.game_screen.blit(loading_text, text_rect)
+        pygame.display.flip()
+
+        pygame.mixer.music.fadeout(2000)
+        time.sleep(2)
+
+        self.screen = "game"
 
     def options_screen(self):
         running = True
@@ -276,7 +294,7 @@ class ScreenManager:
 
                     pygame.mixer.music.fadeout(2000)
                     pygame.mixer.music.load("source/sound/maintheme.mp3")
-                    pygame.mixer.music.play(loops=-1, fade_ms=5000)
+                    pygame.mixer.music.play(loops=-1, fade_ms=2500)
                     pygame.mixer.music.set_volume(0.4)
 
         self.update_screen()

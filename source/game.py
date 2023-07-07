@@ -54,6 +54,7 @@ class Game:
             if not self.player.dead:
                 self.camera.target_pos = Vector2(*self.player.rect.center)
                 self.camera.update()
+                self.map.update_music()
 
                 self.perform_game_operations()
                 self.handle_game_events()

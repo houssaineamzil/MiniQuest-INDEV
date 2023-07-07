@@ -19,9 +19,11 @@ class Map:
         self.map_file = map_file
         self.map_data = pytmx.load_pygame(map_file)
 
+        self.new_music = None
+        self.music_fading = False
         self.music = self.map_data.properties.get("music")
         pygame.mixer.music.load("source/sound/" + self.music)
-        pygame.mixer.music.play(loops=-1, fade_ms=10000)
+        pygame.mixer.music.play(loops=-1, fade_ms=2000)
 
         self.screen_width = screen_width
         self.enemies = []
@@ -41,6 +43,12 @@ class Map:
         self.width = self.map_data.width * self.map_data.tilewidth
         self.height = self.map_data.height * self.map_data.tileheight
         self.surface = pygame.Surface((self.width, self.height))
+
+    def update_music(self):
+        if self.music_fading and not pygame.mixer.music.get_busy():
+            pygame.mixer.music.load("source/sound/" + self.new_music)
+            pygame.mixer.music.play(loops=-1, fade_ms=2000)
+            self.music_fading = False
 
     def spawn_npcs(self):
         npc_objects = self.map_data.get_layer_by_name("npcs")
@@ -218,6 +226,11 @@ class Map:
 
         self.map_file = new_map_file
         self.map_data = pytmx.load_pygame(new_map_file)
+        self.music = self.map_data.properties.get("music")
+        pygame.mixer.music.fadeout(2000)
+        self.new_music = self.music
+        self.music_fading = True
+
         self.width = self.map_data.width * self.map_data.tilewidth
         self.height = self.map_data.height * self.map_data.tileheight
         self.surface = pygame.Surface((self.width, self.height))
