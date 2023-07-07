@@ -27,10 +27,16 @@ class ScreenManager:
 
         self.game = None
         self.screen = "main_menu"
+        self.music_fading = False
+        self.music = "maintheme.mp3"
+        pygame.mixer.music.load("source/sound/" + self.music)
+        pygame.mixer.music.play(loops=-1, fade_ms=2000)
 
-        pygame.mixer.music.load("source/sound/maintheme.mp3")
-        pygame.mixer.music.play(loops=-1, fade_ms=2500)
-        pygame.mixer.music.set_volume(0.4)
+    def update_music(self):
+        if self.music_fading and not pygame.mixer.music.get_busy():
+            pygame.mixer.music.load("source/sound/" + self.music)
+            pygame.mixer.music.play(loops=-1, fade_ms=2000)
+            self.music_fading = False
 
     def run(self):
         while True:
@@ -101,6 +107,7 @@ class ScreenManager:
 
         while running:
             self.game_screen.fill((210, 180, 140))
+            self.update_music()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -293,9 +300,7 @@ class ScreenManager:
                     self.game = None
 
                     pygame.mixer.music.fadeout(2000)
-                    pygame.mixer.music.load("source/sound/maintheme.mp3")
-                    pygame.mixer.music.play(loops=-1, fade_ms=2500)
-                    pygame.mixer.music.set_volume(0.4)
+                    self.music_fading = True
 
         self.update_screen()
 
