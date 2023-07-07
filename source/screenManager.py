@@ -29,7 +29,7 @@ class ScreenManager:
 
         pygame.mixer.music.load("source/sound/maintheme.mp3")
         pygame.mixer.music.play(loops=-1, fade_ms=5000)
-        pygame.mixer.music.set_volume(40)
+        pygame.mixer.music.set_volume(0.4)
 
     def run(self):
         while True:

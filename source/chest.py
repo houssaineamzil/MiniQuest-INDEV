@@ -19,7 +19,7 @@ class Chest:
         self.inv_pos_x = screen_width - self.inv_width - 5
         self.inv_pos_y = 5
         self.inv_image = pygame.Surface((self.inv_width, self.inv_height))
-        self.font = pygame.font.Font(None, 35)
+        self.font = pygame.font.Font(None, 25)
         self.rect = pygame.Rect(x, y, width, height)
         self.items = self.create_items_from_string(items_string)
         self.opened = False
@@ -56,7 +56,7 @@ class Chest:
         for i, item in enumerate(self.items):
             rect = pygame.Rect(
                 10 + self.inv_pos_x,
-                50 * (i + 1) + 10 + self.inv_pos_y,
+                35 * (i + 1) + 10 + self.inv_pos_y,
                 self.inv_width - 20,
                 40,
             )
@@ -75,6 +75,6 @@ class Chest:
 
         for i, item in enumerate(self.items):
             text_surface = self.font.render(item.name, True, (255, 255, 255))
-            self.inv_image.blit(text_surface, (10, 50 * (i + 1) + 10))
+            self.inv_image.blit(text_surface, (10, 35 * (i + 1) + 10))
 
         screen.blit(self.inv_image, (self.inv_pos_x, self.inv_pos_y))
