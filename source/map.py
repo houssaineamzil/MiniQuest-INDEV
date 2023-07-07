@@ -226,10 +226,13 @@ class Map:
 
         self.map_file = new_map_file
         self.map_data = pytmx.load_pygame(new_map_file)
-        self.music = self.map_data.properties.get("music")
-        pygame.mixer.music.fadeout(2000)
-        self.new_music = self.music
-        self.music_fading = True
+        new_music = self.map_data.properties.get("music")
+
+        if self.music != new_music:
+            self.music = new_music
+            pygame.mixer.music.fadeout(2000)
+            self.new_music = self.music
+            self.music_fading = True
 
         self.width = self.map_data.width * self.map_data.tilewidth
         self.height = self.map_data.height * self.map_data.tileheight
