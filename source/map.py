@@ -171,6 +171,7 @@ class Map:
 
                 self.remove_projectile(projectile)
                 if enemy.hp <= 0:
+                    self.entity_collision_rects.remove(enemy.collision_rect)
                     self.remove_enemy(enemy)
                     break
 

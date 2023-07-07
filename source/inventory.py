@@ -5,10 +5,10 @@ class Inventory:
     def __init__(self):
         self.items = []
         self.inv_width = 200
-        self.inv_height = 300
+        self.inv_height = 400
         self.inv_pos_x = 5
         self.inv_pos_y = 5
-        self.equip_inv_height = 400
+        self.equip_inv_height = 300
         self.equip_inv_width = 200
         self.equip_inv_pos_y = self.inv_pos_y + self.inv_height + 5
         self.inv_image = pygame.Surface((self.inv_width, self.inv_height))
