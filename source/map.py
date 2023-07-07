@@ -18,6 +18,9 @@ class Map:
     def __init__(self, map_file, screen_width):
         self.map_file = map_file
         self.map_data = pytmx.load_pygame(map_file)
+        self.music = self.map_data.properties.get("music")
+        pygame.mixer.music.load("source/sound/" + self.music)
+        pygame.mixer.music.play(loops=-1, fade_ms=10000)
         self.screen_width = screen_width
         self.enemies = []
         self.npcs = []
@@ -217,6 +220,7 @@ class Map:
         self.surface = pygame.Surface((self.width, self.height))
         camera.change_map(self.width, self.height)
         camera.teleport_to_player(player.rect.center)
+
         self.object_setup()
         self.projectiles.clear()
         self.particles.clear()

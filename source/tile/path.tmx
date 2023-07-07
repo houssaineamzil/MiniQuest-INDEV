@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="51" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="162">
  <properties>
-  <property name="hp" type="int" value="1"/>
+  <property name="music" value="adventure.mp3"/>
  </properties>
  <tileset firstgid="1" source="village.tsx"/>
  <tileset firstgid="1065" source="TX Tileset Grass.tsx"/>
