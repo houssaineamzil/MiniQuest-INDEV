@@ -80,10 +80,6 @@ class Game:
             self.map.height,
         )
 
-        pygame.mixer.music.load("source/sound/music.wav")
-        pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0)
-
         self.cursor_img = pygame.image.load("source/img/cursor.png")
 
     def game_running(self):

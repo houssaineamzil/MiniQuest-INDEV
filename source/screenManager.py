@@ -27,6 +27,10 @@ class ScreenManager:
         self.game = None
         self.screen = "main_menu"
 
+        pygame.mixer.music.load("source/sound/maintheme.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(40)
+
     def run(self):
         while True:
             if self.screen == "game":
@@ -106,6 +110,9 @@ class ScreenManager:
                             if button_texts[i] == "Start Game":
                                 self.screen = "game"
                                 running = False
+
+                                pygame.mixer.music.fadeout(1000)
+
                             elif button_texts[i] == "Options":
                                 self.screen = "options"
                                 running = False
