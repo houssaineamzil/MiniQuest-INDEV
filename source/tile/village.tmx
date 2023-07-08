@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="51" height="35" tilewidth="32" tileheight="32" infinite="0" nextlayerid="21" nextobjectid="173">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="51" height="35" tilewidth="32" tileheight="32" infinite="0" nextlayerid="21" nextobjectid="174">
  <properties>
   <property name="music" value="adventure.mp3"/>
  </properties>
@@ -165,6 +165,11 @@
  </objectgroup>
  <objectgroup id="18" name="enemies">
   <object id="170" name="Archer" x="1014.75" y="18.25" width="18.5" height="18.5">
+   <properties>
+    <property name="hp" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="173" name="Archer" x="1017.42" y="86.75" width="18.5" height="18.5">
    <properties>
     <property name="hp" type="int" value="4"/>
    </properties>

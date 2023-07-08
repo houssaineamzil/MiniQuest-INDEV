@@ -33,6 +33,11 @@ class ScreenManager:
         pygame.mixer.music.load(resource_path("source/sound/" + self.music))
         pygame.mixer.music.play(loops=-1, fade_ms=2000)
 
+        self.button_font = pygame.font.Font(
+            resource_path("source/font/EagleLake.ttf"),
+            int(30 * self.scale_factor_x_y[0]),
+        )
+
     def update_music(self):
         if self.music_fading and not pygame.mixer.music.get_busy():
             pygame.mixer.music.load(resource_path("source/sound/" + self.music))
@@ -105,24 +110,19 @@ class ScreenManager:
         )
 
         button_gap = 20 * self.scale_factor_x_y[1]
-        button_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
         button_texts = ["Start Game", "Options", "Credits", "Exit"]
 
-        # Create the buttons
         buttons = [None] * len(button_texts)
 
-        # You'll need to set the initial y-position for the first button
         button_start_y = (
-            self.screen_height / 2 - 0.5 * button_font.get_height() - button_gap
+            self.screen_height / 2 - 0.5 * self.button_font.get_height() - button_gap
         )
 
         for i, text in enumerate(button_texts):
-            # Render the text to get its dimensions
-            text_surface = button_font.render(text, True, (255, 255, 255))
-            text_width = text_surface.get_width()
-            text_height = text_surface.get_height()
+            text_surface = self.button_font.render(text, True, (255, 255, 255))
+            text_width = text_surface.get_width() * self.scale_factor_x_y[0]
+            text_height = text_surface.get_height() * self.scale_factor_x_y[1]
 
-            # Create the button rect with the dimensions of the text
             buttons[i] = pygame.Rect(
                 (self.screen_width - text_width) / 2,
                 button_start_y,
@@ -130,7 +130,6 @@ class ScreenManager:
                 text_height,
             )
 
-            # Increment the y-position for the next button
             button_start_y += text_height + button_gap
 
         while running:
@@ -164,19 +163,21 @@ class ScreenManager:
             mouse_pos = pygame.mouse.get_pos()
 
             for i, button in enumerate(buttons):
-                button_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
-
-                # Check if the mouse is over the button
                 if button.collidepoint(mouse_pos):
-                    # Change the color of the button text when mouse hovers over
-                    button_text = button_font.render(
+                    button_text = self.button_font.render(
                         button_texts[i], True, (0, 255, 0)
-                    )  # Changed color to green when hovering
+                    )
                 else:
-                    button_text = button_font.render(
+                    button_text = self.button_font.render(
                         button_texts[i], True, (255, 255, 255)
-                    )  # White color when not hovering
-
+                    )
+                button_text = pygame.transform.scale(
+                    button_text,
+                    (
+                        button_text.get_rect().width * self.scale_factor_x_y[0],
+                        button_text.get_rect().height * self.scale_factor_x_y[1],
+                    ),
+                )
                 button_text_rect = button_text.get_rect(center=button.center)
                 self.game_screen.blit(button_text, button_text_rect)
 
