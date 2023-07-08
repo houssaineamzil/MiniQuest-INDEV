@@ -2,12 +2,43 @@ import pygame
 
 
 class Objective:
-    def __init__(self, description, complete=False):
+    def __init__(
+        self,
+        description,
+        target,
+        target_amount,
+        current_amount=0,
+        complete=False,
+    ):
         self.description = description
+        self.target = target
+        self.target_amount = target_amount
+        self.current_amount = current_amount
         self.complete = complete
 
-    def is_complete(self):
-        return self.complete
+    def process_event(self, event):
+        if event == self.target and not self.complete:
+            self.current_amount += 1
+            print(
+                f"Objective updated! ({self.target} {self.current_amount}/{self.target_amount})"
+            )
+            if self.current_amount >= self.target_amount:
+                self.complete = True
+
+
+class QuestListener:
+    def __init__(self, player):
+        self.player = player
+
+    def process_event(self, event):
+        for quest in self.player.quest_log.quests:
+            for objective in quest.objectives:
+                objective.process_event(event)
+                if objective.complete:
+                    print(f"Objective complete! {objective.description}")
+                    if quest.is_complete():
+                        print(f"Quest complete! {quest.name}")
+                        self.player.quest_log.complete_quest(quest)
 
 
 class Quest:
@@ -23,10 +54,10 @@ class Quest:
         self.objectives = objectives
 
     def is_complete(self):
-        return all([obj.is_complete() for obj in self.objectives])
+        return all([obj.complete for obj in self.objectives])
 
     def get_incomplete_objectives(self):
-        return [obj for obj in self.objectives if not obj.is_complete()]
+        return [obj for obj in self.objectives if not obj.complete()]
 
 
 class QuestLog:

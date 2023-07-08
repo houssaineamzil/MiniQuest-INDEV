@@ -14,10 +14,11 @@ from projectile import Arrow, FireBall
 from particleEffect import FireBallExplosion, ArrowExplosion
 from chest import Chest
 import tempfile
+from quest import QuestListener
 
 
 class Map:
-    def __init__(self, map_file, screen_width, temp_dir):
+    def __init__(self, map_file, screen_width, temp_dir, quest_listener):
         self.temp_dir = temp_dir
         self.map_file = map_file
         self.map_data = pytmx.load_pygame(resource_path("source/tile/" + map_file))
@@ -27,8 +28,8 @@ class Map:
         self.music = self.map_data.properties.get("music")
         pygame.mixer.music.load(resource_path("source/sound/" + self.music))
         pygame.mixer.music.play(loops=-1, fade_ms=2000)
-
         self.screen_width = screen_width
+        self.quest_listener = quest_listener
         self.enemies = []
         self.npcs = []
         self.projectiles = []
@@ -182,6 +183,7 @@ class Map:
                 if enemy.hp <= 0:
                     self.entity_collision_rects.remove(enemy.collision_rect)
                     self.remove_enemy(enemy)
+                    self.quest_listener.process_event(enemy.__class__.__name__)
                     break
 
     def update_projectiles(self, player):

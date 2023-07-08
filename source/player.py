@@ -13,8 +13,8 @@ class Player:
     def __init__(self, x, y, name):
         self.size_x = 32
         self.size_y = 50
-        self.hp = 4
-        self.max_hp = 4
+        self.hp = 100
+        self.max_hp = 100
         self.hit_counter = 0
         self.tint = (255, 255, 255)
         self.spritesheet = Spritesheet("source/img/player.png")

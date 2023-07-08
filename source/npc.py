@@ -51,7 +51,13 @@ class Townsfolk(NPC):
                 difficulty="Difficulty: Easy",
                 length="Length: Short",
                 offered_by="Offered by: Bob",
-                objectives=[],
+                objectives=[
+                    Objective(
+                        description="Kill 1 Archer",
+                        target="Archer",
+                        target_amount=1,
+                    ),
+                ],
             )
         }
 

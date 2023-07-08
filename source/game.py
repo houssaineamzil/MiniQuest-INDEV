@@ -26,6 +26,7 @@ import random
 from healthBar import HealthBar
 from camera import Camera
 import tempfile
+from quest import QuestListener
 
 
 class Game:
@@ -76,8 +77,10 @@ class Game:
         self.player = Player(player_x, player_y, "Adam")
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
-
-        self.map = Map(self.map_file, self.screen_width, self.temp_dir)
+        self.quest_listener = QuestListener(self.player)
+        self.map = Map(
+            self.map_file, self.screen_width, self.temp_dir, self.quest_listener
+        )
         self.map.entity_collision_rects.append(self.player.collision_rect)
         self.camera = Camera(
             Vector2(*self.player.rect.center),
