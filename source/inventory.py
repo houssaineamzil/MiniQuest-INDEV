@@ -36,9 +36,21 @@ class Inventory:
         self.inv_image.blit(
             title_surface, (self.inv_width // 2 - title_surface.get_width() // 2, 10)
         )
+
+        mouse_pos = pygame.mouse.get_pos()
+
         for i, item in enumerate(self.items):
             text_surface = self.font.render(item.name, True, (255, 255, 255))
-            self.inv_image.blit(text_surface, (10, 35 * (i + 1) + 10))
+            width, height = text_surface.get_size()
+            x = self.inv_pos_x + self.inv_width // 2 - width // 2
+            y = 35 * (i + 1) + 10 + self.inv_pos_y
+            rect = pygame.Rect(x, y, width, height)
+
+            if rect.collidepoint(mouse_pos):
+                text_surface = self.font.render(item.name, True, (255, 200, 200))
+
+            self.inv_image.blit(text_surface, (x - self.inv_pos_x, y - self.inv_pos_y))
+
         screen.blit(self.inv_image, (self.inv_pos_x, self.inv_pos_y))
 
     def draw_equipment(self, screen, player):
@@ -53,32 +65,43 @@ class Inventory:
             (self.equip_inv_width // 2 - equip_title_surface.get_width() // 2, 10),
         )
 
+        mouse_pos = pygame.mouse.get_pos()
+
         for i, (slot, item) in enumerate(player.worn_equipment.items()):
-            if item:
-                item_text = self.font.render(item.name, True, (255, 255, 255))
-            else:
-                item_text = self.font.render(f"No {slot}", True, (255, 255, 255))
-            self.equip_inv_image.blit(item_text, (10, 35 * (i + 1) + 10))
+            item_text = item.name if item else f"No {slot}"
+            text_surface = self.font.render(item_text, True, (255, 255, 255))
+            width, height = text_surface.get_size()
+            x = self.inv_pos_x + self.equip_inv_width // 2 - width // 2
+            y = 35 * (i + 1) + 10 + self.equip_inv_pos_y
+
+            rect = pygame.Rect(x, y, width, height)
+            if rect.collidepoint(mouse_pos) and item is not None:
+                text_surface = self.font.render(item_text, True, (255, 200, 200))
+
+            self.equip_inv_image.blit(
+                text_surface, (x - self.inv_pos_x, y - self.equip_inv_pos_y)
+            )
+
         screen.blit(self.equip_inv_image, (self.inv_pos_x, self.equip_inv_pos_y))
 
     def get_inventory_rects(self):
         rects = []
         for i, item in enumerate(self.items):
-            rect = pygame.Rect(
-                10 + self.inv_pos_x,
-                35 * (i + 1) + 10 + self.inv_pos_y,
-                self.inv_width - 20,
-                40,
-            )
-            rects.append(rect)
+            text_surface = self.font.render(item.name, True, (255, 255, 255))
+            width, height = text_surface.get_size()
+            x = self.inv_pos_x + self.inv_width // 2 - width // 2
+            y = 35 * (i + 1) + 10 + self.inv_pos_y
+            rects.append(pygame.Rect(x, y, width, height))
         return rects
 
     def get_equipment_rects(self, player):
         rects = []
         for i, (slot, item) in enumerate(player.worn_equipment.items()):
-            x = self.inv_pos_x + 10
+            item_text = item.name if item else f"No {slot}"
+            text_surface = self.font.render(item_text, True, (255, 255, 255))
+            width, height = text_surface.get_size()
+            x = self.inv_pos_x + self.equip_inv_width // 2 - width // 2
             y = 35 * (i + 1) + 10 + self.equip_inv_pos_y
-            width, height = self.font.size(item.name if item else f"No {slot}")
             rects.append(pygame.Rect(x, y, width, height))
         return rects
 

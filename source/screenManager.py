@@ -72,42 +72,71 @@ class ScreenManager:
         running = True
         clock = pygame.time.Clock()
 
-        button_width = 200 * self.scale_factor_x_y[0]
-        button_height = 50 * self.scale_factor_x_y[1]
-        button_start_x = (self.screen_width / 2) - (button_width / 2)
+        background = pygame.image.load(
+            resource_path("source/img/background.png")
+        ).convert()
+        background = pygame.transform.scale(
+            background, (self.screen_width, self.screen_height)
+        )
+        background_rect = background.get_rect(
+            center=(self.screen_width / 2, self.screen_height / 2)
+        )
+        overlay = pygame.Surface(
+            (self.screen_width, self.screen_height), pygame.SRCALPHA
+        )
+        overlay.fill((0, 0, 0, int(65 * 255 / 100)))
+        overlay_rect = overlay.get_rect(
+            center=(self.screen_width / 2, self.screen_height / 2)
+        )
+        logo = pygame.image.load(resource_path("source/img/logo.svg")).convert_alpha()
+        logo = pygame.transform.scale(
+            logo,
+            (
+                int(logo.get_width()) * 0.8 * self.scale_factor,
+                int(logo.get_height() * 0.8 * self.scale_factor),
+            ),
+        )
+        print(self.scale_factor)
+        logo_rect = logo.get_rect(
+            center=(
+                self.screen_width / 2,
+                (self.screen_height / 2) - 200 * self.scale_factor,
+            )
+        )
+
         button_gap = 20 * self.scale_factor_x_y[1]
-
-        buttons = [
-            pygame.Rect(
-                button_start_x,
-                self.screen_height / 2 - 1.5 * button_height - button_gap,
-                button_width,
-                button_height,
-            ),
-            pygame.Rect(
-                button_start_x,
-                self.screen_height / 2 - 0.5 * button_height,
-                button_width,
-                button_height,
-            ),
-            pygame.Rect(
-                button_start_x,
-                self.screen_height / 2 + 0.5 * button_height + button_gap,
-                button_width,
-                button_height,
-            ),
-            pygame.Rect(
-                button_start_x,
-                self.screen_height / 2 + 1.5 * button_height + 2 * button_gap,
-                button_width,
-                button_height,
-            ),
-        ]
-
+        button_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
         button_texts = ["Start Game", "Options", "Credits", "Exit"]
 
+        # Create the buttons
+        buttons = [None] * len(button_texts)
+
+        # You'll need to set the initial y-position for the first button
+        button_start_y = (
+            self.screen_height / 2 - 0.5 * button_font.get_height() - button_gap
+        )
+
+        for i, text in enumerate(button_texts):
+            # Render the text to get its dimensions
+            text_surface = button_font.render(text, True, (255, 255, 255))
+            text_width = text_surface.get_width()
+            text_height = text_surface.get_height()
+
+            # Create the button rect with the dimensions of the text
+            buttons[i] = pygame.Rect(
+                (self.screen_width - text_width) / 2,
+                button_start_y,
+                text_width,
+                text_height,
+            )
+
+            # Increment the y-position for the next button
+            button_start_y += text_height + button_gap
+
         while running:
-            self.game_screen.fill((210, 180, 140))
+            self.game_screen.blit(background, background_rect)
+            self.game_screen.blit(overlay, overlay_rect)
+            self.game_screen.blit(logo, logo_rect)
             self.update_music()
 
             for event in pygame.event.get():
@@ -132,13 +161,34 @@ class ScreenManager:
                                 pygame.quit()
                                 exit()
 
+            mouse_pos = pygame.mouse.get_pos()
+
             for i, button in enumerate(buttons):
-                pygame.draw.rect(self.game_screen, (255, 255, 255), button)
                 button_font = pygame.font.Font(None, int(30 * self.scale_factor_x_y[0]))
-                button_text = button_font.render(button_texts[i], True, (0, 0, 0))
+
+                # Check if the mouse is over the button
+                if button.collidepoint(mouse_pos):
+                    # Change the color of the button text when mouse hovers over
+                    button_text = button_font.render(
+                        button_texts[i], True, (0, 255, 0)
+                    )  # Changed color to green when hovering
+                else:
+                    button_text = button_font.render(
+                        button_texts[i], True, (255, 255, 255)
+                    )  # White color when not hovering
+
                 button_text_rect = button_text.get_rect(center=button.center)
                 self.game_screen.blit(button_text, button_text_rect)
 
+            fps = pygame.font.Font(None, 18).render(
+                f"{round(clock.get_fps(), 1)} FPS", True, (255, 255, 255)
+            )
+            fps_rect = fps.get_rect(topleft=(15, 15))
+            self.game_screen.blit(fps, fps_rect)
+
+            version = pygame.font.Font(None, 18).render("INDEV", True, (255, 255, 255))
+            version_rect = version.get_rect(bottomleft=(15, self.screen_height - 15))
+            self.game_screen.blit(version, version_rect)
             self.update_screen()
             clock.tick(60)
 

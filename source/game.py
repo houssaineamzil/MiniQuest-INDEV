@@ -303,9 +303,16 @@ class Game:
                     self.player.inventory.remove_item(item)
                     self.player.current_chest.add_item(item)
                 else:
-                    if self.player.worn_equipment[item.equipment_slot] is None:
-                        self.player.equip_item(item)
-                        self.player.inventory.remove_item(item)
+                    # If there's an item already in the equipment slot
+                    if self.player.worn_equipment[item.equipment_slot]:
+                        # Swap the items
+                        self.player.inventory.items.insert(
+                            i, self.player.worn_equipment[item.equipment_slot]
+                        )
+                        self.player.unequip_item(item.equipment_slot)
+                    # Equip the clicked item
+                    self.player.equip_item(item)
+                    self.player.inventory.remove_item(item)
 
     def handle_equipment_click(self, event):
         if not self.player.inventory_open:

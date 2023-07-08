@@ -54,27 +54,34 @@ class Chest:
     def get_item_rects(self):
         rects = []
         for i, item in enumerate(self.items):
-            rect = pygame.Rect(
-                10 + self.inv_pos_x,
-                35 * (i + 1) + 10 + self.inv_pos_y,
-                self.inv_width - 20,
-                40,
-            )
-            rects.append(rect)
+            text_surface = self.font.render(item.name, True, (255, 255, 255))
+            width, height = text_surface.get_size()
+            x = self.inv_pos_x + self.inv_width // 2 - width // 2
+            y = 35 * (i + 1) + 10 + self.inv_pos_y
+            rects.append(pygame.Rect(x, y, width, height))
         return rects
 
     def draw_inventory(self, screen):
         pygame.draw.rect(
             self.inv_image, (123, 123, 123), (0, 0, self.inv_width, self.inv_height)
         )
-
         title_surface = self.font.render("Chest", True, (255, 255, 255))
         self.inv_image.blit(
             title_surface, (self.inv_width // 2 - title_surface.get_width() // 2, 10)
         )
 
+        mouse_pos = pygame.mouse.get_pos()
+
         for i, item in enumerate(self.items):
             text_surface = self.font.render(item.name, True, (255, 255, 255))
-            self.inv_image.blit(text_surface, (10, 35 * (i + 1) + 10))
+            width, height = text_surface.get_size()
+            x = self.inv_pos_x + self.inv_width // 2 - width // 2
+            y = 35 * (i + 1) + 10 + self.inv_pos_y
+
+            rect = pygame.Rect(x, y, width, height)
+            if rect.collidepoint(mouse_pos):
+                text_surface = self.font.render(item.name, True, (255, 200, 200))
+
+            self.inv_image.blit(text_surface, (x - self.inv_pos_x, y - self.inv_pos_y))
 
         screen.blit(self.inv_image, (self.inv_pos_x, self.inv_pos_y))
