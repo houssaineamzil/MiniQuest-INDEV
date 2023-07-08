@@ -69,7 +69,8 @@ class Inventory:
 
         for i, (slot, item) in enumerate(player.worn_equipment.items()):
             item_text = item.name if item else f"No {slot}"
-            text_surface = self.font.render(item_text, True, (255, 255, 255))
+            text_color = (192, 192, 192) if item is None else (255, 255, 255)
+            text_surface = self.font.render(item_text, True, text_color)
             width, height = text_surface.get_size()
             x = self.inv_pos_x + self.equip_inv_width // 2 - width // 2
             y = 35 * (i + 1) + 10 + self.equip_inv_pos_y
@@ -81,6 +82,8 @@ class Inventory:
             self.equip_inv_image.blit(
                 text_surface, (x - self.inv_pos_x, y - self.equip_inv_pos_y)
             )
+
+        screen.blit(self.equip_inv_image, (self.inv_pos_x, self.equip_inv_pos_y))
 
         screen.blit(self.equip_inv_image, (self.inv_pos_x, self.equip_inv_pos_y))
 
