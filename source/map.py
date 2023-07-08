@@ -1,5 +1,6 @@
 import random
 import os
+from resourcePath import resource_path
 import pygame
 import pytmx
 import math
@@ -12,17 +13,19 @@ from npc import Townsfolk
 from projectile import Arrow, FireBall
 from particleEffect import FireBallExplosion, ArrowExplosion
 from chest import Chest
+import tempfile
 
 
 class Map:
-    def __init__(self, map_file, screen_width):
+    def __init__(self, map_file, screen_width, temp_dir):
+        self.temp_dir = temp_dir
         self.map_file = map_file
-        self.map_data = pytmx.load_pygame(map_file)
+        self.map_data = pytmx.load_pygame(resource_path("source/tile/" + map_file))
 
         self.new_music = None
         self.music_fading = False
         self.music = self.map_data.properties.get("music")
-        pygame.mixer.music.load("source/sound/" + self.music)
+        pygame.mixer.music.load(resource_path("source/sound/" + self.music))
         pygame.mixer.music.play(loops=-1, fade_ms=2000)
 
         self.screen_width = screen_width
@@ -46,7 +49,7 @@ class Map:
 
     def update_music(self):
         if self.music_fading and not pygame.mixer.music.get_busy():
-            pygame.mixer.music.load("source/sound/" + self.new_music)
+            pygame.mixer.music.load(resource_path("source/sound/" + self.new_music))
             pygame.mixer.music.play(loops=-1, fade_ms=2000)
             self.music_fading = False
 
@@ -138,9 +141,7 @@ class Map:
         for portal in self.portals:
             if player.collision_rect.colliderect(portal.rect):
                 player.teleport(portal.destination[0], portal.destination[1])
-                self.change_map(
-                    "source/tile/" + portal.map_file + ".tmx", player, camera
-                )
+                self.change_map(portal.map_file + ".tmx", player, camera)
                 break
 
     def update_npc(self, player, npc):
@@ -225,7 +226,7 @@ class Map:
         self.save_state(self.map_file + ".pkl")
 
         self.map_file = new_map_file
-        self.map_data = pytmx.load_pygame(new_map_file)
+        self.map_data = pytmx.load_pygame(resource_path("source/tile/" + new_map_file))
         new_music = self.map_data.properties.get("music")
 
         if self.music != new_music:
@@ -251,14 +252,16 @@ class Map:
         self.entity_collision_rects.append(player.collision_rect)
 
         if (
-            not os.path.exists(new_map_file + ".pkl")
-            or os.path.getsize(new_map_file + ".pkl") == 0
+            not os.path.exists(self.temp_dir.name + "/" + new_map_file + ".pkl")
+            or os.path.getsize(self.temp_dir.name + "/" + new_map_file + ".pkl") == 0
         ):
+            print(f"State file {self.temp_dir.name + new_map_file + '.pkl'} not found.")
             self.spawn_chests()
             self.spawn_enemies()
             self.spawn_npcs()
         else:
-            self.load_state(new_map_file + ".pkl")
+            self.load_state(self.temp_dir.name + "/" + new_map_file + ".pkl")
+            print(f"State loaded from {self.temp_dir.name + new_map_file + '.pkl'}")
 
     def object_setup(self):
         self.collision_rects = []
@@ -308,6 +311,7 @@ class Map:
         pygame.draw.rect(gameScreen, (0, 255, 0), rect, 2)
 
     def save_state(self, state_filename):
+        state_filename = os.path.join(self.temp_dir.name, state_filename)
         state = {
             "chests": [
                 (
@@ -333,6 +337,7 @@ class Map:
         print(f"State saved in {state_filename}")
 
     def load_state(self, state_filename):
+        state_filename = os.path.join(self.temp_dir.name, state_filename)
         if not os.path.exists(state_filename) or os.path.getsize(state_filename) == 0:
             print(f"File {state_filename} not found or empty.")
             return

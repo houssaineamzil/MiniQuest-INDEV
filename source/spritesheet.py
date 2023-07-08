@@ -1,5 +1,5 @@
 import pygame
-from resource import resource_path
+from resourcePath import resource_path
 
 
 class Spritesheet:

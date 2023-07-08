@@ -1,5 +1,5 @@
 import pygame
-from resource import resource_path
+from resourcePath import resource_path
 from sys import exit
 from game import Game
 import time
@@ -35,7 +35,7 @@ class ScreenManager:
 
     def update_music(self):
         if self.music_fading and not pygame.mixer.music.get_busy():
-            pygame.mixer.music.load("source/sound/" + self.new_music)
+            pygame.mixer.music.load(resource_path("source/sound/" + self.music))
             pygame.mixer.music.play(loops=-1, fade_ms=2000)
             self.music_fading = False
 

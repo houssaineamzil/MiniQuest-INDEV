@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from pygame.math import Vector2
 import os
+from resourcePath import resource_path
 import sys
 from map import Map
 from player import Player
@@ -24,6 +25,7 @@ from spritesheet import Spritesheet
 import random
 from healthBar import HealthBar
 from camera import Camera
+import tempfile
 
 
 class Game:
@@ -37,6 +39,8 @@ class Game:
         scale_factor_x_y,
         scale_factor,
     ):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        print(self.temp_dir)
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.map_file = map_file
@@ -66,14 +70,6 @@ class Game:
                 self.delete_save_files()
                 self.handle_dead_player()
 
-    def resource_path(self, relative_path):
-        try:
-            base_path = sys._MEIPASS
-        except Exception:
-            base_path = os.path.abspath(".")
-
-        return os.path.join(base_path, relative_path)
-
     def init_game_loop(self, player_x, player_y):
         self.clock_object = pygame.time.Clock()
 
@@ -81,7 +77,7 @@ class Game:
         self.player.equip_item(LeatherPants())
         self.health_bar = HealthBar(self.player, 5, 5)
 
-        self.map = Map(self.map_file, self.screen_width)
+        self.map = Map(self.map_file, self.screen_width, self.temp_dir)
         self.map.entity_collision_rects.append(self.player.collision_rect)
         self.camera = Camera(
             Vector2(*self.player.rect.center),
@@ -90,7 +86,7 @@ class Game:
             self.map.height,
         )
 
-        self.cursor_img = pygame.image.load(self.resource_path("source/img/cursor.png"))
+        self.cursor_img = pygame.image.load(resource_path("source/img/cursor.png"))
 
     def game_running(self):
         return not self.game_over
@@ -212,9 +208,9 @@ class Game:
             )
 
     def delete_save_files(self):
-        for file in os.listdir("source/tile"):
+        for file in os.listdir(self.temp_dir.name):
             if file.endswith(".pkl"):
-                os.remove(os.path.join("source/tile", file))
+                os.remove(os.path.join(self.temp_dir.name, file))
 
     def handle_mouse_button_down_event(self, event):
         if self.player.in_quest_ui:

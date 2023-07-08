@@ -2,6 +2,7 @@ import random
 import pygame
 import pytmx
 import math
+from resourcePath import resource_path
 
 from particle import FireBallParticle, ArrowParticle
 from particleEffect import FireBallExplosion, ArrowExplosion
@@ -48,7 +49,7 @@ class FireBall(Projectile):
     explosion = FireBallExplosion
 
     def __init__(self, target_x, target_y, life, speed, damage, owner=None):
-        self.orig_image = pygame.image.load("source/img/fireball.png")
+        self.orig_image = pygame.image.load(resource_path("source/img/fireball.png"))
         self.orig_image = pygame.transform.scale(self.orig_image, (20, 20))
         super().__init__(target_x, target_y, life, speed, damage, owner)
 
@@ -56,8 +57,10 @@ class FireBall(Projectile):
         self.collision_rect = self.image.get_rect(center=self.orig_rect.center)
         self.rect = self.image.get_rect(center=self.orig_rect.center)
 
-        self.attack_sound = pygame.mixer.Sound("source/sound/fireball.mp3")
-        self.hit_sound = pygame.mixer.Sound("source/sound/explosion.mp3")
+        self.attack_sound = pygame.mixer.Sound(
+            resource_path("source/sound/fireball.mp3")
+        )
+        self.hit_sound = pygame.mixer.Sound(resource_path("source/sound/explosion.mp3"))
         self.attack_sound.set_volume(0.4)
         self.hit_sound.set_volume(0.4)
         self.attack_sound.play()
@@ -98,7 +101,7 @@ class Arrow(Projectile):
     explosion = ArrowExplosion
 
     def __init__(self, target_x, target_y, life, speed, damage, owner=None):
-        self.orig_image = pygame.image.load("source/img/arrow.png")
+        self.orig_image = pygame.image.load(resource_path("source/img/arrow.png"))
         self.orig_image = pygame.transform.scale(self.orig_image, (30, 30))
         super().__init__(target_x, target_y, life, speed, damage, owner)
 
@@ -117,8 +120,12 @@ class Arrow(Projectile):
         self.image = pygame.transform.rotate(self.orig_image, -math.degrees(self.angle))
         self.rect = self.image.get_rect(center=self.orig_rect.center)
 
-        self.attack_sound = pygame.mixer.Sound("source/sound/arrowrelease.mp3")
-        self.hit_sound = pygame.mixer.Sound("source/sound/arrowimpact.mp3")
+        self.attack_sound = pygame.mixer.Sound(
+            resource_path("source/sound/arrowrelease.mp3")
+        )
+        self.hit_sound = pygame.mixer.Sound(
+            resource_path("source/sound/arrowimpact.mp3")
+        )
         self.attack_sound.set_volume(4)
         self.hit_sound.set_volume(0.4)
         self.attack_sound.play()
