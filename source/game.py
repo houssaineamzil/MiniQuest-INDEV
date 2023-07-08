@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from pygame.math import Vector2
 import os
+import sys
 from map import Map
 from player import Player
 from enemy import Enemy
@@ -65,6 +66,14 @@ class Game:
                 self.delete_save_files()
                 self.handle_dead_player()
 
+    def resource_path(self, relative_path):
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
+
     def init_game_loop(self, player_x, player_y):
         self.clock_object = pygame.time.Clock()
 
@@ -81,7 +90,7 @@ class Game:
             self.map.height,
         )
 
-        self.cursor_img = pygame.image.load("source/img/cursor.png")
+        self.cursor_img = pygame.image.load(self.resource_path("source/img/cursor.png"))
 
     def game_running(self):
         return not self.game_over

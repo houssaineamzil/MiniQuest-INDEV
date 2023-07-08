@@ -1,4 +1,5 @@
 import pygame
+from resource import resource_path
 from sys import exit
 from game import Game
 import time
@@ -6,7 +7,7 @@ import time
 
 class ScreenManager:
     def __init__(self, screen_width, screen_height, map_file):
-        self.cursor_img = pygame.image.load("source/img/cursor.png")
+        self.cursor_img = pygame.image.load(resource_path("source/img/cursor.png"))
         self.screen_resolution = (screen_width, screen_height)
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -29,12 +30,12 @@ class ScreenManager:
         self.screen = "main_menu"
         self.music_fading = False
         self.music = "maintheme.mp3"
-        pygame.mixer.music.load("source/sound/" + self.music)
+        pygame.mixer.music.load(resource_path("source/sound/" + self.music))
         pygame.mixer.music.play(loops=-1, fade_ms=2000)
 
     def update_music(self):
         if self.music_fading and not pygame.mixer.music.get_busy():
-            pygame.mixer.music.load("source/sound/" + self.music)
+            pygame.mixer.music.load("source/sound/" + self.new_music)
             pygame.mixer.music.play(loops=-1, fade_ms=2000)
             self.music_fading = False
 
